@@ -1,5 +1,10 @@
 scriptencoding utf-8
 
+" remapping from typescriptreact to typescript.tsx filetype for coc-tsserver
+augroup filetypedetect
+    au BufRead,BufNewFile *.tsx set filetype=typescript.tsx
+augroup END
+
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>

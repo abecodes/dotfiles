@@ -1,3 +1,3 @@
 function json
-    jq -n $argv
+  jq -n $argv
 end

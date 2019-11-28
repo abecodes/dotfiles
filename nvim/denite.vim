@@ -41,7 +41,7 @@ let s:denite_options = {'default' : {
 \ 'start_filter': 1,
 \ 'auto_resize': 1,
 \ 'source_names': 'short',
-\ 'prompt': 'λ ',
+\ 'prompt': ' ',
 \ 'statusline': 0,
 \ 'highlight_matched_char': 'QuickFixLine',
 \ 'highlight_matched_range': 'Visual',

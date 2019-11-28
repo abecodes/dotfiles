@@ -9,10 +9,12 @@ source ~/.config/nvim/syntastic.vim
 source ~/.config/nvim/devicons.vim
 source ~/.config/nvim/lightline.vim
 source ~/.config/nvim/nuake.vim
+source ~/.config/nvim/vimgo.vim
 source ~/.config/nvim/coc.vim
 
 " neovim settings
 set number relativenumber
+autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=2 shiftwidth=2
 
 " if hidden is not set, TextEdit might fail.
 set hidden
@@ -60,12 +62,15 @@ set smartcase
 " Automatically re-read file if a change was detected outside of vim
 set autoread
 
-if (has("termguicolors"))
- set termguicolors
-endif
+" comment out for mac and use oceanic-next iterm colorschema
+"if (has("termguicolors"))
+"set termguicolors
+"endif
 
 syntax on
 let g:oceanic_next_terminal_bold = 1
 let g:oceanic_next_terminal_italic = 1
 colorscheme OceanicNext
 
+" use on mac if neovim/fish is installed with brew
+set shell=/usr/local/bin/fish
