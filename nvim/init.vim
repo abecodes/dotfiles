@@ -87,7 +87,26 @@ let g:oceanic_next_terminal_bold = 1
 let g:oceanic_next_terminal_italic = 1
 colorscheme OceanicNext
 
-highlight Keyword cterm=italic
+" Adding italics
+highlight Keyword cterm=italic term=italic gui=italic
+highlight Identifier cterm=italic term=italic gui=italic
+highlight String cterm=italic term=italic gui=italic
+highlight Number cterm=italic term=italic gui=italic
+highlight Character cterm=italic term=italic gui=italic
+highlight Float cterm=italic term=italic gui=italic
+highlight Boolean cterm=italic term=italic gui=italic
+highlight Reference cterm=italic term=italic gui=italic
+" highlight Function cterm=italic term=italic gui=italic
+highlight Conditional cterm=italic term=italic gui=italic
+highlight Label cterm=italic term=italic gui=italic
+highlight Repeat cterm=italic term=italic gui=italic
+highlight PreProc cterm=italic term=italic gui=italic
+highlight htmlArg cterm=italic term=italic gui=italic
+highlight xmlAttrib cterm=italic term=italic gui=italic
+highlight Type cterm=italic term=italic gui=italic
+
+
+
 
 " use on mac if neovim/fish is installed with brew
 set shell=/usr/local/bin/fish
