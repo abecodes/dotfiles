@@ -10,11 +10,12 @@ source ~/.config/nvim/devicons.vim
 source ~/.config/nvim/lightline.vim
 source ~/.config/nvim/nuake.vim
 source ~/.config/nvim/vimgo.vim
+source ~/.config/nvim/dartvim.vim
 source ~/.config/nvim/coc.vim
+source ~/.config/nvim/vimstartify.vim
 
 " neovim settings
 set number relativenumber
-autocmd BufNewFile,BufRead *.go setlocal noexpandtab tabstop=2 shiftwidth=2
 
 " if hidden is not set, TextEdit might fail.
 set hidden
@@ -43,7 +44,8 @@ set clipboard=unnamed
 
 " Change number of spaces that a <Tab> counts for during editing ops
 set softtabstop=2
-
+set tabstop=2 
+set shiftwidth=2
 " Change vertical split character to be a space (essentially hide it)
 set fillchars+=vert:.
 
@@ -62,6 +64,19 @@ set smartcase
 " Automatically re-read file if a change was detected outside of vim
 set autoread
 
+" auto write buffer on focus change
+autocmd BufLeave * silent! wall
+
+" Startify then NERDTree, on startup
+autocmd VimEnter *
+                \   if !argc()
+                \ |   Startify
+                \ |   NERDTree
+                \ |   wincmd w
+                \ | endif
+
+autocmd VimResized * redraw!
+
 " comment out for mac and use oceanic-next iterm colorschema
 "if (has("termguicolors"))
 "set termguicolors
@@ -71,6 +86,8 @@ syntax on
 let g:oceanic_next_terminal_bold = 1
 let g:oceanic_next_terminal_italic = 1
 colorscheme OceanicNext
+
+highlight Keyword cterm=italic
 
 " use on mac if neovim/fish is installed with brew
 set shell=/usr/local/bin/fish

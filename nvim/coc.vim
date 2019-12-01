@@ -5,6 +5,12 @@ augroup filetypedetect
     au BufRead,BufNewFile *.tsx set filetype=typescript.tsx
 augroup END
 
+" remapping dart filetype for coc-flutter
+augroup filetypedetect
+    au BufRead,BufNewFile *.dart set filetype=dart
+augroup END
+
+
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>

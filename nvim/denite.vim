@@ -36,19 +36,32 @@ call denite#custom#var('buffer', 'date_format', '')
 "   prompt_highlight        - Specify color of prompt
 "   highlight_matched_char  - Matched characters highlight
 "   highlight_matched_range - matched range highlight
+"let s:denite_options = {'default' : {
+"\ 'split': 'floating',
+"\ 'start_filter': 1,
+"\ 'auto_resize': 1,
+"\ 'source_names': 'short',
+"\ 'prompt': '>',
+"\ 'statusline': 0,
+"\ 'highlight_matched_char': 'QuickFixLine',
+"\ 'highlight_matched_range': 'Visual',
+"\ 'highlight_window_background': 'Visual',
+"\ 'highlight_filter_background': 'DiffAdd',
+"\ 'winrow': 1,
+"\ 'vertical_preview': 1
+"\ }}
+
 let s:denite_options = {'default' : {
-\ 'split': 'floating',
-\ 'start_filter': 1,
 \ 'auto_resize': 1,
-\ 'source_names': 'short',
-\ 'prompt': ' ',
-\ 'statusline': 0,
-\ 'highlight_matched_char': 'QuickFixLine',
-\ 'highlight_matched_range': 'Visual',
-\ 'highlight_window_background': 'Visual',
-\ 'highlight_filter_background': 'DiffAdd',
+\ 'winminheight': '10',
+\ 'highlight_mode_insert': 'Visual',
+\ 'highlight_mode_normal': 'Visual',
+\ 'prompt_highlight': 'Function',
+\ 'highlight_matched_char': 'Function',
+\ 'highlight_matched_range': 'Normal',
 \ 'winrow': 1,
-\ 'vertical_preview': 1
+\ 'split': 'floating',
+\ 'prompt': '>',
 \ }}
 
 " Loop through denite options and enable them
@@ -61,7 +74,6 @@ function! s:profile(opts) abort
 endfunction
 
 call s:profile(s:denite_options)
-
 
 "   ;         - Browser currently open buffers
 "   <leader>t - Browse list of files in current directory

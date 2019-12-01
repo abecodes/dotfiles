@@ -1,5 +1,12 @@
 scriptencoding utf-8
 
+" Automaticaly close nvim if NERDTree is only thing left open
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+let NERDTreeHijackNetrw = 1
+let g:NERDTreeIgnore = ['^\.DS_Store$', '\.idea$[[dir]]']
+let g:NERDTreeStatusline = ''
+
 " Show hidden files/directories
 let g:NERDTreeShowHidden = 1
 
@@ -8,7 +15,7 @@ let g:NERDTreeMinimalUI = 1
 
 " Custom icons for expandable/expanded directories
 let g:NERDTreeDirArrowExpandable = '+'
-let g:NERDTreeDirArrowCollapsible = '-'
+let g:NERDTreeDirArrowCollapsible = '-'  
 
 "  <leader>n - Toggle NERDTree on/off
 "  <leader>f - Opens current file location in NERDTree

@@ -1,16 +1,16 @@
 # env vars
+set -x FLUTTERBIN ~/flutter/bin
 set -x GOPATH ~/go
 set -x GOBIN $GOPATH/bin
 
-
 # Path
-set PATH $PATH ~/.deno/bin $GOBIN
+set PATH $PATH ~/.deno/bin $GOBIN $FLUTTERBIN
 
 # Spacefish Sort Order
 set SPACEFISH_PROMPT_ORDER dir host git package node docker golang pyenv kubecontext exec_time line_sep time user battery jobs exit_code char
 
 # Spacefish Prompt options
-set SPACEFISH_CHAR_SYMBOL 👽🧟🙈🙉🙊🦄
+set SPACEFISH_CHAR_SYMBOL 🙈🙉🙊🦄
 set SPACEFISH_TIME_SHOW true
 set SPACEFISH_JULIA_SHOW false
 set SPACEFISH_RUBY_SHOW false
