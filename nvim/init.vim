@@ -65,7 +65,7 @@ set smartcase
 set autoread
 
 " auto write buffer on focus change
-autocmd BufLeave * silent! wall
+" autocmd BufLeave * silent! wall
 
 " Startify then NERDTree, on startup
 autocmd VimEnter *
@@ -105,8 +105,8 @@ highlight htmlArg cterm=italic term=italic gui=italic
 highlight xmlAttrib cterm=italic term=italic gui=italic
 highlight Type cterm=italic term=italic gui=italic
 
-
-
+"hi link BufTabLineActive TabLineSel
+"hi link BufTabLineCurrent PmenuSel
 
 " use on mac if neovim/fish is installed with brew
 set shell=/usr/local/bin/fish

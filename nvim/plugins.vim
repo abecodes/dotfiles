@@ -22,7 +22,8 @@ call plug#end()
 
 " coc lsp plugins
 let g:coc_global_extensions = [
-			\"coc-css",
+			\ "coc-yank",
+			\ "coc-css",
       \ "coc-eslint",
       \ "coc-html",
       \ "coc-json",
