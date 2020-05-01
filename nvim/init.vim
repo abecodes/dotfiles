@@ -3,7 +3,7 @@ scriptencoding utf-8
 source ~/.config/nvim/plugins.vim
 source ~/.config/nvim/functions.vim
 source ~/.config/nvim/keybindings.vim
-source ~/.config/nvim/nerdtree.vim
+" source ~/.config/nvim/nerdtree.vim
 source ~/.config/nvim/denite.vim
 source ~/.config/nvim/syntastic.vim
 source ~/.config/nvim/devicons.vim
@@ -12,6 +12,7 @@ source ~/.config/nvim/nuake.vim
 source ~/.config/nvim/vimgo.vim
 source ~/.config/nvim/dartvim.vim
 source ~/.config/nvim/coc.vim
+source ~/.config/nvim/coc-explorer.vim
 source ~/.config/nvim/vimstartify.vim
 
 " neovim settings
@@ -44,7 +45,7 @@ set clipboard=unnamed
 
 " Change number of spaces that a <Tab> counts for during editing ops
 set softtabstop=2
-set tabstop=2 
+set tabstop=2
 set shiftwidth=2
 " Change vertical split character to be a space (essentially hide it)
 set fillchars+=vert:.
@@ -71,9 +72,11 @@ set autoread
 autocmd VimEnter *
                 \   if !argc()
                 \ |   Startify
-                \ |   NERDTree
+                \ " |   NERDTree
                 \ |   wincmd w
                 \ | endif
+
+autocmd User Startified setlocal buflisted
 
 autocmd VimResized * redraw!
 
@@ -86,6 +89,7 @@ syntax on
 let g:oceanic_next_terminal_bold = 1
 let g:oceanic_next_terminal_italic = 1
 colorscheme OceanicNext
+" colorscheme dracula
 
 " Adding italics
 highlight Keyword cterm=italic term=italic gui=italic

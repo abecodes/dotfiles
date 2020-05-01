@@ -6,4 +6,3 @@ let g:mapleader=','
 " bind terminal ESC to exit terminal mode
 tnoremap <Esc> <C-\><C-n>
 
-

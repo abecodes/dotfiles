@@ -62,7 +62,7 @@ let s:denite_options = {'default' : {
 \ 'winrow': 1,
 \ 'split': 'floating',
 \ 'prompt': '>',
-\ 'start_filter': 1,
+\ 'start_filter': 0,
 \ 'source_names': 'short',
 \ 'statusline': 0,
 \ }}
@@ -82,7 +82,7 @@ call s:profile(s:denite_options)
 "   <leader>t - Browse list of files in current directory
 "   <leader>g - Search current directory for occurences of given term and close window if no results
 "   <leader>j - Search current directory for occurences of word under cursor
-nmap ; :Denite buffer<CR> <C-o>
+nmap ; :Denite buffer <CR>
 nmap <leader>t :DeniteProjectDir file/rec<CR>
 nnoremap <leader>g :<C-u>Denite grep:. -no-empty<CR>
 nnoremap <leader>j :<C-u>DeniteCursorWord grep:.<CR>

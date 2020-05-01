@@ -8,7 +8,7 @@ function! IsNERDTreeOpen()
 	return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
 endfunction
 
-" Call NERDTreeFind iff NERDTree is active, current window contains a
+" Call NERDTreeFind if NERDTree is active, current window contains a
 " modifiable file and we're not in vimdiff
 function! SyncTree()
 	if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
@@ -16,6 +16,9 @@ function! SyncTree()
 		wincmd p
 	endif
 endfunction
+
+" If more than one window and previous buffer was NERDTree, go back to it.
+autocmd BufEnter * if bufname('#') =~# "^NERD_tree_" && winnr('$') > 1 | b# | endif
 
 " Highlight currently open buffer in NERDTree
 autocmd BufEnter * call SyncTree()
@@ -32,7 +35,7 @@ let g:NERDTreeMinimalUI = 1
 
 " Custom icons for expandable/expanded directories
 let g:NERDTreeDirArrowExpandable = '+'
-let g:NERDTreeDirArrowCollapsible = '-'  
+let g:NERDTreeDirArrowCollapsible = '-'
 
 "  <leader>n - Toggle NERDTree on/off
 "  <leader>f - Opens current file location in NERDTree

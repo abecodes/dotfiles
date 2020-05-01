@@ -1,12 +1,24 @@
 scriptencoding utf-8
 
-" Settings for devicons
+function! CocCurrentFunction()
+    return get(b:, 'coc_current_function', '')
+endfunction
+
 
 let g:lightline = {
       \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead',
       \   'filetype': 'MyFiletype',
       \   'fileformat': 'MyFileformat',
 			\   'cocstatus': 'coc#status',
+      \   'currentfunction': 'CocCurrentFunction',
+      \ },
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ],
+      \   'right': [ [ 'lineinfo' ],
+      \              [ 'percent' ],
+      \              [ 'fileformat', 'fileencoding', 'filetype', 'cocstatus', 'currentfunction' ] ],
       \ },
       \ 'colorscheme': 'wombat',
       \ }
