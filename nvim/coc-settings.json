@@ -64,5 +64,7 @@
 			"rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
 			"filetypes": ["go"]
 		}
-	}
+	},
+	"coc.preferences.colorSupport": true,
+	"highlight.colors.enable": true
 }

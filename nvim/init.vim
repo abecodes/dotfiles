@@ -3,9 +3,7 @@ scriptencoding utf-8
 source ~/.config/nvim/plugins.vim
 source ~/.config/nvim/functions.vim
 source ~/.config/nvim/keybindings.vim
-" source ~/.config/nvim/nerdtree.vim
 source ~/.config/nvim/denite.vim
-source ~/.config/nvim/syntastic.vim
 source ~/.config/nvim/devicons.vim
 source ~/.config/nvim/lightline.vim
 source ~/.config/nvim/nuake.vim
@@ -68,11 +66,10 @@ set autoread
 " auto write buffer on focus change
 " autocmd BufLeave * silent! wall
 
-" Startify then NERDTree, on startup
+" Startify on startup
 autocmd VimEnter *
                 \   if !argc()
                 \ |   Startify
-                \ " |   NERDTree
                 \ |   wincmd w
                 \ | endif
 
@@ -82,7 +79,7 @@ autocmd VimResized * redraw!
 
 " comment out for mac and use oceanic-next iterm colorschema
 "if (has("termguicolors"))
-"set termguicolors
+" set termguicolors
 "endif
 
 syntax on

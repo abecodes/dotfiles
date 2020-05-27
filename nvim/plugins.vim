@@ -3,9 +3,7 @@ scriptencoding utf-8
 call plug#begin()
 Plug 'mhinz/vim-startify'
 Plug 'Shougo/denite.nvim'
-" Plug 'scrooloose/nerdtree' | Plug 'Xuyuanp/nerdtree-git-plugin' | Plug 'ryanoasis/vim-devicons' | Plug 'PhilRunninger/nerdtree-buffer-ops'
 Plug 'ryanoasis/vim-devicons'
-Plug 'scrooloose/syntastic'
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 Plug 'maxmellon/vim-jsx-pretty'
 Plug 'dart-lang/dart-vim-plugin'
@@ -17,17 +15,15 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'mattn/emmet-vim'
 Plug 'Lenovsky/nuake'
 Plug 'mhartington/oceanic-next'
-" Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'easymotion/vim-easymotion'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
 " coc lsp plugins
 let g:coc_global_extensions = [
-      \ "coc-explorer",
+			\ "coc-explorer",
 			\ "coc-yank",
 			\ "coc-css",
-      \ "coc-eslint",
       \ "coc-html",
       \ "coc-json",
       \ "coc-prettier",
