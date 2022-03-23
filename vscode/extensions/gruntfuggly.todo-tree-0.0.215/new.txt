@@ -1,0 +1,22 @@
+TODO make this work
+
+
+evu eiuvbe rubv[ woeidwiedn, wefiubweiufb, woeidwoibed]
+
+"todo-tree.highlights.customHighlight": {
+        "TODO": {
+           "icon":  "check"
+        },
+        "BUG": {
+            "icon": "bug"
+        },
+        "HACK": {
+            "icon": "tools"
+        },
+        "FIXME": {
+            "icon": "flame"
+        },
+        "XXX": {
+            "icon": "$(close)"
+        }
+    },

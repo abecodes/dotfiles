@@ -1,0 +1,6 @@
+.DS_Store
+nvim/COMMANDS.md
+nvim/KEYS.md
+nvim/plugged
+nvim/sessions
+nvim/plugin

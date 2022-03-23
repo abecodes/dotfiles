@@ -1,0 +1,173 @@
+{
+	"[go]": {
+		"editor.insertSpaces": false,
+		"editor.formatOnSave": true,
+		"editor.codeActionsOnSave": {
+			"source.organizeImports": true
+		},
+		"editor.defaultFormatter": "golang.go-nightly",
+		"editor.suggest.snippetsPreventQuickSuggestions": false
+	},
+	"[html]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[markdown]": {
+		"files.trimTrailingWhitespace": false
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+  "debug.console.fontFamily": "Rec Mono Duotone", // OperatorMono Nerd Font Book
+	"debug.console.fontSize": 20,
+	"editor.bracketPairColorization.enabled": true,
+	"editor.codeLensFontFamily": "Rec Mono Duotone", // OperatorMono Nerd Font Book
+	"editor.cursorStyle": "line",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.fontFamily": "Rec Mono Duotone", // Operator SSm
+	"editor.fontLigatures": true,
+	"editor.fontSize": 26,
+	"editor.formatOnSave": true,
+	"editor.guides.bracketPairs": "active",
+	"editor.guides.indentation": true,
+	"editor.insertSpaces": false,
+	"editor.lineNumbers": "relative",
+	"editor.minimap.enabled": false,
+	"editor.tabSize": 2,
+	"editor.wordWrap": "off",
+	"emojisense.languages": {
+		"markdown": {
+			"markupCompletionsEnabled": true,
+			"unicodeCompletionsEnabled": false
+		},
+		"plaintext": {
+			"markupCompletionsEnabled": false,
+			"emojiDecoratorsEnabled": false
+		},
+		"git-commit": true,
+		"javascript": true,
+		"typescript": true
+	},
+  "emojisense.unicodeCompletionsEnabled": true,
+	"explorer.confirmDelete": false,
+	"files.autoSave": "onFocusChange",
+	"files.insertFinalNewline": true,
+	"files.trimFinalNewlines": true,
+	"files.trimTrailingWhitespace": true,
+  "git.autofetch": true,
+	"gitlens.advanced.telemetry.enabled": false,
+	"gitlens.blame.ignoreWhitespace": true,
+  "go.buildOnSave": "off",
+	"go.coverOnSave": true,
+	"go.coverOnSingleTest": true,
+	"go.coverOnSingleTestFile": true,
+	"go.formatTool": "gofumpt",
+	"go.languageServerExperimentalFeatures": {
+		"diagnostics": false
+	},
+	"go.lintTool": "revive",
+	"go.toolsManagement.autoUpdate": true,
+	"go.useLanguageServer": true,
+	"gopls": {
+		"formatting.gofumpt": true
+	},
+  "html.format.endWithNewline": true,
+	"indentRainbow.excludedLanguages": [
+		"plaintext",
+		"json",
+		"jsonc",
+		"JSON",
+		"JSON with Comments",
+		"Markdown"
+	],
+	"javascript.preferences.quoteStyle": "single",
+	"javascript.suggest.completeFunctionCalls": true,
+	"javascript.updateImportsOnFileMove.enabled": "always",
+	"json.maxItemsComputed": 25000,
+	"languageToolLinter.external.url": "http://localhost:8010",
+	"languageToolLinter.languageTool.ignoredWordsGlobal": [
+		"&nbsp",
+		"mongodb",
+		"pritunl"
+	],
+  "markdown.preview.fontSize": 24,
+	"prettier.configPath": "~/.prettierrc",
+	"prettier.documentSelectors": [
+		"*.{tsx?, jsx?, json}"
+	],
+  "prettier.endOfLine": "lf",
+	"prettier.prettierPath": "/usr/local/lib/node_modules/@fsouza/prettierd/dist/prettierd.js",
+	"prettier.trailingComma": "es5",
+	"prettier.useTabs": true,
+	"telemetry.enableCrashReporter": false,
+	"telemetry.enableTelemetry": false,
+	"telemetry.telemetryLevel": "off",
+	"terminal.external.osxExec": "kitty.app",
+	"terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.fontFamily": "Rec Mono Duotone", // OperatorMono Nerd Font Book
+	"terminal.integrated.fontSize": 24,
+  "todo-tree.filtering.excludeGlobs": [
+		"**/node_modules",
+		"**/ios",
+    "**/vendor"
+	],
+	"todo-tree.general.tags": [
+		"BUG",
+		"HACK",
+		"FIXME",
+		"TODO",
+		"XXX",
+		"[ ]",
+		"[x]"
+	],
+  "todo-tree.highlights.customHighlight": {
+		"TODO": {
+			"icon": "clock",
+			"type": "line",
+			"iconColour": "yellow"
+		},
+		"FIXME": {
+			"type": "line",
+			"icon": "flame",
+			"background": "white",
+			"iconColour": "orange"
+		}
+	},
+	"todo-tree.highlights.defaultHighlight": {
+		"type": "text",
+		"foreground": "black",
+		"background": "yellow",
+		"iconColour": "lime"
+	},
+	"todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
+  "todo-tree.tree.showScanModeButton": false,
+	"typescript.preferences.quoteStyle": "single",
+	"typescript.suggest.completeFunctionCalls": true,
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"window.zoomLevel": 2,
+	"workbench.colorCustomizations": {
+		"editor.lineHighlightBackground": "#1073cf2d",
+		"editor.lineHighlightBorder": "#9fced11f"
+	},
+  "vim.easymotion": true,
+	"vim.easymotionMarkerFontSize": "18",
+	"vim.easymotionMarkerHeight": 18,
+	"vim.enableNeovim": true,
+	"vim.leader": ",",
+	"vim.neovimPath": "/usr/local/bin/nvim",
+	"vim.sneak": true,
+	"workbench.colorTheme": "Horizon Italic",
+	"workbench.iconTheme": "material-icon-theme"
+}
+

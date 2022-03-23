@@ -1,0 +1,92 @@
+# Inserts a blank line between shell prompts
+# add_newline = true
+
+#format = """
+#$username\
+#$hostname\
+#$shlvl\
+#$kubernetes\
+#$directory\
+#$vcsh\
+#$git_branch\
+#$git_commit\
+#$git_state\
+#$git_metrics\
+#$git_status\
+#$hg_branch\
+#$docker_context\
+#$package\
+#$cmake\
+#$dart\
+#$deno\
+#$dotnet\
+#$elixir\
+#$elm\
+#$erlang\
+#$golang\
+#$helm\
+#$java\
+#$julia\
+#$kotlin\
+#$nim\
+#$nodejs\
+#$ocaml\
+#$perl\
+#$php\
+#$purescript\
+#$python\
+#$red\
+#$ruby\
+#$rust\
+#$scala\
+#$swift\
+#$terraform\
+#$vlang\
+#$vagrant\
+#$zig\
+#$nix_shell\
+#$conda\
+#$memory_usage\
+#$aws\
+#$gcloud\
+#$openstack\
+#$env_var\
+#$crystal\
+#$custom\
+#$cmd_duration\
+#$line_break\
+#$lua\
+#$jobs\
+#$battery\
+#$time\
+#$status\
+#$shell\
+#$character"""
+
+
+format = """
+$time$username$hostname$directory$git_status$git_branch
+$cmd_duration$character
+"""
+
+[username]
+style_user = "white bold"
+style_root = "red bold"
+format = "[$user]($style) "
+show_always = false
+
+# Replace the "❯" symbol in the prompt with "➜"
+[character]                            # The name of the module we are configuring is "character"
+success_symbol = "[🦄❯](bold green)"     # The "success_symbol" segment is being set to "➜" with the color "bold green"
+error_symbol = "[🙈🙉🙊❯](bold red)"
+
+[aws]
+disabled = true
+
+[package]
+disabled = false
+display_private = true
+
+[time]
+format = "[$time]($style) "
+disabled = false

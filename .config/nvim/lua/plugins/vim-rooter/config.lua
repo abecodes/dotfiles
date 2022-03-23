@@ -1,0 +1,37 @@
+local g = vim.g
+-- Everything (default)
+-- g.rooter_targets = '/,*'
+-- All files
+-- g.rooter_targets = '*'
+-- YAML files
+-- g.rooter_targets = '*.yml,*.yaml'
+-- Directories and YAML files
+-- g.rooter_targets = '/,*.yml,*.yaml'
+-- To specify the root is a certain directory, prefix it with =.
+-- g.rooter_patterns = ['=src']
+-- To specify the root has a certain directory or file (which may be a glob), just give the name:
+-- g.rooter_patterns = ['.git', 'Makefile', '*.sln', 'build/env.sh']
+-- To specify the root has a certain directory as an ancestor (useful for excluding directories),
+-- prefix it with ^:
+-- g.rooter_patterns = ['^fixtures']
+-- To specify the root has a certain directory as its direct ancestor / parent (useful when you
+-- put working projects in a common directory), prefix it with >:
+-- g.rooter_patterns = ['>Latex']
+-- To exclude a pattern, prefix it with !.
+-- g.rooter_patterns = ['!.git/worktrees', '!=extras', '!^fixtures', '!build/env.sh']
+-- non-project files
+-- Don't change directory (default).
+-- g.rooter_change_directory_for_non_project_files = ''
+-- Change to file's directory (similar to autochdir).
+-- g.rooter_change_directory_for_non_project_files = 'current'
+-- Change to home directory.
+-- g.rooter_change_directory_for_non_project_files = 'home'
+-- To make Rooter start in manual mode:
+-- g.rooter_manual_only = 1
+-- By default vim-rooter uses :cd to change directory. To use :lcd or :tcd instead:
+-- g.rooter_cd_cmd = 'lcd'
+-- To stop Rooter echoing the project directory:
+g.rooter_silent_chdir = 1
+-- By default Rooter doesn't resolve symbolic links in the file or directory which
+-- triggers it. To do so:
+-- g.rooter_resolve_links = 1

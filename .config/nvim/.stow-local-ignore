@@ -1,0 +1,15 @@
+/\.vscode
+/plugin
+/sessions
+
+^/COMMANDS.*
+^/DAP.*
+^/HORIZON_COLORS.*
+^/KEYS.*
+^/LSP.*
+^/LUA.*
+^/project.*
+^/snippets.*
+^/SYNTAX.*
+^/ZETTELKASTEN.*
+

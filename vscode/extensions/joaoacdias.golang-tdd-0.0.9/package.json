@@ -1,0 +1,47 @@
+{
+	"name": "golang-tdd",
+	"displayName": "Golang TDD",
+	"description": "Show green/red lights on the bottom bar. Red when tests are failing and green when passing. This runs on save. Better feedback with less effort.",
+	"version": "0.0.9",
+	"publisher": "joaoacdias",
+	"engines": {
+		"vscode": "^1.5.0"
+	},
+	"icon": "images/gotdd.png",
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"onCommand:extension.golangTDD"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/joaodias/vscode-golang-tdd"
+	},
+	"main": "./extension",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.golangTDD",
+				"title": "Golang TDD"
+			}
+		]
+	},
+	"scripts": {
+		"postinstall": "node ./node_modules/vscode/bin/install",
+		"test": "node ./node_modules/vscode/bin/test"
+	},
+	"devDependencies": {
+		"typescript": "^2.0.3",
+		"vscode": "^1.0.0",
+		"mocha": "^2.3.3",
+		"eslint": "^3.6.0",
+		"@types/node": "^6.0.40",
+		"@types/mocha": "^2.2.32"
+	},
+	"__metadata": {
+		"id": "57b31869-018f-45b8-bd99-5881bbfdf53f",
+		"publisherId": "966f0abc-424b-4e30-a582-8945cf1501f6",
+		"publisherDisplayName": "joaoacdias"
+	}
+}

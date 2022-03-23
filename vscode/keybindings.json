@@ -1,0 +1,34 @@
+// Place your key bindings in this file to override the defaultsauto[]
+[
+	{
+		"key": "alt+t",
+		"command": "workbench.action.terminal.focus"
+	},
+	{
+		"key": "alt+k",
+		"command": "workbench.action.focusActiveEditorGroup"
+	},
+	{
+		"key": "alt+f",
+		"command": "workbench.files.action.focusFilesExplorer"
+	},
+	{
+		"key": "alt+e",
+		"command": "workbench.files.action.focusOpenEditorsView",
+		"when": "workbench.explorer.openEditorsView.active"
+	},
+	{
+		"key": "cmd+k e",
+		"command": "-workbench.files.action.focusOpenEditorsView",
+		"when": "workbench.explorer.openEditorsView.active"
+	},
+	{
+		"key": "cmd+e",
+		"command": "workbench.action.focusPanel"
+	},
+	{
+    "key": "ctrl+`",
+    "command": "-workbench.action.terminal.toggleTerminal",
+    "when": "terminal.active"
+  }
+]
