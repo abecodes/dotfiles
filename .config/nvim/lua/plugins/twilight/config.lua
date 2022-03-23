@@ -22,4 +22,4 @@ require("twilight").setup({
     'startify'
   },
 })
-require("twilight").toggle()
+-- require("twilight").toggle()
