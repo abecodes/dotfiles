@@ -40,9 +40,9 @@ stow -t ~/ /
 ```
 
 ```bash
-brew install neovim kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer clementtsang/bottom/bottom dust sd procs fd tokei jq starship youtube-dl silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab
+brew install neovim kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer clementtsang/bottom/bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab
 
-brew install --cask rectangle mark-text bloomrpc vscodium pritunl librewolf gaphor motrix
+brew install --cask rectangle mark-text bloomrpc vscodium pritunl librewolf gaphor motrix mongodb-compass
 
 npm i -g eslint_d @fsouza/prettierd vscode-langservers-extracted typescript typescript-language-server
 
@@ -236,6 +236,12 @@ brew install --cask gaphor
 brew install --cask motrix
 ```
 
+[mongodb-compass](https://www.mongodb.com/try/download/compass) GUI explorer for mongodb
+
+```bash
+brew install --cask mongodb-compass
+```
+
 Additions to the CLI would be:
 
 ```bash
@@ -271,8 +277,8 @@ brew install fzf
 # To install useful key bindings and fuzzy completion:
 $(brew --prefix)/opt/fzf/install
 
-# youtube-dl
-brew install youtube-dl
+# youtube-dl fork with some fix and more features [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+brew install yt-dlp/taps/yt-dlp
 
 # silicon for screenshots with nvim https://github.com/Aloxaf/silicon
 brew install silicon
