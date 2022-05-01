@@ -176,7 +176,7 @@ return require('packer').startup(function()
     }
     use {'rhysd/clever-f.vim', setup = [[require('plugins.clever-f.setup')]]}
     use {
-        -- "/Volumes/Data SSD/repos/nvim/tabout.nvim",
+        --"/Users/abe/Repos/nvim/tabout.nvim",
         'abecodes/tabout.nvim',
         config = [[require('plugins.tabout.config')]],
         wants = {'nvim-treesitter'},

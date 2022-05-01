@@ -8,6 +8,6 @@ function update
   go install github.com/go-critic/go-critic/cmd/gocritic@latest
   go install github.com/praetorian-inc/gokart@latest
   go install github.com/quasilyte/go-consistent@latest
-  go install goa.design/model/cmd/mdl@latest
+  go install goa.design/model/cmd/mdl@master
   go install github.com/divan/expvarmon@latest
 end

@@ -10,16 +10,13 @@ Setting up a new system? Messed up the old one again?
 
 > Ah sh!t, here we go again - C.J.
 
-Here are some easy to follow along steps to speed the process up. Maybe you will
-finally take the time and use some automation for that...
+Here are some easy to follow along steps to speed the process up. Maybe you will finally take the time and use some automation for that...
 
 ## Prerequisits
 
 **wasiqman**
 
-[wasiqman](https://github.com/qisaw/wasiqman) is a fork of the great
-[workman layout](https://workmanlayout.org/). It fixes an issue where some ctrl
-codes are not correctly transmitted to the terminal emulator.
+[wasiqman](https://github.com/qisaw/wasiqman) is a fork of the great [workman layout](https://workmanlayout.org/). It fixes an issue where some ctrl codes are not correctly transmitted to the terminal emulator.
 
 **homebrew**
 
@@ -27,6 +24,8 @@ codes are not correctly transmitted to the terminal emulator.
 
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+brew analytics off
 ```
 
 ## :see_no_evil: tl;dr
@@ -40,7 +39,7 @@ stow -t ~/ /
 ```
 
 ```bash
-brew install neovim kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer clementtsang/bottom/bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab
+brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab
 
 brew install --cask rectangle mark-text bloomrpc vscodium pritunl librewolf gaphor motrix mongodb-compass
 
@@ -71,6 +70,14 @@ $(brew --prefix)/opt/fzf/install
 
 # fzf vim c-tag support
 brew install --HEAD universal-ctags/universal-ctags/universal-ctags
+
+# set default shell
+sudo sh -c 'echo /usr/local/bin/fish >> /etc/shells'
+chsh -s /usr/local/bin/fish
+
+# For M1 cpus
+sudo sh -c 'echo /opt/homebrew/bin/fish >> /etc/shells'
+chsh -s /opt/homebrew/bin/fish
 ```
 
 ## :fire: Firewall
@@ -86,9 +93,7 @@ brew install lulu
 
 ## :computer: Shell
 
-Right now I am hooked on [kitty](https://sw.kovidgoyal.net/kitty/#quickstart).
-Its fast, powerful, highly customizeable and offers everything a great terminal
-emulater needs.
+Right now I am hooked on [kitty](https://sw.kovidgoyal.net/kitty/#quickstart). Its fast, powerful, highly customizeable and offers everything a great terminal emulater needs.
 
 ```bash
 brew install kitty
@@ -97,9 +102,7 @@ brew install kitty
 https://github.com/dexpota/kitty-themes
 ```
 
-[fish](https://fishshell.com/) is my goto shell, but be aware, it is not POSIX
-compliant and does not support normal bash functions. You may end up rewriting a
-lot of things to make it work with _fish_.
+[fish](https://fishshell.com/) is my goto shell, but be aware, it is not POSIX compliant and does not support normal bash functions. You may end up rewriting a lot of things to make it work with _fish_.
 
 ```bash
 brew install fish
@@ -111,12 +114,25 @@ And of course I want a colorful and fancy prompt :unicorn:
 # starship prompt https://starship.rs
 brew install starship
 # add to fish conf: starship init fish | source
+
+# colorful terminal motd https://github.com/dylanaraps/neofetch
+brew install neofetch
+```
+
+Now make **fish** the default shell
+
+```bash
+sudo sh -c 'echo /usr/local/bin/fish >> /etc/shells'
+chsh -s /usr/local/bin/fish
+
+# For M1 cpus
+sudo sh -c 'echo /opt/homebrew/bin/fish >> /etc/shells'
+chsh -s /opt/homebrew/bin/fish
 ```
 
 ## :neckbeard: Editor
 
-I like it fast, colorful and extendable, so there is only one choice here:
-[neovim](https://neovim.io/).
+I like it fast, colorful and extendable, so there is only one choice here: [neovim](https://neovim.io/).
 
 ```bash
 brew install neovim
@@ -143,9 +159,7 @@ brew install --cask vscodium
 
 ## :zap: Speed up system tools
 
-The rise of [rust](https://www.rust-lang.org/) and its recent _adoption_ to the
-UNIX kernel brings us more and more improved rewrites of system tools. Some of
-them are great replacements already.
+The rise of [rust](https://www.rust-lang.org/) and its recent _adoption_ to the UNIX kernel brings us more and more improved rewrites of system tools. Some of them are great replacements already.
 
 ```bash
 brew install exa # ls replacement https://github.com/ogham/exa
@@ -170,8 +184,7 @@ brew install fd # find replacement https://github.com/sharkdp/fd
 brew install stow
 ```
 
-Thats a good place for some
-[Docker](https://docs.docker.com/docker-for-mac/install/).
+Thats a good place for some [Docker](https://docs.docker.com/docker-for-mac/install/).
 
 [Rectangle](https://github.com/rxhanson/Rectangle) as snappy window manager:
 
@@ -203,22 +216,19 @@ brew install --cask bloomrpc
 brew install --cask mark-text
 ```
 
-[KIND](https://kind.sigs.k8s.io/docs/user/quick-start/) for local k8s
-development
+[KIND](https://kind.sigs.k8s.io/docs/user/quick-start/) for local k8s development
 
 ```bash
 brew install kind
 ```
 
-[kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#install-with-homebrew-on-macos)
-k8s command-line tool
+[kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#install-with-homebrew-on-macos) k8s command-line tool
 
 ```bash
 brew install kubectl
 ```
 
-[kustomize](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/)
-for customizing k8s resource configuration free from templates and DSLs
+[kustomize](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/) for customizing k8s resource configuration free from templates and DSLs
 
 ```bash
 brew install kustomize

@@ -1,6 +1,5 @@
 .DS_Store
-nvim/COMMANDS.md
-nvim/KEYS.md
-nvim/plugged
-nvim/sessions
-nvim/plugin
+.config/nnn
+.config/nvim/plugged
+.config/nvim/sessions
+.config/nvim/plugin
