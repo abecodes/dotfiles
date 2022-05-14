@@ -11,15 +11,27 @@ local warnings_fg = get_hex('DiagnosticWarn', 'fg')
 
 require('cokeline').setup({
 	show_if_buffers_are_at_least = 2,
+	-- The default highlight group values.
+  -- The `fg` and `bg` keys are either colors in hexadecimal format or
+  -- functions taking a `buffer` parameter and returning a color in
+  -- hexadecimal format. Similarly, the `style` key is either a string
+  -- containing a comma separated list of items in `:h attr-list` or a
+  -- function returning one.
   default_hl = {
-    focused = {
-      fg = get_hex('Normal', 'fg'),
-      bg = 'NONE',
-    },
-    unfocused = {
-      fg = get_hex('Comment', 'fg'),
-      bg = 'NONE',
-    },
+    -- default: `ColorColumn`'s background color for focused buffers,
+    -- `Normal`'s foreground color for unfocused ones.
+    fg = function (buffer)
+			if buffer.is_focused	then
+				return get_hex('Normal', 'fg')
+			end
+
+			return get_hex('Comment', 'fg')
+		end,
+
+    -- default: `Normal`'s foreground color for focused buffers,
+    -- `ColorColumn`'s background color for unfocused ones.
+    -- default: `Normal`'s foreground color.
+    bg = 'NONE',
   },
 
   components = {
