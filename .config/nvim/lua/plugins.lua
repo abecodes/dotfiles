@@ -170,13 +170,14 @@ return require('packer').startup(function()
 
     -- motion
     use {
-        'phaazon/hop.nvim',
-        config = [[require('plugins.hop.config')]],
-        setup = [[require('plugins.hop.setup')]]
+        'ggandor/lightspeed.nvim',
+        config = [[require('plugins.lightspeed-nvim.config')]],
+        requires = {
+            'tpope/vim-repeat'
+        }
     }
-    use {'rhysd/clever-f.vim', setup = [[require('plugins.clever-f.setup')]]}
     use {
-        --"/Users/abe/Repos/nvim/tabout.nvim",
+        -- "/Users/abe/Repos/nvim/tabout.nvim",
         'abecodes/tabout.nvim',
         config = [[require('plugins.tabout.config')]],
         wants = {'nvim-treesitter'},
