@@ -370,5 +370,3 @@ npm i -g vscode-langservers-extracted
 - [Font-List 2](https://www.programmingfonts.org/)
 
 ## :white_check_mark: todo
-
-- add https://github.com/anishathalye/dotbot support

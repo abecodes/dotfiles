@@ -69,10 +69,9 @@ _G.vim_starify_save_session = function()
     local branch = utils.git_branch()
     local branch = (string.len(branch) == 0 and '' or ('-' .. branch))
 
-    -- return fn.substitute(path . branch, '/', '-', 'g')
-    -- vim.cmd(string.format('SSave! %s', fn.substitute(path .. branch, '/', '-', 'g')))
-    -- vim.cmd('SSave! '.. string.gsub(path .. branch, '/', '-'))
-    vim.cmd('SSave! ' .. string.gsub(path .. branch, '/', '-'))
+    if string.find(branch, "fatal") == false and string.len(branch) > 0 then
+      vim.cmd('SSave! ' .. string.gsub(path .. branch, '/', '-'))
+    end
 end
 
 vim.api.nvim_exec([[
