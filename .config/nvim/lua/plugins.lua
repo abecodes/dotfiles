@@ -234,23 +234,6 @@ return require('packer').startup(function()
         setup = [[require('plugins.coq_nvim.setup')]],
         wants = {'nvim-treesitter'}
     }
-    -- use {
-    --     'hrsh7th/nvim-cmp',
-    --     requires = {
-    --         {'hrsh7th/cmp-nvim-lsp'},
-    --         {'hrsh7th/cmp-path'},
-    --         -- {'lukas-reineke/cmp-rg'},
-    --         {
-    --             'saadparwaiz1/cmp_luasnip',
-    --             requires = {'rafamadriz/friendly-snippets'},
-    --             setup = [[require('plugins.luasnip.setup')]],
-    --         },
-    --         {'L3MON4D3/LuaSnip'},
-    --     },
-    --     config = [[require('plugins.nvim-cmp.config')]],
-    --     setup = [[require('plugins.nvim-cmp.setup')]],
-    -- }
-    -- use 'glepnir/lspsaga.nvim' replacement for lsp visualisation, buggy with efm right now
     use {
         "ThePrimeagen/refactoring.nvim",
         config = [[require('plugins.refactoring.config')]],
