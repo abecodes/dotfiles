@@ -48,9 +48,13 @@ return require('packer').startup(function()
         setup = [[require('plugins.vim-which-key.setup')]],
         config = [[require('plugins.vim-which-key.config')]]
     }
-    use {'mbbill/undotree'}
+    use {
+        'mbbill/undotree',
+        setup = [[require('plugins.undotree.setup')]]
+    }
     use {
         'simrat39/symbols-outline.nvim',
+        setup = [[require('plugins.symbols-outline.setup')]],
         config = [[require('plugins.symbols-outline.config')]]
     }
     use {
@@ -78,7 +82,16 @@ return require('packer').startup(function()
         setup = [[require('plugins.minimap.setup')]],
         disable = true
     }
-
+    use {
+        'TimUntersberger/neogit',
+        requires = 'nvim-lua/plenary.nvim'
+    }
+    use {
+        'ThePrimeagen/harpoon',
+        requires = 'nvim-lua/plenary.nvim',
+        config = [[require('plugins.harpoon.config')]],
+        setup = [[require('plugins.harpoon.setup')]],
+    }
     -- Editor visuals
     use {'machakann/vim-sandwich'}
     use {
@@ -145,6 +158,13 @@ return require('packer').startup(function()
         cmd = {"ZenMode"}
     }
 
+    use {
+        'renerocksai/telekasten.nvim',
+        config = [[require('plugins.telekasten.config')]],
+        setup = [[require('plugins.telekasten.setup')]],
+        wants = {'plenary.nvim', 'telescope.nvim'},
+    }
+
     -- documentation
     use {
         'kkoomen/vim-doge',
@@ -157,7 +177,6 @@ return require('packer').startup(function()
     -- screenshots
     use {
         'segeljakt/vim-silicon',
-        config = [[require('plugins.vim-silicon.config')]],
         setup = [[require('plugins.vim-silicon.setup')]]
     }
 
@@ -175,6 +194,12 @@ return require('packer').startup(function()
         requires = {
             'tpope/vim-repeat'
         }
+    }
+    use {
+        'declancm/cinnamon.nvim',
+        config = [[require('plugins.cinnamon.config')]],
+        setup = [[require('plugins.cinnamon.setup')]],
+        wants = {'plenary.nvim'}
     }
     use {
         -- "/Users/abe/Repos/nvim/tabout.nvim",
@@ -223,6 +248,7 @@ return require('packer').startup(function()
     }
     use {
         'romgrk/nvim-treesitter-context',
+        setup = [[require('plugins.nvim-treesitter-context.setup')]],
         config = [[require('plugins.nvim-treesitter-context.config')]],
         wants = {'nvim-treesitter'}
     }
@@ -285,12 +311,12 @@ return require('packer').startup(function()
         config = [[require('plugins.lualine.config')]],
         wants = {'kyazdani42/nvim-web-devicons', 'SmiteshP/nvim-gps'}
     }
-    use {
-        'noib3/nvim-cokeline',
-        config = [[require('plugins.nvim-cokeline.config')]],
-        setup = [[require('plugins.nvim-cokeline.setup')]],
-        wants = {'kyazdani42/nvim-web-devicons'}
-    }
+    -- use {
+    --     'noib3/nvim-cokeline',
+    --     config = [[require('plugins.nvim-cokeline.config')]],
+    --     setup = [[require('plugins.nvim-cokeline.setup')]],
+    --     wants = {'kyazdani42/nvim-web-devicons'}
+    -- }
 
     -- theme
     use {'ntk148v/vim-horizon', as = 'horizon'}

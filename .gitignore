@@ -3,3 +3,4 @@
 .config/nvim/plugged
 .config/nvim/sessions
 .config/nvim/plugin
+.config/nvim/KEYS.md

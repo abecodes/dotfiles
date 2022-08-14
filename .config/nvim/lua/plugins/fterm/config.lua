@@ -40,4 +40,3 @@ require'FTerm'.setup({
 })
 
 require("plugins.fterm.lazygit")
-require("plugins.fterm.fzf")

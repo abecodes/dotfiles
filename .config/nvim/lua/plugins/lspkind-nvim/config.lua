@@ -36,4 +36,5 @@
 		Constant = '',
 		Struct = ''
 	},
-}) ]] require('lspkind').init()
+}) ]]
+require('lspkind').init()

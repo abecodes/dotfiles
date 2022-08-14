@@ -1,3 +1,4 @@
+-- RUST inline hints
 vim.api.nvim_exec([[
 	augroup LspExtensions
 		autocmd!

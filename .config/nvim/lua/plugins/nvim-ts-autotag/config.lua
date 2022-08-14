@@ -7,4 +7,6 @@
 --     'input', 'keygen', 'link', 'meta', 'param', 'source', 'track', 'wbr','menuitem'
 --   }
 -- }
-require('nvim-ts-autotag').setup {}
+require('nvim-ts-autotag').setup {
+  filetypes = { 'html' , 'javascriptreact', 'typescriptreact' },
+}

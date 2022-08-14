@@ -1,4 +1,4 @@
-alias cat "bat"
+alias cat "bat -pp --theme ansi"
 alias cd "z"
 alias du "dust"
 alias find "fd"
@@ -10,4 +10,3 @@ alias ps "procs"
 alias sed "sd"
 alias nnn "nnn -P p"
 alias ssh "kitty +kitten ssh"
-

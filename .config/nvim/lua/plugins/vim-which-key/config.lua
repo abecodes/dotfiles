@@ -25,4 +25,5 @@ augroup END
 require("plugins.vim-which-key.register")
 
 -- Register which key map
-vim.cmd ':call which_key#register("<,>", "g:which_key_map")'
+vim.cmd ':call which_key#register("<,>", "g:which_key_map", "n")'
+vim.cmd ':call which_key#register("<,>", "g:which_key_map_visual", "v")'

@@ -25,20 +25,43 @@ map('n', "<leader>fb", "<CMD>Telescope buffers<CR>", {silent = true})
 map('n', "<leader>fh", "<CMD>Telescope help_tags<CR>", {silent = true}) ]]
 
 -- Using Lua functions
-map('n', "<leader>e",
+map('n', "<leader>te",
     "<CMD>lua require 'telescope'.extensions.file_browser.file_browser()<CR>", {silent = true})
-map('n', "<leader>ff", "<CMD>lua require('telescope.builtin').find_files()<CR>",
+map('n', "<leader>tf", "<CMD>lua require('telescope.builtin').find_files()<CR>",
     {silent = true})
-map('n', "<leader>fg", "<CMD>lua require('telescope.builtin').live_grep()<CR>",
+map('n', "<leader>tF", "<CMD>lua require('telescope.builtin').live_grep()<CR>",
     {silent = true})
-map('n', "<leader>fb", "<CMD>lua require('telescope.builtin').buffers()<CR>",
+map('n', "<leader>tb", "<CMD>lua require('telescope.builtin').buffers()<CR>",
     {silent = true})
-map('n', "<leader>fh", "<CMD>lua require('telescope.builtin').help_tags()<CR>",
+map('n', "<leader>tB", "<CMD>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>",
+		{silent = true})
+map('n', "<leader>tg", "<CMD>lua require('telescope.builtin').git_files()<CR>",
+		{silent = true})
+map('n', "<leader>th", "<CMD>lua require('telescope.builtin').help_tags()<CR>",
     {silent = true})
+map('n', "<leader>tt", "<CMD>lua require('telescope.builtin').treesitter()<CR>",
+		{silent = true})
+map('n', "<leader>ts", "<CMD>lua require('telescope.builtin').symbols()<CR>",
+		{silent = true})
+map('n', "<leader>tq", "<CMD>lua require('telescope.builtin').quickfix()<CR>",
+		{silent = true})
 -- remap to open the Telescope refactoring menu in visual mode
 map(
-	"v",
-	"<leader>rr",
+	"n",
+	"<leader>tr",
 	"<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>",
+	{ noremap = true }
+)
+map(
+	"v",
+	"<leader>tr",
+	"<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>",
+	{ noremap = true }
+)
+-- remap to open the Telescope refactoring menu in visual mode
+map(
+	"n",
+	"<leader>tm",
+	"<CMD>Telescope harpoon marks<CR>",
 	{ noremap = true }
 )

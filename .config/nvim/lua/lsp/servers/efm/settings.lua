@@ -2,8 +2,8 @@ local nvim_lsp = require('lspconfig')
 local custom_attach = require('lsp.utils.attach')
 local prettier = require 'lsp.servers.efm.formatters.prettier'
 local eslint = require 'lsp.servers.efm.linters.eslint'
-local clippy = require 'lsp.servers.efm.linters.clippy'
-local rustfmt = require 'lsp.servers.efm.formatters.rustfmt'
+-- local clippy = require 'lsp.servers.efm.linters.clippy'
+-- local rustfmt = require 'lsp.servers.efm.formatters.rustfmt'
 
 local languages = {
     typescript = {prettier, eslint},

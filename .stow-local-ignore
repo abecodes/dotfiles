@@ -1,3 +1,5 @@
+.DS_Store
+
 \.git
 \.gitignore
 /assets
@@ -5,4 +7,3 @@
 
 ^/LICENSE
 ^/README.*
-

@@ -1,6 +1,4 @@
 local custom_attach = function(client, bufnr)
-    -- local buf_map = vim.api.nvim_buf_set_keymap
-    -- local buf_set_option = vim.api.nvim_buf_set_option
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
     local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -20,47 +18,38 @@ local custom_attach = function(client, bufnr)
     vim.cmd("command! LspImplementation lua vim.lsp.buf.implementation()")
     vim.cmd("command! LspDiagPrev lua vim.diagnostic.goto_prev()")
     vim.cmd("command! LspDiagNext lua vim.diagnostic.goto_next()")
-    vim.cmd(
-        "command! LspDiagLine lua vim.diagnostic.open_float()")
+    vim.cmd("command! LspDiagLine lua vim.diagnostic.open_float()")
     vim.cmd("command! LspSignatureHelp lua vim.lsp.buf.signature_help()")
-    buf_set_keymap("n", "gd", ":LspDef<CR>", opts)
-    buf_set_keymap("n", "gr", ":LspRename<CR>", opts)
-    buf_set_keymap("n", "gR", ":LspRefs<CR>", opts)
-    buf_set_keymap("n", "gy", ":LspTypeDef<CR>", opts)
-    buf_set_keymap("n", "K", ":LspHover<CR>", opts)
-    buf_set_keymap("n", "[a", ":LspDiagPrev<CR>", opts)
-    buf_set_keymap("n", "]a", ":LspDiagNext<CR>", opts)
-    buf_set_keymap("n", "ga", ":LspCodeAction<CR>", opts)
-    buf_set_keymap("n", "<Leader>a", ":LspDiagLine<CR>", opts)
-    buf_set_keymap("i", "<C-x><C-x>", "<Cmd>LspSignatureHelp<CR>",
-            opts)
-
-    -- if client.resolved_capabilities.document_formatting then
-    --     vim.api.nvim_exec([[
-	-- 		 augroup LspAutocommands
-	-- 			autocmd! * <buffer>
-	-- 			autocmd BufWritePost <buffer> LspFormatting
-	-- 		 augroup END
-	-- 		 ]], true)
-    -- end
+    buf_set_keymap("n", "gd", "<Cmd>LspDef<CR>", opts)
+    buf_set_keymap("n", "gr", "<Cmd>LspRename<CR>", opts)
+    buf_set_keymap("n", "gR", "<Cmd>LspRefs<CR>", opts)
+    buf_set_keymap("n", "gy", "<Cmd>LspTypeDef<CR>", opts)
+    buf_set_keymap("n", "K", "<Cmd>LspHover<CR>", opts)
+    buf_set_keymap("n", "[a", "<Cmd>LspDiagPrev<CR>", opts)
+    buf_set_keymap("n", "]a", "<Cmd>LspDiagNext<CR>", opts)
+    buf_set_keymap("n", "ga", "<Cmd>LspCodeAction<CR>", opts)
+    buf_set_keymap("n", "<Leader>a", "<Cmd>LspDiagLine<CR>", opts)
+    buf_set_keymap("i", "<C-x><C-x>", "<Cmd>LspSignatureHelp<CR>", opts)
 
     -- Set some keybinds conditional on server capabilities
     if client.resolved_capabilities.document_formatting then
-        buf_set_keymap("n", "ff", ":LspFormatting<CR>", opts)
-        vim.api.nvim_exec([[
-			 augroup LspAutocommands
-				autocmd! * <buffer>
-				autocmd BufWritePost <buffer> LspFormatting
-			 augroup END
-			 ]], true)
+        buf_set_keymap("n", "ff", "<Cmd>LspFormatting<CR>", opts)
+        -- TODO: use BufWritePre for formatting and uncomment
+        -- vim.api.nvim_exec([[
+		-- 	 augroup LspAutocommands
+		-- 		autocmd! * <buffer>
+		-- 		autocmd BufWritePost <buffer> LspFormatting
+		-- 	 augroup END
+		-- 	 ]], true)
     elseif client.resolved_capabilities.document_range_formatting then
-        buf_set_keymap("n", "ff", ":LspRangeFormatting<CR>", opts)
-        vim.api.nvim_exec([[
-			 augroup LspAutocommands
-				autocmd! * <buffer>
-				autocmd BufWritePost <buffer> LspRangeFormatting
-			 augroup END
-			 ]], true)
+        buf_set_keymap("n", "ff", "<Cmd>LspRangeFormatting<CR>", opts)
+        -- TODO: use BufWritePre for formatting and uncomment
+        -- vim.api.nvim_exec([[
+		-- 	 augroup LspAutocommands
+		-- 		autocmd! * <buffer>
+		-- 		autocmd BufWritePost <buffer> LspRangeFormatting
+		-- 	 augroup END
+		-- 	 ]], true)
     end
 
     -- Set autocommands conditional on server_capabilities

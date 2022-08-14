@@ -92,6 +92,7 @@ vim.api.nvim_exec([[
 
 -- add new empty line at eof
 -- getbufline as alternative to getline
+-- TODO: remove lines if there are more than one
 vim.api.nvim_exec([[
 	augroup AbeNewline
 		autocmd!

@@ -1,4 +1,5 @@
 function update
+  brew upgrade
   brew upgrade --cask --greedy
   npm update -g
   go install mvdan.cc/gofumpt@latest
