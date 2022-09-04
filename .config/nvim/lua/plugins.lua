@@ -84,6 +84,8 @@ return require('packer').startup(function()
     }
     use {
         'TimUntersberger/neogit',
+        config = [[require('plugins.neogit.config')]],
+        setup = [[require('plugins.neogit.setup')]],
         requires = 'nvim-lua/plenary.nvim'
     }
     use {
@@ -93,7 +95,7 @@ return require('packer').startup(function()
         setup = [[require('plugins.harpoon.setup')]],
     }
     -- Editor visuals
-    use {'machakann/vim-sandwich'}
+    use {'machakann/vim-sandwich'} -- maybe use nvim-surround
     use {
         'windwp/nvim-autopairs',
         config = [[require('plugins.nvim-autopairs.config')]],
@@ -157,12 +159,17 @@ return require('packer').startup(function()
         },
         cmd = {"ZenMode"}
     }
-
     use {
         'renerocksai/telekasten.nvim',
         config = [[require('plugins.telekasten.config')]],
         setup = [[require('plugins.telekasten.setup')]],
         wants = {'plenary.nvim', 'telescope.nvim'},
+    }
+    use {
+        'phaazon/mind.nvim',
+        branch = 'v2',
+        requires = { 'nvim-lua/plenary.nvim' },
+        config = [[require('plugins.mind.config')]],
     }
 
     -- documentation

@@ -14,13 +14,13 @@ vim.cmd 'highlight default link WhichKeyGroup     Identifier'
 vim.cmd 'highlight default link WhichKeyDesc      Function'
 
 -- Hide status line
-vim.api.nvim_exec([[
-augroup VimWhichKey
-  autocmd! FileType which_key
-	autocmd FileType which_key set laststatus=0 noshowmode noruler
-  autocmd BufLeave <buffer> set laststatus=2 noshowmode ruler
-augroup END
-]], true)
+-- vim.api.nvim_exec([[
+-- augroup VimWhichKey
+--   autocmd! FileType which_key
+-- 	autocmd FileType which_key set laststatus=0 noshowmode noruler
+--   autocmd BufLeave <buffer> set laststatus=2 noshowmode ruler
+-- augroup END
+-- ]], true)
 
 require("plugins.vim-which-key.register")
 

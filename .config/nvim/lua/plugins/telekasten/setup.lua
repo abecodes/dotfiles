@@ -5,79 +5,79 @@ map(
 	"n",
 	"<leader>z",
 	"<cmd>lua require('telekasten').panel()<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"n",
 	"<leader>zf",
 	"<cmd>lua require('telekasten').find_notes()<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"n",
 	"<leader>zF",
 	"<cmd>lua require('telekasten').search_notes()<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"n",
 	"<leader>zl",
 	"<cmd>lua require('telekasten').follow_link()<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"n",
 	"<leader>zL",
 	"<cmd>lua require('telekasten').find_friends()<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"n",
 	"<leader>zn",
 	"<cmd>lua require('telekasten').new_note()<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"n",
 	"<leader>zN",
 	"<cmd>lua require('telekasten').new_templated_note()<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"n",
 	"<leader>zy",
 	"<cmd>lua require('telekasten').yank_notelink()<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"n",
 	"<leader>zt",
 	"<cmd>lua require('telekasten').show_tags()<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"n",
 	"<leader>zb",
 	"<cmd>lua require('telekasten').show_backlinks()<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"n",
 	"<leader>zr",
 	"<cmd>lua require('telekasten').rename_note()<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"n",
 	"<leader>zi",
 	"<cmd>lua require('telekasten').paste_img_and_link()<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"n",
 	"<leader>zI",
 	"<cmd>lua require('telekasten').insert_img_link({ i=true })<CR>",
-	{ noremap = true }
+	opts
 )
 
 
@@ -85,13 +85,13 @@ map(
 	"i",
 	"<leader>[",
 	"<cmd>lua require('telekasten').insert_link({ i=true })<CR>",
-	{ noremap = true }
+	opts
 )
 map(
 	"i",
 	"<leader>#",
 	"<cmd>lua require('telekasten').show_tags({ i=true })<CR>",
-	{ noremap = true }
+	opts
 )
 -- nnoremap <leader>zd :lua require('telekasten').find_daily_notes()<CR>
 -- nnoremap <leader>zT :lua require('telekasten').goto_today()<CR>

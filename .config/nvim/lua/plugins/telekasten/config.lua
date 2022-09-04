@@ -20,6 +20,7 @@ require('telekasten').setup({
     -- dir name (absolute path or subdir name)
     -- or nil if pasted images shouldn't go into a special subdir
     image_subdir = "img",
+    media_previewer = "viu-previewer",
     -- markdown file extension
     extension    = ".md",
     -- Generate note filenames. One of:
