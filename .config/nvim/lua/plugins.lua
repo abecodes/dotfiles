@@ -215,6 +215,10 @@ return require('packer').startup(function()
         wants = {'nvim-treesitter'},
         after = {'coq_nvim'}
     }
+    use {
+        'abecodes/gox.nvim',
+        config = [[require('plugins.gox.config')]]
+    }
 
     -- lsp
     use {
