@@ -4,7 +4,7 @@ local custom_attach = require('lsp.utils.attach')
 return {
     on_attach = function(client, bufnr)
 			-- disable formatting, handled with prettierd via efm ls
-			client.resolved_capabilities.document_formatting = false
+			client.server_capabilities.document_formatting = false
 			custom_attach(client, bufnr)
 		end,
     cmd = {'vscode-html-language-server', '--stdio'},

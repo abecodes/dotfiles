@@ -12,7 +12,7 @@ vim.api.nvim_exec([[
 return {
     on_attach = function(client, bufnr)
 			-- disable formatting, handled with prettierd via efm ls
-        client.resolved_capabilities.document_formatting = false
+        client.server_capabilities.document_formatting = false
         vim.api.nvim_buf_set_keymap(
 					bufnr, 'n', 'go',
 					':LspOrganizeImports<CR>',

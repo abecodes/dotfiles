@@ -32,7 +32,7 @@ local custom_attach = function(client, bufnr)
     buf_set_keymap("i", "<C-x><C-x>", "<Cmd>LspSignatureHelp<CR>", opts)
 
     -- Set some keybinds conditional on server capabilities
-    if client.resolved_capabilities.document_formatting then
+    if client.server_capabilities.document_formatting then
         buf_set_keymap("n", "ff", "<Cmd>LspFormatting<CR>", opts)
         -- TODO: use BufWritePre for formatting and uncomment
         -- vim.api.nvim_exec([[
@@ -41,7 +41,7 @@ local custom_attach = function(client, bufnr)
 		-- 		autocmd BufWritePost <buffer> LspFormatting
 		-- 	 augroup END
 		-- 	 ]], true)
-    elseif client.resolved_capabilities.document_range_formatting then
+    elseif client.server_capabilities.document_range_formatting then
         buf_set_keymap("n", "ff", "<Cmd>LspRangeFormatting<CR>", opts)
         -- TODO: use BufWritePre for formatting and uncomment
         -- vim.api.nvim_exec([[
@@ -56,7 +56,7 @@ local custom_attach = function(client, bufnr)
     -- hi LspReferenceRead cterm=bold ctermbg=DarkMagenta guibg=LightYellow
     -- hi LspReferenceText cterm=bold ctermbg=DarkMagenta guibg=LightYellow
     -- hi LspReferenceWrite cterm=bold ctermbg=DarkMagenta guibg=LightYellow
-    if client.resolved_capabilities.document_highlight then
+    if client.server_capabilities.document_highlight then
         vim.api.nvim_exec([[
         hi def link LspReferenceText CursorLine
         hi def link LspReferenceWrite CursorLine
