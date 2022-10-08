@@ -8,7 +8,7 @@ local custom_attach = function(client, bufnr)
 
     vim.cmd("command! LspDef lua vim.lsp.buf.definition()")
     -- vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting()")
-    vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting_sync(nil, 1000)")
+    vim.cmd("command! LspFormatting lua vim.lsp.buf.format(nil, 1000)")
     vim.cmd("command! LspRangeFormatting lua vim.lsp.buf.range_formatting()")
     vim.cmd("command! LspCodeAction lua vim.lsp.buf.code_action()")
     vim.cmd("command! LspHover lua vim.lsp.buf.hover()")

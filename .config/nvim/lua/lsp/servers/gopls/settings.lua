@@ -6,7 +6,7 @@ local nvim_lsp = require('lspconfig')
 -- autocmd BufWritePre *.go lua require"lsp.servers.gopls.functions.organize_imports"(1000)
 vim.api.nvim_exec([[
     augroup GoImports
-        autocmd BufWritePre *.go lua vim.lsp.buf.formatting_sync(nil, 1000)
+        autocmd BufWritePre *.go lua vim.lsp.buf.format(nil, 1000)
     augroup END
 ]], true)
 

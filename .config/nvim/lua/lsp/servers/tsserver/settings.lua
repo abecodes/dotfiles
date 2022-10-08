@@ -5,7 +5,7 @@ local organize_imports = require('lsp.servers.tsserver.functions.organize_import
 vim.api.nvim_exec([[
 	augroup TsImports
 		autocmd BufWritePre *.ts,*.tsx,*.js,*.jsx lua require"lsp.servers.tsserver.functions.organize_imports"()
-		autocmd BufWritePre *.ts,*.tsx,*.js,*.jsx lua vim.lsp.buf.formatting_sync(nil, 1000)
+		autocmd BufWritePre *.ts,*.tsx,*.js,*.jsx lua vim.lsp.buf.format(nil, 1000)
 	augroup END
 ]], true)
 
