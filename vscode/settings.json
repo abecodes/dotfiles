@@ -29,14 +29,14 @@
 	"[typescriptreact]": {
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
-  "debug.console.fontFamily": "Rec Mono Duotone", // OperatorMono Nerd Font Book
+  "debug.console.fontFamily": "Cartograph CF", // "Rec Mono Duotone", // OperatorMono Nerd Font Book
 	"debug.console.fontSize": 20,
 	"editor.bracketPairColorization.enabled": true,
-	"editor.codeLensFontFamily": "Rec Mono Duotone", // OperatorMono Nerd Font Book
+	"editor.codeLensFontFamily": "Cartograph CF", // "Rec Mono Duotone", // OperatorMono Nerd Font Book
 	"editor.cursorStyle": "line",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-	"editor.fontFamily": "Rec Mono Duotone", // Operator SSm
-	"editor.fontLigatures": true,
+	"editor.fontFamily": "Cartograph CF", // "Rec Mono Duotone", // Operator SSm
+	"editor.fontLigatures": "'ss05', 'calt', 'liga', 'zero'",
 	"editor.fontSize": 26,
 	"editor.formatOnSave": true,
 	"editor.guides.bracketPairs": "active",
@@ -107,7 +107,6 @@
 		"*.{tsx?, jsx?, json}"
 	],
   "prettier.endOfLine": "lf",
-	"prettier.prettierPath": "/usr/local/lib/node_modules/@fsouza/prettierd/dist/prettierd.js",
 	"prettier.trailingComma": "es5",
 	"prettier.useTabs": true,
 	"telemetry.enableCrashReporter": false,
@@ -115,7 +114,7 @@
 	"telemetry.telemetryLevel": "off",
 	"terminal.external.osxExec": "kitty.app",
 	"terminal.integrated.copyOnSelection": true,
-  "terminal.integrated.fontFamily": "Rec Mono Duotone", // OperatorMono Nerd Font Book
+  "terminal.integrated.fontFamily": "Cartograph CF", //"Rec Mono Duotone", // OperatorMono Nerd Font Book
 	"terminal.integrated.fontSize": 24,
   "todo-tree.filtering.excludeGlobs": [
 		"**/node_modules",
@@ -170,4 +169,3 @@
 	"workbench.colorTheme": "Horizon Italic",
 	"workbench.iconTheme": "material-icon-theme"
 }
-
