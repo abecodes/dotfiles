@@ -39,7 +39,7 @@ stow -t ~/ /
 ```
 
 ```bash
-brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu
+brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go golangci-lint node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu
 
 brew install --cask rectangle mark-text bloomrpc vscodium pritunl librewolf gaphor motrix mongodb-compass
 
@@ -55,15 +55,7 @@ https://github.com/dexpota/kitty-themes
 curl -Ls https://raw.githubusercontent.com/jarun/nnn/master/plugins/getplugs | sh
 
 # additional golang tooling
-go install mvdan.cc/gofumpt@latest
-go install golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@latest
-go install github.com/securego/gosec/v2/cmd/gosec@latest
-go install github.com/fdaines/spm-go@latest
-go install github.com/go-critic/go-critic/cmd/gocritic@latest
-go install github.com/praetorian-inc/gokart@latest
-go install github.com/quasilyte/go-consistent@latest
-go install goa.design/model/cmd/mdl@latest
-go install github.com/divan/expvarmon@latest
+go install mvdan.cc/gofumpt@latest golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@latest github.com/securego/gosec/v2/cmd/gosec@latest github.com/fdaines/spm-go@latest github.com/go-critic/go-critic/cmd/gocritic@latest github.com/praetorian-inc/gokart@latest github.com/quasilyte/go-consistent@latest goa.design/model/cmd/mdl@latest github.com/divan/expvarmon@latest
 
 # fzf shell bindings
 $(brew --prefix)/opt/fzf/install
@@ -335,6 +327,8 @@ go install goa.design/model/cmd/mdl@latest
 go install github.com/divan/expvarmon@latest
 # linter for the Go programming language (https://staticcheck.io/)
 brew install staticcheck
+# [golangci-lint](https://golangci-lint.run) is a colleltion of go linters and code checkers
+brew install golangci-lint
 # Rust
 # rust-analyzer is needed as lsp for nvim
 # llvm is needed for nvim dap debugging
