@@ -209,7 +209,6 @@ return require('packer').startup(function()
         wants = {'plenary.nvim'}
     }
     use {
-        -- "/Users/abe/Repos/nvim/tabout.nvim",
         'abecodes/tabout.nvim',
         config = [[require('plugins.tabout.config')]],
         wants = {'nvim-treesitter'},
@@ -218,6 +217,10 @@ return require('packer').startup(function()
     use {
         'abecodes/gox.nvim',
         config = [[require('plugins.gox.config')]]
+    }
+    use {
+        'abecodes/headache.nvim',
+        config = [[require('plugins.headache.config')]]
     }
 
     -- lsp
