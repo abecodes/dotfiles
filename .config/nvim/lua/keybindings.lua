@@ -34,6 +34,12 @@ map('t', '<A-l>', '<c-\\><c-n><C-w>l', {silent = true})
 map('v', '<', '<gv', {silent = true})
 map('v', '>', '>gv', {silent = true})
 
+-- lines
+map('n', '<A-Up>', ':m -2<CR>', {silent = true})
+map('n', '<A-Down>', ':m +1<CR>', {silent = true})
+map('v', '<A-Up>', ':m -2<CR>', {silent = true})
+map('v', '<A-Down>', ':m +1<CR>', {silent = true})
+
 -- leader
 --- search and replace in current buffer
 map('n', '<Leader>r', ':%s///g<Left><Left>', {silent = true})
