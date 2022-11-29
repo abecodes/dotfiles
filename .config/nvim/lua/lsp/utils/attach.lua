@@ -34,22 +34,8 @@ local custom_attach = function(client, bufnr)
     -- Set some keybinds conditional on server capabilities
     if client.server_capabilities.document_formatting then
         buf_set_keymap("n", "ff", "<Cmd>LspFormatting<CR>", opts)
-        -- TODO: use BufWritePre for formatting and uncomment
-        -- vim.api.nvim_exec([[
-		-- 	 augroup LspAutocommands
-		-- 		autocmd! * <buffer>
-		-- 		autocmd BufWritePost <buffer> LspFormatting
-		-- 	 augroup END
-		-- 	 ]], true)
     elseif client.server_capabilities.document_range_formatting then
         buf_set_keymap("n", "ff", "<Cmd>LspRangeFormatting<CR>", opts)
-        -- TODO: use BufWritePre for formatting and uncomment
-        -- vim.api.nvim_exec([[
-		-- 	 augroup LspAutocommands
-		-- 		autocmd! * <buffer>
-		-- 		autocmd BufWritePost <buffer> LspRangeFormatting
-		-- 	 augroup END
-		-- 	 ]], true)
     end
 
     -- Set autocommands conditional on server_capabilities

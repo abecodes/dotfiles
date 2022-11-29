@@ -1,23 +1,15 @@
-local map = require'utils'.map
+local map = require'utils'.map_key
 
 vim.g.mapleader = ','
 
 -- bind terminal ESC to exit terminal mode
 map('t', '<Esc>', '<C-\\><C-n>', {silent = true})
 
--- bind leader + c to show/hide cursorline
-map('n', '<Leader>c', '<cmd>set cursorline!<CR>', {silent = true})
-
 -- navigate the quickfix window
 map('n', 'q[', ':cn<CR>', {silent = true})
 map('n', 'q]', ':cp<CR>', {silent = true})
 map('n', 'qo', ':copen<CR>', {silent = true})
 map('n', 'qc', ':ccl<CR>', {silent = true})
-
--- search and replace in current buffer
-map('n', '<Leader>r', ':%s///g<Left><Left>', {silent = true})
-map('n', '<Leader>rl', ':s///g<Left><Left>', {silent = true})
-map('n', '<Leader>rc', ':%s///gc<Left><Left><Left>', {silent = true})
 
 -- better split movement
 -- TODO: create mapAll util function
@@ -41,3 +33,14 @@ map('t', '<A-l>', '<c-\\><c-n><C-w>l', {silent = true})
 -- indent
 map('v', '<', '<gv', {silent = true})
 map('v', '>', '>gv', {silent = true})
+
+-- leader
+--- search and replace in current buffer
+map('n', '<Leader>r', ':%s///g<Left><Left>', {silent = true})
+map('n', '<Leader>rl', ':s///g<Left><Left>', {silent = true})
+map('n', '<Leader>rc', ':%s///gc<Left><Left><Left>', {silent = true})
+-- show/hide cursorline
+map('n', '<Leader>c', '<cmd>set cursorline!<CR>', {silent = true})
+--- screenshots
+map('n', "<leader>S", "<CMD>Screenshot<CR>", {silent = true})
+map('v', "<leader>S", ":'<,'>Screenshot<CR>", {silent = true})

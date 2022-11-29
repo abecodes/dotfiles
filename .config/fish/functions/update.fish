@@ -11,4 +11,5 @@ function update
   go install github.com/quasilyte/go-consistent@latest
   go install goa.design/model/cmd/mdl@master
   go install github.com/divan/expvarmon@latest
+  go install github.com/segmentio/golines@latest
 end

@@ -1,4 +1,5 @@
-local utils = require'utils'
+local utils = require('utils')
+local hooks = require('hooks.hooks')
 local g = vim.g
 local fn = vim.fn
 
@@ -62,7 +63,7 @@ g.startify_custom_header = utils.split(header, "\n")
   return fn.substitute(path . branch, '/', '-', 'g')
 end ]]
 
-_G.vim_starify_save_session = function()
+local vim_starify_save_session = function()
     local path = fn.fnamemodify(fn.getcwd(), ':~:t')
     local path = (string.len(path) == 0 and 'no-project' or path)
     -- local branch = fn['gitbranch#name']()
@@ -74,10 +75,36 @@ _G.vim_starify_save_session = function()
     end
 end
 
-vim.api.nvim_exec([[
-  augroup VimStartify
-    autocmd VimEnter * if !argc() | Startify | wincmd w | endif
-    autocmd VimLeavePre * silent :lua vim_starify_save_session()
-    autocmd User Startified setlocal buflisted
-  augroup END
-]], true)
+hooks.register(
+  '*',
+  'VimEnter',
+  {
+    function()
+      vim.cmd('if !argc() | Startify | wincmd w | endif')
+    end
+  }
+)
+hooks.register(
+  '*',
+  'VimLeavePre',
+  {
+    vim_starify_save_session
+  }
+)
+hooks.register(
+  'Startified',
+  'User',
+  {
+    function()
+      vim.cmd('setlocal buflisted')
+    end
+  }
+)
+
+-- vim.api.nvim_exec([[
+--   augroup VimStartify
+--     autocmd VimEnter * if !argc() | Startify | wincmd w | endif
+--     autocmd VimLeavePre * silent :lua vim_starify_save_session()
+--     autocmd User Startified setlocal buflisted
+--   augroup END
+-- ]], true)

@@ -1,3 +1,4 @@
+local hooks = require('hooks.hooks')
 local g = vim.g
 
 -- g:minimap_auto_start	0	if set minimap will show at startup
@@ -30,13 +31,24 @@ g.minimap_git_colors = 1
 vim.cmd 'hi MinimapCurrentLine ctermfg=Green guifg=#50FA7B guibg=#32302f'
 g.minimap_highlight = 'MinimapCurrentLine'
 
-vim.api.nvim_exec([[
-	augroup Minimap
-		autocmd!
-		autocmd BufReadPost * Minimap
-		autocmd TextChangedI * MinimapRefresh
-		autocmd InsertEnter,InsertLeave * MinimapRefresh
-		autocmd BufAdd * MinimapClose
-	augroup END
-]], true)
-
+hooks.register(
+	'*',
+	'BufReadPost, InsertLeave',
+	{
+		vim.cmd('Minimap')
+	}
+)
+hooks.register(
+	'*',
+	'TextChangedI',
+	{
+		vim.cmd('MinimapRefresh')
+	}
+)
+hooks.register(
+	'*',
+	'BufAdd, InsertEnter',
+	{
+		vim.cmd('MinimapClose')
+	}
+)

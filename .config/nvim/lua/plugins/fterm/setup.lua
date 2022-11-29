@@ -1,4 +1,4 @@
-local map = require'utils'.map
+local map = require'utils'.map_key
 local opts = { noremap = true, silent = true }
 
 map('n', '<leader>T', '<CMD>lua require("FTerm").toggle()<CR>', opts)

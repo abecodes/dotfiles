@@ -1,4 +1,4 @@
-local map = require'utils'.map
+local map = require'utils'.map_key
 
 map("n", "<leader>x", "<cmd>TroubleToggle<cr>", {silent = true})
 map("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>", {silent = true})

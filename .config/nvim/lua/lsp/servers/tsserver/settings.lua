@@ -1,13 +1,18 @@
 local nvim_lsp = require('lspconfig')
 local custom_attach = require('lsp.utils.attach')
 local organize_imports = require('lsp.servers.tsserver.functions.organize_imports')
+local hooks = require('hooks.hooks')
 
-vim.api.nvim_exec([[
-	augroup TsImports
-		autocmd BufWritePre *.ts,*.tsx,*.js,*.jsx lua require"lsp.servers.tsserver.functions.organize_imports"()
-		autocmd BufWritePre *.ts,*.tsx,*.js,*.jsx lua vim.lsp.buf.format(nil, 1000)
-	augroup END
-]], true)
+hooks.register(
+	'*.ts,*.tsx,*.js,*.jsx',
+	'BufWritePre',
+	{
+		organize_imports,
+		function()
+			vim.lsp.buf.format(nil, 1000)
+		end
+	}
+)
 
 return {
     on_attach = function(client, bufnr)

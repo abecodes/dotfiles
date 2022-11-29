@@ -1,8 +1,8 @@
 local utils = require 'utils'
 
--- utils.map('x', "<S-s>", "<Cmd>'<,'>Silicon<CR>", {silent = true})
-utils.map('n', "<leader>S", "<CMD>Silicon<CR>", {silent = true})
-utils.map('v', "<leader>S", ":'<,'> Silicon<CR>", {silent = true})
+-- utils.map_key('x', "<S-s>", "<Cmd>'<,'>Silicon<CR>", {silent = true})
+-- utils.map_key('n', "<leader>S", "<CMD>Silicon<CR>", {silent = true})
+-- utils.map_key('v', "<leader>S", ":'<,'> Silicon<CR>", {silent = true})
 
 vim.g.silicon = {
     theme = '~/.config/bat/themes/Horizon.tmTheme',

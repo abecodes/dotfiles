@@ -1,4 +1,4 @@
-local map = require'utils'.map
+local map = require'utils'.map_key
 
 -- see custom lsp on attach function
 -- maybe move everything to here

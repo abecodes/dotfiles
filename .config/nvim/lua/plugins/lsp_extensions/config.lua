@@ -1,8 +1,23 @@
+local hooks = require('hooks.hooks')
+
 -- RUST inline hints
-vim.api.nvim_exec([[
-	augroup LspExtensions
-		autocmd!
-		autocmd BufHidden,BufLeave,InsertEnter  *.rs lua require'lsp_extensions.inlay_hints'.clear()
-		autocmd CursorMoved,InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost *.rs lua require'lsp_extensions'.inlay_hints{ prefix = '', highlight = "Comment", enabled = {"TypeHint", "ChainingHint", "ParameterHint"} }
-	augroup END
-]], true)
+hooks.register(
+	'*.rs',
+	'BufHidden,BufLeave,InsertEnter',
+	{
+		require('lsp_extensions.inlay_hints').clear
+	}
+)
+hooks.register(
+	'*.rs',
+	'CursorMoved,InsertLeave,BufEnter,BufWinEnter,TabEnter,BufWritePost',
+	{
+		function()
+			require('lsp_extensions').inlay_hints({
+				prefix = '',
+				highlight = 'Comment',
+				enabled = {'TypeHint', 'ChainingHint', 'ParameterHint'}
+			})
+		end
+	}
+)

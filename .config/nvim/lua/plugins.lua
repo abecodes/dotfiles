@@ -41,7 +41,7 @@ return require('packer').startup(function()
     -- Editor components
     use {
         'mhinz/vim-startify',
-        config = [[require('plugins.vim-startify.config')]]
+        config = [[require('plugins.vim-startify.config')]],
     }
     use {
         'liuchengxu/vim-which-key',
@@ -147,7 +147,8 @@ return require('packer').startup(function()
     }
     use 'brooth/far.vim'
 
-    -- writing
+    -- writing/reading
+    use 'nullchilly/fsread.nvim'
     use {
         'folke/zen-mode.nvim',
         config = [[require('plugins.zen-mode.config')]],
@@ -181,12 +182,6 @@ return require('packer').startup(function()
         end, ]]
     }
 
-    -- screenshots
-    use {
-        'segeljakt/vim-silicon',
-        setup = [[require('plugins.vim-silicon.setup')]]
-    }
-
     -- comments
     use {
         'tpope/vim-commentary',
@@ -214,21 +209,13 @@ return require('packer').startup(function()
         wants = {'nvim-treesitter'},
         after = {'coq_nvim'}
     }
-    use {
-        'abecodes/gox.nvim',
-        config = [[require('plugins.gox.config')]]
-    }
-    use {
-        'abecodes/headache.nvim',
-        config = [[require('plugins.headache.config')]]
-    }
 
     -- lsp
     use {
         'neovim/nvim-lspconfig',
         config = [[require('plugins.nvim-lspconfig.config')]],
         setup = [[require('plugins.nvim-lspconfig.setup')]],
-        wants = {'nvim-treesitter', 'coq_nvim'}
+        wants = {'nvim-treesitter', 'coq_nvim'},
     }
     use {
         'nvim-treesitter/nvim-treesitter',
@@ -325,12 +312,6 @@ return require('packer').startup(function()
         config = [[require('plugins.lualine.config')]],
         wants = {'kyazdani42/nvim-web-devicons', 'SmiteshP/nvim-gps'}
     }
-    -- use {
-    --     'noib3/nvim-cokeline',
-    --     config = [[require('plugins.nvim-cokeline.config')]],
-    --     setup = [[require('plugins.nvim-cokeline.setup')]],
-    --     wants = {'kyazdani42/nvim-web-devicons'}
-    -- }
 
     -- theme
     use {'ntk148v/vim-horizon', as = 'horizon'}

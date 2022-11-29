@@ -1,4 +1,4 @@
-local map = require'utils'.map
+local map = require'utils'.map_key
 local opts = { noremap = true, silent = true }
 
 map('n', 'hm', '<CMD>lua require("harpoon.mark").add_file()<CR>', opts)

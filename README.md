@@ -55,7 +55,7 @@ https://github.com/dexpota/kitty-themes
 curl -Ls https://raw.githubusercontent.com/jarun/nnn/master/plugins/getplugs | sh
 
 # additional golang tooling
-go install mvdan.cc/gofumpt@latest golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@latest github.com/securego/gosec/v2/cmd/gosec@latest github.com/fdaines/spm-go@latest github.com/go-critic/go-critic/cmd/gocritic@latest github.com/praetorian-inc/gokart@latest github.com/quasilyte/go-consistent@latest goa.design/model/cmd/mdl@latest github.com/divan/expvarmon@latest
+go install mvdan.cc/gofumpt@latest golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@latest github.com/securego/gosec/v2/cmd/gosec@latest github.com/fdaines/spm-go@latest github.com/go-critic/go-critic/cmd/gocritic@latest github.com/praetorian-inc/gokart@latest github.com/quasilyte/go-consistent@latest goa.design/model/cmd/mdl@latest github.com/divan/expvarmon@latest github.com/segmentio/golines@latest
 
 # fzf shell bindings
 $(brew --prefix)/opt/fzf/install
@@ -325,6 +325,8 @@ go install github.com/quasilyte/go-consistent@latest
 go install goa.design/model/cmd/mdl@latest
 # expvarmon to monitor debug endpoints from terminal
 go install github.com/divan/expvarmon@latest
+# golines breaks and indents long lines
+go install github.com/segmentio/golines@latest
 # linter for the Go programming language (https://staticcheck.io/)
 brew install staticcheck
 # [golangci-lint](https://golangci-lint.run) is a colleltion of go linters and code checkers

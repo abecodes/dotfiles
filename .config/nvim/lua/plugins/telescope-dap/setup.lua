@@ -1,4 +1,4 @@
-local map = require'utils'.map
+local map = require'utils'.map_key
 
 map('n', '<leader>dcc',
     '<cmd>lua require"telescope".extensions.dap.commands{}<CR>')

@@ -1,4 +1,4 @@
-local map = require'utils'.map
+local map = require'utils'.map_key
 
 --[[ <C-n>/<Down>	Next item
 <C-p>/<Up>	Previous item
