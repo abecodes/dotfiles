@@ -122,6 +122,13 @@ return require('packer').startup(function()
         'airblade/vim-rooter',
         config = [[require('plugins.vim-rooter.config')]]
     }
+    use {
+		'lewis6991/gitsigns.nvim',
+		requires = {'nvim-lua/plenary.nvim'},
+		config = function()
+			require('gitsigns').setup()
+		end
+	}
 
     -- terminal
     use {
@@ -323,16 +330,6 @@ return require('packer').startup(function()
     'glepnir/galaxyline.nvim', branch = 'main', config = function() require'statusline' end,
     requires = {'kyazdani42/nvim-web-devicons'}
   } ]]
-    -- replacement for vim-gitbranch and vim-signify?
-    --[[ use {
-		'lewis6991/gitsigns.nvim',
-		requires = {
-			'nvim-lua/plenary.nvim'
-		},
-		config = function()
-			require('gitsigns').setup()
-		end
-	} ]]
 end)
 
 --[[ config = {

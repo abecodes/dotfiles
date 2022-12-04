@@ -9,7 +9,7 @@ local custom_attach = function(client, bufnr)
     vim.cmd("command! LspDef lua vim.lsp.buf.definition()")
     -- vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting()")
     vim.cmd("command! LspFormatting lua vim.lsp.buf.format(nil, 1000)")
-    vim.cmd("command! LspRangeFormatting lua vim.lsp.buf.range_formatting()")
+    -- vim.cmd("command! LspRangeFormatting lua vim.lsp.buf.range_formatting()")
     vim.cmd("command! LspCodeAction lua vim.lsp.buf.code_action()")
     vim.cmd("command! LspHover lua vim.lsp.buf.hover()")
     vim.cmd("command! LspRename lua vim.lsp.buf.rename()")
@@ -32,10 +32,29 @@ local custom_attach = function(client, bufnr)
     buf_set_keymap("i", "<C-x><C-x>", "<Cmd>LspSignatureHelp<CR>", opts)
 
     -- Set some keybinds conditional on server capabilities
-    if client.server_capabilities.document_formatting then
-        buf_set_keymap("n", "ff", "<Cmd>LspFormatting<CR>", opts)
-    elseif client.server_capabilities.document_range_formatting then
-        buf_set_keymap("n", "ff", "<Cmd>LspRangeFormatting<CR>", opts)
+    -- if client.server_capabilities.document_formatting then
+    --     buf_set_keymap("n", "ff", "<Cmd>LspFormatting<CR>", opts)
+    -- elseif client.server_capabilities.document_range_formatting then
+    --     buf_set_keymap("n", "ff", "<Cmd>LspRangeFormatting<CR>", opts)
+    -- end
+    if client.server_capabilities.documentFormattingProvider then
+        local shouldMap = true
+        -- looks like keymap.set ignores noremap
+        for _, e in pairs(vim.api.nvim_buf_get_keymap(bufnr,'n')) do
+            if e.lhs == 'ff' then
+                -- vim.pretty_print(e)
+                shouldMap = false
+                break
+            end
+        end
+
+        if shouldMap then
+            vim.keymap.set('n', 'ff', function() vim.lsp.buf.format(nil, 1000) end, {buffer = bufnr})
+        end
+
+        -- buf_set_keymap('n', 'ff', ':LspFormatting<CR>', { noremap=true, silent=true })
+        -- vim.lsp.buf.range_formatting is deprecated, use vim.lsp.formatexpr or vim.lsp.buf.format instead. See :h deprecated
+        -- buf_set_keymap('v', 'ff', '<Cmd>LspRangeFormatting<CR>', opts)
     end
 
     -- Set autocommands conditional on server_capabilities

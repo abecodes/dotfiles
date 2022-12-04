@@ -90,6 +90,12 @@ M.get_filepath = function()
 	return vim.api.nvim_buf_get_name(0)
 end
 
+---get the extension to the current file
+---@return string
+M.get_fileext = function()
+	return vim.fn.expand("%:e")
+end
+
 ---get the dir to the current file
 ---@return string
 M.get_filedir = function()
@@ -119,11 +125,16 @@ end
 ---@param sep string
 ---@return string[]
 M.split = function (str, sep)
-    if sep == nil then
-        sep = "%s"
-    end
     local t={}
-		-- for match in (s .. delimiter):gmatch("(.-)" .. delimiter) do
+
+    if str == nil then
+        return t
+    end
+    if sep == nil then
+        sep = '%s'
+    end
+
+	-- for s in (str .. sep):gmatch("(.-)" .. sep) do
     for s in string.gmatch(str, "([^"..sep.."]+)") do
         table.insert(t, s)
     end

@@ -1,14 +1,19 @@
-local fterm = require("FTerm")
+local fterm = require('FTerm')
+local utils = require('utils')
 
 local lazygit = fterm:new({
     ft = 'fterm_lazygit',
-    cmd = "lazygit",
-    border = 'rounded',
+    cmd = 'lazygit',
+    border = {
+		{'╭', 'DiagnosticHint'},
+		{'─', 'DiagnosticHint'},
+		{'╮', 'DiagnosticHint'},
+		{'│', 'DiagnosticHint'},
+		{'╯', 'DiagnosticHint'},
+		{'─', 'DiagnosticHint'},
+		{'╰', 'DiagnosticHint'},
+		{'│', 'DiagnosticHint'},
+	},
 })
 
- -- Use this to toggle lazygit in a floating terminal
-function _G.__fterm_lazygit()
-    lazygit:toggle()
-end
-
-vim.cmd('command! FTermLazygit lua _G.__fterm_lazygit()')
+utils.new_cmd('FTermLazygit', function() lazygit:toggle() end, {})

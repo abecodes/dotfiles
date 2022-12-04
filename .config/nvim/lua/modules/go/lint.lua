@@ -1,4 +1,5 @@
 local utils = require('utils')
+local logger = require('logger')
 local namespace = vim.api.nvim_create_namespace('codes.abe.hooks.golangci')
 
 local handle_stdout = function(_, data)
@@ -37,6 +38,11 @@ local handle_stdout = function(_, data)
 		end
 
 		local decoded = vim.json.decode(line)
+		if not (decoded.Report.Error == nil) then
+			logger.warn(decoded.Report.Error)
+			break
+		end
+
 		for _, issue in ipairs(decoded.Issues) do
 			if not (vim.fn.fnamemodify(issue.Pos.Filename, ':t') == utils.get_filename()) then
 				goto continue_issue
@@ -77,9 +83,10 @@ return function()
 			'json',
 			'-c',
 			vim.fn.expand('$HOME/.golangci.yaml'),
-			vim.fn.expand(utils.get_filedir()..'/*.go'),
+			'./...'
 		},
 		{
+			cwd = utils.get_filedir(),
 			stdout_buffered = true,
 			on_stdout = handle_stdout
 		}

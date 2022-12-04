@@ -1,6 +1,15 @@
 require'FTerm'.setup({
 	-- Neovim's native window border. See `:h nvim_open_win` for more configuration options.
-	border = 'rounded',
+	border = {
+		{"╭", "DiagnosticHint"},
+		{"─", "DiagnosticHint"},
+		{"╮", "DiagnosticHint"},
+		{"│", "DiagnosticHint"},
+		{"╯", "DiagnosticHint"},
+		{"─", "DiagnosticHint"},
+		{"╰", "DiagnosticHint"},
+		{"│", "DiagnosticHint"},
+	},
 	-- Close the terminal as soon as shell/command exits.
 	-- Disabling this will mimic the native terminal behaviour.
 	auto_close = false,
