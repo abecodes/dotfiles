@@ -34,7 +34,6 @@ end
 local function get_struct()
   local ns = get_struct_node_at_pos(unpack(vim.api.nvim_win_get_cursor(0)))
   if ns == nil then
-    logger.log('[impl] put cursor on a struct or specify a receiver')
     return ''
   end
 
@@ -51,7 +50,8 @@ return function(data)
   local iface, recv_name = '', ''
   local recv = get_struct()
 
-	if recv == '' then
+	if recv == '' and #args == 0 then
+    logger.log('[impl] put cursor on a struct or specify a receiver')
 		return
 	end
 
@@ -63,7 +63,7 @@ return function(data)
       return
     end
   elseif #args == 1 then -- :GoImpl io.Reader
-    recv = string.lower(recv) .. ' *' .. recv
+    recv = string.lower(recv):sub(1, 1) .. ' *' .. recv
     vim.cmd 'redraw!'
     iface = args[1]
   elseif #args == 2 then -- :GoImpl w io.Writer
@@ -78,7 +78,8 @@ return function(data)
   end
 
   local cmd_args = {
-    '-dir', vim.fn.fnameescape(vim.fn.expand '%:p:h'),
+    '-dir',
+    vim.fn.fnameescape(vim.fn.expand '%:p:h'),
     recv,
     iface
   }
@@ -89,13 +90,17 @@ return function(data)
     args = cmd_args,
     on_exit = function(data, retval)
       if retval ~= 0 then
-        logger.warn('command "impl ' .. unpack(cmd_args) .. '" exited with code ' .. retval)
+        logger.error('command "impl ' .. unpack(cmd_args) .. '" exited with code ' .. retval)
         return
       end
 
       res_data = data:result()
     end,
   }):sync()
+
+  if not res_data then
+    return
+  end
 
   local pos = vim.fn.getcurpos()[2]
   table.insert(res_data, 1, '')

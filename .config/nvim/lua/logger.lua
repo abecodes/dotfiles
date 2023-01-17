@@ -5,16 +5,30 @@ local debug = false
 local M = {}
 
 --- @param msg string
---- @param hl? string
-M.log = function(msg, hl)
-    vim.api.nvim_echo({{name .. ': ', hl}, {msg}}, true, {})
+--- @param level string
+--- vim.log.levels.DEBUG | vim.log.levels.ERROR | vim.log.levels.INFO | vim.log.levels.TRACE | vim.log.levels.WARN | vim.log.levels.OFF
+M.log = function(msg, level)
+		if level == "" then
+			level = vim.log.levels.INFO
+		end
+    if vim.in_fast_event() then
+      vim.schedule(function()
+        vim.notify(msg, level)
+      end)
+    else
+      vim.notify(msg, level)
+    end
+    -- vim.api.nvim_echo({{name .. ': ', hl}, {msg}}, true, {})
 end
 
 --- @param msg string
-M.warn = function(msg) M.log(msg, 'WarningMsg') end
+M.error = function(msg) M.log(msg, vim.log.levels.ERROR) end
 
 --- @param msg string
-M.debug = function(msg) if debug then M.log(msg, 'Todo') end end
+M.warn = function(msg) M.log(msg, vim.log.levels.WARN) end
+
+--- @param msg string
+M.debug = function(msg) if debug then M.log(msg, vim.log.levels.DEBUG) end end
 
 M.dump = function(o)
 	M.warn('rather use vim.pretty_print')

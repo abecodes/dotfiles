@@ -1,4 +1,4 @@
-vim.g.symbols_outline = {
+local opts = {
     highlight_hovered_item = true,
     show_guides = true,
     auto_preview = true,
@@ -6,6 +6,16 @@ vim.g.symbols_outline = {
     show_numbers = false,
     show_relative_numbers = false,
     show_symbol_details = true,
+    border = {
+		{"╭", "DiagnosticHint"},
+		{"─", "DiagnosticHint"},
+		{"╮", "DiagnosticHint"},
+		{"│", "DiagnosticHint"},
+		{"╯", "DiagnosticHint"},
+		{"─", "DiagnosticHint"},
+		{"╰", "DiagnosticHint"},
+		{"│", "DiagnosticHint"},
+	},
     keymaps = {
         close = "<Esc>",
         goto_location = "<Cr>",
@@ -16,3 +26,5 @@ vim.g.symbols_outline = {
     },
     lsp_blacklist = {}
 }
+
+require("symbols-outline").setup(opts)
