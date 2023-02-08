@@ -94,6 +94,7 @@ return require('packer').startup(function()
         config = [[require('plugins.harpoon.config')]],
         setup = [[require('plugins.harpoon.setup')]],
     }
+
     -- Editor visuals
     use {'machakann/vim-sandwich'} -- maybe use nvim-surround
     use {
@@ -143,10 +144,14 @@ return require('packer').startup(function()
         requires = {
             {'nvim-lua/popup.nvim'}, {'nvim-telescope/telescope-symbols.nvim'},
             {'nvim-telescope/telescope-file-browser.nvim'},
-            {'nvim-telescope/telescope-fzf-native.nvim', run = 'make'}
+            {'nvim-telescope/telescope-fzf-native.nvim', run = 'make'},
+            {'nvim-telescope/telescope-ui-select.nvim'}
         },
         wants = {
-            'plenary.nvim', 'popup.nvim', 'telescope-symbols.nvim',
+            'plenary.nvim',
+            'popup.nvim',
+            'telescope-symbols.nvim',
+            'telescope-ui-select.nvim',
             'refactoring.nvim'
         },
         setup = [[require('plugins.telescope.setup')]],
@@ -322,6 +327,12 @@ return require('packer').startup(function()
 
     -- theme
     use {'ntk148v/vim-horizon', as = 'horizon'}
+
+    -- ui
+    use {
+        'stevearc/dressing.nvim',
+        config = [[require('plugins.dressing.config')]],
+    }
 
     -- tryouts:
     -- use {'tpope/vim-dispatch', cmd = {'Dispatch', 'Make', 'Focus', 'Start'}}

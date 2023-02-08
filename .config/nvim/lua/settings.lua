@@ -61,5 +61,7 @@ opt.ignorecase = true
 opt.smartcase = true
 -- Automatically re-read file if a change was detected outside of vim
 opt.autoread = true
+-- Always keep cursor centered (seems to be overwritten by a plugin)
+-- opt.scrolloff = 999
 -- use on mac if neovim/fish is installed with brew
 --[[ opt.shell = '/usr/local/bin/fish' ]]

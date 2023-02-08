@@ -5,6 +5,14 @@ vim.g.mapleader = ','
 -- bind terminal ESC to exit terminal mode
 map('t', '<Esc>', '<C-\\><C-n>', {silent = true})
 
+-- center screen before typing
+map('n', 'a', 'zza', {silent = true})
+map('n', 'A', 'zzA', {silent = true})
+map('n', 'i', 'zzi', {silent = true})
+map('n', 'I', 'zzI', {silent = true})
+map('n', 'o', 'zzo', {silent = true})
+map('n', 'O', 'zzO', {silent = true})
+
 -- navigate the quickfix window
 map('n', 'q[', ':cn<CR>', {silent = true})
 map('n', 'q]', ':cp<CR>', {silent = true})

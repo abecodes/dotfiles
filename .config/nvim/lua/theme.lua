@@ -182,6 +182,26 @@ local color = {
 			ctermbg = 188,
 		},
 	},
+	grey = {
+		fg = {
+			fg = '#6c6f93',
+			ctermfg = 242,
+		},
+		bg = {
+			bg = '#6c6f93',
+			ctermbg = 242,
+		}
+	},
+	grey_l = {
+		fg = {
+			fg = '#272c42',
+			ctermfg=236,
+		},
+		bg = {
+			bg = '#272c42',
+			ctermbg=236,
+		},
+	},
 	none = {
 		fg = {
 			fg = 'none',
@@ -292,7 +312,7 @@ for _, s in pairs({
 }) do
 	update_highlight(s, color.blue.fg)
 end
---- ReD
+--- Red
 for _, s in pairs({
 	'@constant.builtin',
 }) do
@@ -334,6 +354,8 @@ end
 update_highlight('Todo', color.none.bg)
 update_highlight('Pmenu', color.white.fg, color.none.bg)
 update_highlight('PmenuSel', color.green.fg, color.none.bg)
+update_highlight('FloatBorder', color.grey.fg, color.none.bg)
+update_highlight('WinSeparator', color.grey.fg, color.none.bg)
 
 -- Italic
 for _, s in pairs({
