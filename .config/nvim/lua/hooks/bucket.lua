@@ -98,7 +98,7 @@ M.get_star_pattern = function()
 	local ignored = {}
 	for fileID, _ in pairs(M.H) do
 		if not (id == '*') then
-			table.insert(ignored, fileID)
+			table.insert(ignored, utils.split(fileID, '.')[2])
 		end
 	end
 

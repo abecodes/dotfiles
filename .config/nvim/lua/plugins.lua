@@ -217,6 +217,7 @@ return require('packer').startup(function()
     }
     use {
         'abecodes/tabout.nvim',
+        branch = 'feature/tabout-md',
         config = [[require('plugins.tabout.config')]],
         wants = {'nvim-treesitter'},
         after = {'coq_nvim'}
