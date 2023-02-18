@@ -19,36 +19,7 @@ local utils = require('utils')
 local enabled = false
 local pastes = {}
 
-local handlePaste = function()
-	local s = pastes[vim.api.nvim_get_current_buf()].pos_start
-	local e = pastes[vim.api.nvim_get_current_buf()].pos_end
-	local text = table.concat(
-		vim.api.nvim_buf_get_text(
-			vim.api.nvim_get_current_buf(),
-			s[1] - 1,
-			s[2],
-			e[1] - 1,
-			e[2],
-			{}
-		),
-		''
-	)
-
-	if not pcall(vim.json.decode,text) then
-		-- no json, just paste
-		return
-	end
-
-	local input = 'n'
-	vim.ui.input(
-		{
-			prompt = 'turn JSON to struct[<name>/N]?:',
-		},
-		function(val)
-			input = val
-		end
-	)
-
+local handleInput = function(input, text, s, e)
 	if utils.str_is_empty(input) or string.lower(input) == 'n' then
 		return
 	end
@@ -77,6 +48,36 @@ local handlePaste = function()
 			(s[1] - 1) + #struct,
 			s[2] + string.len(struct[#struct])
 		}
+	)
+end
+
+local handlePaste = function()
+	local s = pastes[vim.api.nvim_get_current_buf()].pos_start
+	local e = pastes[vim.api.nvim_get_current_buf()].pos_end
+	local text = table.concat(
+		vim.api.nvim_buf_get_text(
+			vim.api.nvim_get_current_buf(),
+			s[1] - 1,
+			s[2],
+			e[1] - 1,
+			e[2],
+			{}
+		),
+		''
+	)
+
+	if not pcall(vim.json.decode,text) then
+		-- no json, just paste
+		return
+	end
+
+	vim.ui.input(
+		{
+			prompt = 'turn JSON to struct[<name>/N]?:',
+		},
+		function(val)
+			handleInput(val, text, s, e)
+		end
 	)
 end
 
