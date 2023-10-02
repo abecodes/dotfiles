@@ -5,3 +5,9 @@ utils.new_cmd(
 	require('modules.silicon'),
 	{ range = '%' }
 )
+
+utils.new_cmd(
+	'ToggleSpell',
+	function() vim.api.nvim_command(':setlocal spell!') end,
+	{}
+)

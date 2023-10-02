@@ -41,7 +41,7 @@ if fn.has("termguicolors") then opt.termguicolors = true end
 
 opt.background = 'dark'
 opt.relativenumber = true
-opt.spelling = 'en_us'
+opt.spelllang = 'en_us'
 opt.spell = true
 opt.hidden = true
 opt.cmdheight = 2

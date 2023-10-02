@@ -1,5 +1,6 @@
 # Inserts a blank line between shell prompts
 # add_newline = true
+add_newline = false
 
 #format = """
 #$username\
@@ -82,6 +83,12 @@ error_symbol = "[🙈🙉🙊❯](bold red)"
 
 [aws]
 disabled = true
+
+[battery]
+disabled = true
+full_symbol = '🔋 '
+charging_symbol = '⚡️ '
+discharging_symbol = '💀 '
 
 [package]
 disabled = false

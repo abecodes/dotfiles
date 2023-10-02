@@ -5,7 +5,7 @@ require('tabout').setup {
         {open = "'", close = "'"}, {open = '"', close = '"'},
         {open = '`', close = '`'}, {open = '(', close = ')'},
         {open = '[', close = ']'}, {open = '{', close = '}'},
-        {open = '<', close = '>'}, {open = '#', close = ']'}
+        {open = '<', close = '>'},
     }
 }
 

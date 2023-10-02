@@ -1,7 +1,51 @@
 local cmd = vim.cmd
 
-cmd 'colorscheme horizon'
 cmd 'set cursorline'
+-- cmd 'colorscheme horizon'
+-- dark schemes
+cmd 'colorscheme base2tone_evening_dark'
+-- or any of the other schemes:
+-- cmd 'colorscheme base2tone_morning_dark'
+-- cmd 'colorscheme base2tone_sea_dark'
+-- cmd 'colorscheme base2tone_space_dark'
+-- cmd 'colorscheme base2tone_earth_dark'
+-- cmd 'colorscheme base2tone_forest_dark'
+-- cmd 'colorscheme base2tone_field_dark'
+-- cmd 'colorscheme base2tone_garden_dark'
+-- cmd 'colorscheme base2tone_desert_dark'
+-- cmd 'colorscheme base2tone_lake_dark'
+-- cmd 'colorscheme base2tone_meadow_dark'
+-- cmd 'colorscheme base2tone_drawbridge_dark'
+-- cmd 'colorscheme base2tone_mall_dark'
+-- cmd 'colorscheme base2tone_suburb_dark'
+-- cmd 'colorscheme base2tone_lavender_dark'
+-- cmd 'colorscheme base2tone_pool_dark'
+-- cmd 'colorscheme base2tone_porch_dark'
+-- cmd 'colorscheme base2tone_heath_dark'
+-- cmd 'colorscheme base2tone_cave_dark'
+-- cmd 'colorscheme base2tone_motel_dark'
+
+-- light schemes
+-- cmd 'colorscheme base2tone_evening_light'
+-- cmd 'colorscheme base2tone_morning_light'
+-- cmd 'colorscheme base2tone_sea_light'
+-- cmd 'colorscheme base2tone_space_light'
+-- cmd 'colorscheme base2tone_earth_light'
+-- cmd 'colorscheme base2tone_forest_light'
+-- cmd 'colorscheme base2tone_field_light'
+-- cmd 'colorscheme base2tone_garden_light'
+-- cmd 'colorscheme base2tone_desert_light'
+-- cmd 'colorscheme base2tone_lake_light'
+-- cmd 'colorscheme base2tone_meadow_light'
+-- cmd 'colorscheme base2tone_drawbridge_light'
+-- cmd 'colorscheme base2tone_mall_light'
+-- cmd 'colorscheme base2tone_suburb_light'
+-- cmd 'colorscheme base2tone_lavender_light'
+-- cmd 'colorscheme base2tone_pool_light'
+-- cmd 'colorscheme base2tone_porch_light'
+-- cmd 'colorscheme base2tone_heath_light'
+-- cmd 'colorscheme base2tone_cave_light'
+-- cmd 'colorscheme base2tone_motel_light'
 
 --[[
 Horizon colors
@@ -19,12 +63,12 @@ white = {guifg=#dcdfe4, ctermfg=188}
 To be able to allow each user to pick his favorite set of colors, there must
 be preferred names for highlight groups that are common for many languages.
 These are the suggested group names (if syntax highlighting works properly
-you can see the actual color, except for "Ignore"):
+you can see the actual color, except for 'Ignore'):
 
 	*Comment	any comment
 
 	*Constant	any constant
-	String		a string constant: "this is a string"
+	String		a string constant: 'this is a string'
 	Character	a character constant: 'c', '\n'
 	Number		a number constant: 234, 0xff
 	Boolean	a boolean constant: TRUE, false
@@ -37,7 +81,7 @@ you can see the actual color, except for "Ignore"):
 	Conditional	if, then, else, endif, switch, etc.
 	Repeat		for, do, while, etc.
 	Label		case, default, etc.
-	Operator	"sizeof", "+", "*", etc.
+	Operator	'sizeof', '+', '*', etc.
 	Keyword	any other keyword
 	Exception	try, catch, throw
 
@@ -69,12 +113,12 @@ you can see the actual color, except for "Ignore"):
 			keywords TODO FIXME and XXX
 
 The names marked with * are the preferred groups; the others are minor groups.
-For the preferred groups, the "syntax.vim" file contains default highlighting.
+For the preferred groups, the 'syntax.vim' file contains default highlighting.
 The minor groups are linked to the preferred groups, so they get the same
-highlighting.  You can override these defaults by using ":highlight" commands
-after sourcing the "syntax.vim" file.
+highlighting.  You can override these defaults by using ':highlight' commands
+after sourcing the 'syntax.vim' file.
 
-Note that highlight group names are not case sensitive.  "String" and "string"
+Note that highlight group names are not case sensitive.  'String' and 'string'
 can be used for the same group.
 ]]--
 
@@ -95,9 +139,9 @@ vim.highlight.create('CursorLineNR', { guifg=white, ctermfg=white }, true) ]]
 -- ]], true)
 
 --[[
-	• fg (or foreground): color name or "#RRGGBB", see note.
-	• bg (or background): color name or "#RRGGBB", see note.
-	• sp (or special): color name or "#RRGGBB"
+	• fg (or foreground): color name or '#RRGGBB', see note.
+	• bg (or background): color name or '#RRGGBB', see note.
+	• sp (or special): color name or '#RRGGBB'
 	• ctermfg: Sets foreground of cterm color |ctermfg|
 	• ctermbg: Sets background of cterm color |ctermbg|
 ]]--
@@ -282,7 +326,7 @@ local set_highlight = function(id, ...)
 		vim.tbl_extend(
 			'force',
 			{},
-			unpack(args, select("#", args))
+			unpack(args, select('#', args))
 		)
 	)
 end
@@ -297,12 +341,12 @@ local update_highlight = function(id, ...)
 			'force',
 			{},
 			vim.api.nvim_get_hl_by_name(id, true),
-			unpack(args, select("#", args))
+			unpack(args, select('#', args))
 		)
 	)
 end
 
-
+--[[
 -- Recolor
 --- Blue
 for _, s in pairs({
@@ -356,6 +400,7 @@ update_highlight('Pmenu', color.white.fg, color.none.bg)
 update_highlight('PmenuSel', color.green.fg, color.none.bg)
 update_highlight('FloatBorder', color.grey.fg, color.none.bg)
 update_highlight('WinSeparator', color.grey.fg, color.none.bg)
+]]--
 
 -- Italic
 for _, s in pairs({

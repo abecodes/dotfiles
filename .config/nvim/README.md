@@ -31,7 +31,7 @@ folke/trouble.nvim
 nvim-lua/plenary.nvim
 
 # icons for bars etc.
-kyazdani42/nvim-web-devicons
+nvim-tree/nvim-web-devicons
 ryanoasis/vim-devicons
 
 # diff current file

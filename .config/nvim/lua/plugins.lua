@@ -38,6 +38,14 @@ return require('packer').startup(function()
     -- Packer can manage itself
     use 'wbthomason/packer.nvim'
 
+    use {
+		'nvim-tree/nvim-web-devicons',
+        version = 'nerd-v2-compat',
+		config = function()
+			require('nvim-web-devicons').setup()
+		end,
+	}
+
     -- Editor components
     use {
         'mhinz/vim-startify',
@@ -64,13 +72,13 @@ return require('packer').startup(function()
     }
     use {
         'folke/trouble.nvim',
-        requires = 'kyazdani42/nvim-web-devicons',
+        requires = 'nvim-tree/nvim-web-devicons',
         setup = [[require('plugins.trouble.setup')]],
         config = [[require('plugins.trouble.config')]]
     }
     use {
         'sindrets/diffview.nvim',
-        wants = {'kyazdani42/nvim-web-devicons'},
+        wants = {'nvim-tree/nvim-web-devicons'},
         config = [[require('plugins.diffview.config')]]
     }
     use {
@@ -83,10 +91,14 @@ return require('packer').startup(function()
         disable = true
     }
     use {
-        'TimUntersberger/neogit',
+        'NeogitOrg/neogit',
         config = [[require('plugins.neogit.config')]],
         setup = [[require('plugins.neogit.setup')]],
-        requires = 'nvim-lua/plenary.nvim'
+        requires = {
+            'nvim-lua/plenary.nvim',
+            'nvim-telescope/telescope.nvim',
+            'sindrets/diffview.nvim'
+        }
     }
     use {
         'ThePrimeagen/harpoon',
@@ -160,6 +172,11 @@ return require('packer').startup(function()
     use 'brooth/far.vim'
 
     -- writing/reading
+    use {
+        'shortcuts/no-neck-pain.nvim',
+        tag = '*',
+        config = [[require('plugins.no-neck-pain.config')]],
+    }
     use 'nullchilly/fsread.nvim'
     use {
         'folke/zen-mode.nvim',
@@ -170,7 +187,7 @@ return require('packer').startup(function()
                 config = [[require('plugins.twilight.config')]]
             }
         },
-        cmd = {"ZenMode"}
+        cmd = {'ZenMode'}
     }
     use {
         'renerocksai/telekasten.nvim',
@@ -275,7 +292,7 @@ return require('packer').startup(function()
         wants = {'nvim-treesitter'}
     }
     use {
-        "ThePrimeagen/refactoring.nvim",
+        'ThePrimeagen/refactoring.nvim',
         config = [[require('plugins.refactoring.config')]],
         setup = [[require('plugins.refactoring.setup')]],
         wants = {'plenary.nvim', 'nvim-treesitter'}
@@ -316,17 +333,18 @@ return require('packer').startup(function()
 
     -- bars
     use {
-        'SmiteshP/nvim-gps',
-        config = [[require('plugins.nvim-gps.config')]],
-        wants = {'nvim-treesitter/nvim-treesitter'}
+        'SmiteshP/nvim-navic',
+        -- config = [[require('plugins.nvim-navic.config')]],
+        requires = 'neovim/nvim-lspconfig'
     }
     use {
         'nvim-lualine/lualine.nvim',
         config = [[require('plugins.lualine.config')]],
-        wants = {'kyazdani42/nvim-web-devicons', 'SmiteshP/nvim-gps'}
+        wants = {'nvim-tree/nvim-web-devicons', 'SmiteshP/nvim-navic'}
     }
 
     -- theme
+    use { 'atelierbram/Base2Tone-nvim' }
     use {'ntk148v/vim-horizon', as = 'horizon'}
 
     -- ui
@@ -340,7 +358,7 @@ return require('packer').startup(function()
     -- replacement for lightline, is it working with the theme?
     --[[ use {
     'glepnir/galaxyline.nvim', branch = 'main', config = function() require'statusline' end,
-    requires = {'kyazdani42/nvim-web-devicons'}
+    requires = {'nvim-tree/nvim-web-devicons'}
   } ]]
 end)
 

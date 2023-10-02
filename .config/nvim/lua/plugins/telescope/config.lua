@@ -51,6 +51,7 @@ require('telescope').setup {
         file_browser = {
             hidden = true,
             path = '%:p:h',
+            respect_gitignore = false,
         },
         ['ui-select'] = {
             require('telescope.themes').get_dropdown {

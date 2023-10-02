@@ -1,4 +1,4 @@
-local gps = require("nvim-gps")
+local navic = require("nvim-navic")
 
 local function whichLsp()
 	local msg = 'No Active Lsp'
@@ -20,7 +20,8 @@ end
 require('lualine').setup({
   options = {
     icons_enabled = true,
-    theme = 'horizon',
+    -- theme = 'horizon',
+		theme = 'base2tone_evening_dark',
 		component_separators = '',
     section_separators = '',
     -- component_separators = { left = '', right = ''},
@@ -32,7 +33,17 @@ require('lualine').setup({
     -- lualine_a = {'mode'},
 		lualine_a = {{ 'mode', fmt = function(str) return str:sub(1,1) end }},
     lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {'filename', { gps.get_location, cond = gps.is_available }},
+    lualine_c = {
+			'filename',
+			{
+				function()
+					return navic.get_location()
+				end,
+				cond = function()
+					return navic.is_available()
+				end
+			},
+		},
     lualine_x = {
 			-- 'encoding',
 			'fileformat',
