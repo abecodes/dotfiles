@@ -158,6 +158,10 @@ git clone https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pac
 >  "recommendationsUrl": ""
 > }```
 > ````
+>
+> **Extensions**
+>
+> To use extensions that are not available through VS-Codium [see migration guide](https://github.com/VSCodium/vscodium/blob/master/DOCSmd#migrating-from-visual-studio-code-to-vscodium)
 
 ## :zap: Speed up system tools
 
