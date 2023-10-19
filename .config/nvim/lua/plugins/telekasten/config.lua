@@ -15,7 +15,7 @@ require('telekasten').setup({
     -- dir names for special notes (absolute path or subdir name)
     dailies      = home .. '/' .. 'zettel/_fleeting',
     weeklies     = home .. '/' .. 'zettel/_fleeting',
-    templates    = home .. '/' .. '_template',
+    templates    = vim.fn.expand("~/.config/nvim/_template"),
     -- image (sub)dir for pasting
     -- dir name (absolute path or subdir name)
     -- or nil if pasted images shouldn't go into a special subdir
@@ -41,7 +41,7 @@ require('telekasten').setup({
     journal_auto_open = false,
     -- template for new notes (new_note, follow_link)
     -- set to `nil` or do not specify if you do not want a template
-    template_new_note = home .. '/' .. '_template/note.md',
+    template_new_note = '/Users/abe/Repos/dotfiles/.config/nvim/_template/note.md',
     -- template for newly created daily notes (goto_today)
     -- set to `nil` or do not specify if you do not want a template
     template_new_daily = nil,
