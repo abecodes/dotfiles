@@ -21,22 +21,22 @@ map('n', 'qc', ':ccl<CR>', {silent = true})
 
 -- better split movement
 -- TODO: create mapAll util function
-map('n', '<A-h>', '<C-w>h', {silent = true})
-map('n', '<A-j>', '<C-w>j', {silent = true})
-map('n', '<A-k>', '<C-w>k', {silent = true})
-map('n', '<A-l>', '<C-w>l', {silent = true})
-map('i', '<A-h>', '<Esc><C-w>h', {silent = true})
-map('i', '<A-j>', '<Esc><C-w>j', {silent = true})
-map('i', '<A-k>', '<Esc><C-w>k', {silent = true})
-map('i', '<A-l>', '<Esc><C-w>l', {silent = true})
-map('v', '<A-h>', '<Esc><C-w>h', {silent = true})
-map('v', '<A-j>', '<Esc><C-w>j', {silent = true})
-map('v', '<A-k>', '<Esc><C-w>k', {silent = true})
-map('v', '<A-l>', '<Esc><C-w>l', {silent = true})
-map('t', '<A-h>', '<c-\\><c-n><C-w>h', {silent = true})
-map('t', '<A-j>', '<c-\\><c-n><C-w>j', {silent = true})
-map('t', '<A-k>', '<c-\\><c-n><C-w>k', {silent = true})
-map('t', '<A-l>', '<c-\\><c-n><C-w>l', {silent = true})
+map('n', '<A-Left>', '<C-w>h', {silent = true})
+map('n', '<A-Down>', '<C-w>j', {silent = true})
+map('n', '<A-Up>', '<C-w>k', {silent = true})
+map('n', '<A-Right>', '<C-w>l', {silent = true})
+map('i', '<A-Left>', '<Esc><C-w>h', {silent = true})
+map('i', '<A-Down>', '<Esc><C-w>j', {silent = true})
+map('i', '<A-Up>', '<Esc><C-w>k', {silent = true})
+map('i', '<A-Right>', '<Esc><C-w>l', {silent = true})
+map('v', '<A-Left>', '<Esc><C-w>h', {silent = true})
+map('v', '<A-Down>', '<Esc><C-w>j', {silent = true})
+map('v', '<A-Up>', '<Esc><C-w>k', {silent = true})
+map('v', '<A-Right>', '<Esc><C-w>l', {silent = true})
+map('t', '<A-Left>', '<c-\\><c-n><C-w>h', {silent = true})
+map('t', '<A-Down>', '<c-\\><c-n><C-w>j', {silent = true})
+map('t', '<A-Up>', '<c-\\><c-n><C-w>k', {silent = true})
+map('t', '<A-Right>', '<c-\\><c-n><C-w>l', {silent = true})
 
 -- indent
 map('v', '<', '<gv', {silent = true})
@@ -50,9 +50,11 @@ map('v', '<A-Down>', ':m \'>+1<CR>gv=gv', {silent = true})
 
 -- leader
 --- search and replace in current buffer
-map('n', '<Leader>r', ':%s///g<Left><Left>', {silent = true})
-map('n', '<Leader>rl', ':s///g<Left><Left>', {silent = true})
-map('n', '<Leader>rc', ':%s///gc<Left><Left><Left>', {silent = true})
+map('n', '<Leader>rr', ':%s///g<Left><Left><Left>', {silent = true})
+map('n', '<Leader>rl', ':s///g<Left><Left><Left>', {silent = true})
+map('n', '<Leader>rc', ':%s///gc<Left><Left><Left><Left>', {silent = true})
+map('v', '<Leader>rr', ":'<,'>s///g<Left><Left><Left>", {silent = true})
+map('v', '<Leader>rc', ":'<,'>%s///gc<Left><Left><Left><Left>", {silent = true})
 -- show/hide cursorline
 map('n', '<Leader>c', '<cmd>set cursorline!<CR>', {silent = true})
 --- screenshots

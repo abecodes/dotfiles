@@ -76,7 +76,7 @@ require('telekasten').setup({
     show_tags_theme = "dropdown",
     -- when linking to a note in subdir/, create a [[subdir/title]] link
     -- instead of a [[title only]] link
-    subdirs_in_links = true,
+    subdirs_in_links = false,
     -- template_handling
     -- What to do when creating a new note via `new_note()` or `follow_link()`
     -- to a non-existing note

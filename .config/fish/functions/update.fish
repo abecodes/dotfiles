@@ -12,4 +12,5 @@ function update
   go install goa.design/model/cmd/mdl@master
   go install github.com/divan/expvarmon@latest
   go install github.com/segmentio/golines@latest
+  go install github.com/onsi/ginkgo/v2/ginkgo@latest
 end

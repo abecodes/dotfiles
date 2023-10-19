@@ -34,6 +34,7 @@ local getEventFunc = function(eventBucket)
 
 	return function()
 		for _, hook in pairs(eventBucket) do
+			-- vim.print('executing', hook.id, hook.order)
 			hook.func()
 		end
 	end
@@ -64,11 +65,11 @@ M.add_hook = function(fileID, events, hook)
 				hook = { func = hook }
 			end
 
-			if not hook.order then
+			if hook.order == nil then
 				hook.order = 100
 			end
 
-			if not hook.id then
+			if hook.id == nil then
 				hook.id = config.getID()
 			end
 
@@ -91,6 +92,9 @@ M.has_no_star = function()
 	return M.H['*'] == nil
 end
 
+-- this function excludes already registered filetypes from the * selector
+-- eg * is add last line and we have a hook for *.go registered
+-- *.go will be excluded from * (no last line added)
 M.get_star_pattern = function()
 	if M.has_no_star() then
 		return '*'
@@ -114,22 +118,55 @@ M.reconcile = function()
 
 	for event, hooks in pairs(M.H['*']) do
 		for fileID, _ in pairs(M.H) do
-			if not M.H[fileID][event] then
+			if fileID == '*' then
+				goto continue
+			end
+			if M.H[fileID][event] == nil then
 				M.H[fileID][event] = {}
 				for _, hook in pairs(hooks) do
+					logger.debug(
+						'[codes.abe.hook] adding hook '
+						.. hook.id..
+						' for event '
+						.. event ..
+						' from * to '
+						.. fileID
+						)
 					table.insert(M.H[fileID][event],  hook)
 				end
+
+				goto continue
 			else
 				for _, hook in pairs(hooks) do
-					if not eventBucketHasHook(M.H[fileID][event], hook) then
+					if eventBucketHasHook(M.H[fileID][event], hook) == false then
+						logger.debug(
+							'[codes.abe.hook] hook '
+							.. hook.id ..
+							' not registered on '
+							.. fileID ..
+							' for '
+							..event
+						)
 						if config.get_append_star() then
+						-- adding at the last position
 							table.insert(M.H[fileID][event], hook)
 						else
 							table.insert(M.H[fileID][event], 1, hook)
 						end
+					else
+						logger.debug(
+							'[codes.abe.hook] '
+							.. fileID ..
+							' already has hook '
+							.. hook.id ..
+							' registered for '
+							..event
+							)
 					end
+					goto continue
 				end
 			end
+			::continue::
 		end
 	end
 
@@ -149,6 +186,7 @@ M.create_au_grps = function()
 			utils.new_autocmd(event, 'codes.abe.hook.'..auID, {
 				pattern = pattern,
 				callback = function()
+					-- vim.print('executing ' ..event.. ' on ' ..pattern)
 					f()
 				end
 			})

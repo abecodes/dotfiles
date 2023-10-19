@@ -14,8 +14,11 @@ local h = {
 			function() vim.api.nvim_command(":redraw!") end
 		},
 		['BufWritePre'] = {
-			-- ensure empty last line on each file
-			require('modules.ensureLastLine'),
+			{
+				-- ensure empty last line on each file
+				func = require('modules.ensureLastLine'),
+				order = 9999, -- default is 100
+			},
 		},
 	},
 	-- *************[GO]*************

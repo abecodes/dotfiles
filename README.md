@@ -39,9 +39,9 @@ stow -t ~/ /
 ```
 
 ```bash
-brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go golangci-lint node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu
+brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go golangci-lint node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu httpie
 
-brew install --cask rectangle mark-text bloomrpc vscodium pritunl librewolf gaphor motrix mongodb-compass
+brew install --cask rectangle mark-text bloomrpc vscodium pritunl librewolf gaphor motrix mongodb-compass keepassxc
 
 npm i -g eslint_d @fsouza/prettierd vscode-langservers-extracted typescript typescript-language-server https://github.com/jez/bars.git
 
@@ -128,26 +128,36 @@ I like it fast, colorful and extendable, so there is only one choice here: [neov
 
 ```bash
 brew install neovim
-
-# packer to manage nvim plugins, "Plug" would be another option
-git clone https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
-# dont forget to create a session dir for startify in the nvim folder
-
-# If you like your mouse, VS-Code is also a solid choice
-[vscodium](https://vscodium.com/) # VS-Code without all the telemetry stuff
-brew install --cask vscodium
-# By default VS-Codium uses [open-vsx.org](https://open-vsx.org) as plugin marketplace.
-# To use the original marketplace overwrite the `product.json`
-# /Applications/VSCodium.app/Contents/Resources/app/product.json
-# Add:
-"extensionsGallery": {
-    "serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
-    "cacheUrl": "https://vscode.blob.core.windows.net/gallery/index",
-    "itemUrl": "https://marketplace.visualstudio.com/items",
-    "controlUrl": "",
-    "recommendationsUrl": ""
-  }
 ```
+
+### neovim plugin manager
+
+[packer](https://github.com/wbthomason/packer.nvim) ("Plug" would be another option)
+
+```bash
+git clone https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
+```
+
+> _dont forget to create a session dir for startify in the nvim folder_
+
+> If you like your mouse, VS-Code is also a solid choice  
+> [vscodium](https://vscodium.com/): VS-Code without all the telemetry stuff
+>
+> `brew install --cask vscodium`
+>
+> _By default VS-Codium uses [open-vsx.org](https://open-vsx.org) as plugin marketplace. To use the original marketplace overwrite the `product.json`_
+>
+> ````JSON
+> // /Applications/VSCodium.app/Contents/Resources/app/product.json
+>
+> "extensionsGallery": {
+>  "serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
+>  "cacheUrl": "https://vscode.blob.core.windows.net/gallery/index",
+>  "itemUrl": "https://marketplace.visualstudio.com/items",
+>  "controlUrl": "",
+>  "recommendationsUrl": ""
+> }```
+> ````
 
 ## :zap: Speed up system tools
 
@@ -166,6 +176,7 @@ brew install dust # du replacement https://github.com/bootandy/dust
 brew install sd # sed replacement https://github.com/chmln/sd
 brew install procs # ps replacement https://github.com/dalance/procs
 brew install fd # find replacement https://github.com/sharkdp/fd
+brew install httpie # curl replacement https://httpie.io/ (also has a UI to replace postman)
 ```
 
 ## :sparkles: Additional tooling
@@ -208,6 +219,12 @@ brew install --cask bloomrpc
 brew install --cask mark-text
 ```
 
+[keepassxc](https://keepassxc.org/) as password manager
+
+```bash
+brew install --cask keepassxc
+```
+
 [KIND](https://kind.sigs.k8s.io/docs/user/quick-start/) for local k8s development
 
 ```bash
@@ -243,6 +260,8 @@ brew install --cask motrix
 ```bash
 brew install --cask mongodb-compass
 ```
+
+[httpie](https://httpie.io/download) A gui for httpie (postman replacement)
 
 Additions to the CLI would be:
 

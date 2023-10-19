@@ -1,6 +1,6 @@
 return {
-	name = '+refactor', -- optional group name
-	b = {',rb', 'extract block'},
-	B = {',rB', 'extract block to file'},
-	i = {',ri', 'inline variable'},
+	name = '+replace', -- optional group name
+	r = {',rr', 'in file'},
+	l = {',rl', 'in line'},
+	c = {',rc', 'in file with confirmation'},
 }

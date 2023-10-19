@@ -402,6 +402,16 @@ update_highlight('FloatBorder', color.grey.fg, color.none.bg)
 update_highlight('WinSeparator', color.grey.fg, color.none.bg)
 ]]--
 
+set_highlight("none", color.none.fg, color.none.bg, style.none)
+
+-- Recolor for base2tone_evening_dark
+for _, s in pairs({
+	'FloatBorder',
+	'FloatTitle',
+}) do
+	update_highlight(s, color.grey.fg, color.none.bg)
+end
+
 -- Italic
 for _, s in pairs({
 	'Comment',
@@ -447,3 +457,23 @@ for _, s in pairs({
 end
 
 update_highlight('Number', vim.tbl_extend('force', style.none, { bold = true, cterm = {bold = true }}))
+
+update_highlight(
+	'SpellBad',
+	vim.tbl_extend(
+		'force',
+		style.none,
+		{
+			undercurl = true,
+			sp = '#599eff',
+			cterm = {
+				undercurl = true
+			}
+		}
+	)
+)
+
+update_highlight(
+	'SpellBad',
+	color.none.fg
+)

@@ -1,5 +1,6 @@
 return {
 	n = {':enew', 'empty buffer'},
+	N = {':Neogit', 'Neogit'},
 	e = {',e', 'Explorer'}, -- see this on how to bind existing leader bindings
 	T = {':Trouble', 'Troubles'},
 	g = {':DiffviewOpen', 'Diff view'},

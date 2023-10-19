@@ -100,12 +100,12 @@ return require('packer').startup(function()
             'sindrets/diffview.nvim'
         }
     }
-    use {
-        'ThePrimeagen/harpoon',
-        requires = 'nvim-lua/plenary.nvim',
-        config = [[require('plugins.harpoon.config')]],
-        setup = [[require('plugins.harpoon.setup')]],
-    }
+    -- use {
+    --     'ThePrimeagen/harpoon',
+    --     requires = 'nvim-lua/plenary.nvim',
+    --     config = [[require('plugins.harpoon.config')]],
+    --     setup = [[require('plugins.harpoon.setup')]],
+    -- }
 
     -- Editor visuals
     use {'machakann/vim-sandwich'} -- maybe use nvim-surround
@@ -116,7 +116,8 @@ return require('packer').startup(function()
     }
     use {
         'lukas-reineke/indent-blankline.nvim',
-        config = [[require('plugins.indent-blankline.config')]]
+        config = [[require('plugins.indent-blankline.config')]],
+        after = {'rainbow-delimiters.nvim'}
     }
     use {
         'machakann/vim-highlightedyank',
@@ -195,12 +196,6 @@ return require('packer').startup(function()
         setup = [[require('plugins.telekasten.setup')]],
         wants = {'plenary.nvim', 'telescope.nvim'},
     }
-    use {
-        'phaazon/mind.nvim',
-        branch = 'v2',
-        requires = { 'nvim-lua/plenary.nvim' },
-        config = [[require('plugins.mind.config')]],
-    }
 
     -- documentation
     use {
@@ -256,8 +251,8 @@ return require('packer').startup(function()
         }
     }
     use {
-        'p00f/nvim-ts-rainbow',
-        config = [[require('plugins.nvim-ts-rainbow.config')]]
+        'hiphish/rainbow-delimiters.nvim',
+        config = [[require('plugins.rainbow-delimiters.config')]]
     }
     use {
         'windwp/nvim-ts-autotag',
