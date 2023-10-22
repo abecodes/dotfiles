@@ -18,4 +18,5 @@ return {
     s = {',ts', 'Find in lsp document symbols'},
     S = {',tS', 'Find in lsp workspace symbols'},
     t = {',tt', 'Find in treesitter'},
+    w = {',tw', 'Find in spelling suggestions for word'}
 }

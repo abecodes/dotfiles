@@ -55,6 +55,9 @@ map('n', "<leader>tR", "<CMD>lua require('telescope.builtin').lsp_references()<C
 	{silent = true})
 map('n', "<leader>tI", "<CMD>lua require('telescope.builtin').lsp_implementations()<CR>",
 	{silent = true})
+-- require("telescope.builtin").spell_suggest(require("telescope.themes").get_cursor({}))
+map('n', "<leader>tw", "<CMD>lua require('telescope.builtin').spell_suggest(vim.api.nvim_win_get_cursor(0))",
+	{silent = true})
 -- remap to open the Telescope refactoring menu in visual mode
 map(
 	"n",

@@ -67,3 +67,4 @@ opt.autoread = true
 -- opt.scrolloff = 999
 -- use on mac if neovim/fish is installed with brew
 --[[ opt.shell = '/usr/local/bin/fish' ]]
+opt.jumpoptions = 'stack' -- how items in the jumplist are arranged

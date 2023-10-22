@@ -43,10 +43,10 @@ map('v', '<', '<gv', {silent = true})
 map('v', '>', '>gv', {silent = true})
 
 -- lines
-map('n', '<A-Up>', ':m -2<CR>', {silent = true})
-map('n', '<A-Down>', ':m +1<CR>', {silent = true})
-map('v', '<A-Up>', ':m \'<-2<CR>gv=gv', {silent = true})
-map('v', '<A-Down>', ':m \'>+1<CR>gv=gv', {silent = true})
+map('n', '<A-S-Up>', ':m -2<CR>', {silent = true})
+map('n', '<A-S-Down>', ':m +1<CR>', {silent = true})
+map('v', '<A-S-Up>', ':m \'<-2<CR>gv=gv', {silent = true})
+map('v', '<A-S-Down>', ':m \'>+1<CR>gv=gv', {silent = true})
 
 -- leader
 --- search and replace in current buffer
