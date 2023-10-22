@@ -53,8 +53,8 @@ map('v', '<A-S-Down>', ':m \'>+1<CR>gv=gv', {silent = true})
 map('n', '<Leader>rr', ':%s///g<Left><Left><Left>', {silent = true})
 map('n', '<Leader>rl', ':s///g<Left><Left><Left>', {silent = true})
 map('n', '<Leader>rc', ':%s///gc<Left><Left><Left><Left>', {silent = true})
-map('v', '<Leader>rr', ":'<,'>s///g<Left><Left><Left>", {silent = true})
-map('v', '<Leader>rc', ":'<,'>%s///gc<Left><Left><Left><Left>", {silent = true})
+map('v', '<Leader>rr', ":'s///g<Left><Left><Left>", {silent = true})
+map('v', '<Leader>rc', ":'%s///gc<Left><Left><Left><Left>", {silent = true})
 -- show/hide cursorline
 map('n', '<Leader>c', '<cmd>set cursorline!<CR>', {silent = true})
 --- screenshots
