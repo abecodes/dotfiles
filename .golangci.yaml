@@ -106,7 +106,7 @@ linters:
   #   - asasalint
   #   - asciicheck
   #   - bidichk
-  #   - bodyclose
+    - bodyclose
   #   - containedctx
   #   - contextcheck
   #   - cyclop
@@ -598,7 +598,7 @@ linters-settings:
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#unexported-return
       - name: unexported-return
         severity: warning
-        disabled: false
+        disabled: true
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#unhandled-error
       - name: unhandled-error
         severity: warning
@@ -642,28 +642,28 @@ issues:
   #   - abcdef
   # Excluding configuration per-path, per-linter, per-text and per-source
   # exclude-rules:
-    # Exclude some linters from running on tests files.
-    # - path: _test\.go
-    #   linters:
-    #     - gocyclo
-    #     - errcheck
-    #     - dupl
-    #     - gosec
-    # Exclude known linters from partially hard-vendored code,
-    # which is impossible to exclude via `nolint` comments.
-    # `/` will be replaced by current OS file path separator to properly work on Windows.
-    # - path: internal/hmac/
-    #   text: "weak cryptographic primitive"
-    #   linters:
-    #     - gosec
-    # Exclude some `staticcheck` messages.
-    # - linters:
-    #     - staticcheck
-    #   text: "SA9003:"
-    # Exclude `lll` issues for long lines with `go:generate`.
-    # - linters:
-    #     - lll
-    #   source: "^//go:generate "
+  # Exclude some linters from running on tests files.
+  # - path: _test\.go
+  #   linters:
+  #     - gocyclo
+  #     - errcheck
+  #     - dupl
+  #     - gosec
+  # Exclude known linters from partially hard-vendored code,
+  # which is impossible to exclude via `nolint` comments.
+  # `/` will be replaced by current OS file path separator to properly work on Windows.
+  # - path: internal/hmac/
+  #   text: "weak cryptographic primitive"
+  #   linters:
+  #     - gosec
+  # Exclude some `staticcheck` messages.
+  # - linters:
+  #     - staticcheck
+  #   text: "SA9003:"
+  # Exclude `lll` issues for long lines with `go:generate`.
+  # - linters:
+  #     - lll
+  #   source: "^//go:generate "
   # Independently of option `exclude` we use default exclude patterns,
   # it can be disabled by this option.
   # To list all excluded by default patterns execute `golangci-lint run --help`.
@@ -737,5 +737,5 @@ severity:
   # Default: []
   rules:
     - linters:
-      - gocritic
+        - gocritic
       severity: warning
