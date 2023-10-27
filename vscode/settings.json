@@ -53,7 +53,7 @@
   "emeraldwalk.runonsave": {
     "commands": [
       {
-        "cmd": "golines -m 80 -t 2 --no-chain-split-dots --base-formatter gofumpt ${file} | gci write -s standard -s default -s blank -s dot ${file}",
+        "cmd": "golines -m 80 -t 2 --no-chain-split-dots --base-formatter gofumpt ${file} -w && gci write -s standard -s default -s blank -s dot ${file}",
         "match": "\\.go$"
       }
     ]
