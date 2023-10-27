@@ -50,6 +50,14 @@
   "editor.minimap.enabled": false,
   "editor.tabSize": 2,
   "editor.wordWrap": "off",
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "cmd": "golines -m 80 -t 2 --no-chain-split-dots --base-formatter gofumpt ${file} | gci write -s standard -s default -s blank -s dot ${file}",
+        "match": "\\.go$"
+      }
+    ]
+  },
   "emojisense.languages": {
     "git-commit": true,
     "javascript": true,

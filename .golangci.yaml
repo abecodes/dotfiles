@@ -103,107 +103,110 @@ linters:
   # Enable specific linter
   # https://golangci-lint.run/usage/linters/#enabled-by-default
   enable:
-  #   - asasalint
-  #   - asciicheck
-  #   - bidichk
+    - asasalint
+    #   - asciicheck
+    #   - bidichk
     - bodyclose
-  #   - containedctx
-  #   - contextcheck
-  #   - cyclop
-  #   - deadcode
-  #   - decorder
-  #   - depguard
-  #   - dogsled
-  #   - dupl
-  #   - dupword
-  #   - durationcheck
-  #   - errcheck
-  #   - errchkjson
+    #   - containedctx
+    #   - contextcheck
+    #   - cyclop
+    #   - deadcode
+    #   - decorder
+    #   - depguard
+    #   - dogsled
+    #   - dupl
+    #   - dupword
+    #   - durationcheck
+    #   - errcheck
+    #   - errchkjson
     - errname
-  #   - errorlint
-  #   - execinquery
-  #   - exhaustive
-  #   - exhaustivestruct
+    #   - errorlint
+    #   - execinquery
+    #   - exhaustive
+    #   - exhaustivestruct
     - exhaustruct
     - exportloopref
-  #   - forbidigo
-  #   - forcetypeassert
-  #   - funlen
-  #   - gci
-  #   - gochecknoglobals
-  #   - gochecknoinits
-  #   - gocognit
-  #   - goconst
+    #   - forbidigo
+    #   - forcetypeassert
+    #   - funlen
+    #   - gci
+    - ginkgolinter
+    #   - gochecknoglobals
+    #   - gochecknoinits
+    #   - gocognit
+    #   - goconst
     - gocritic
-  #   - gocyclo
-  #   - godot
-  #   - godox
-  #   - goerr113
-  #   - gofmt
-  #   - gofumpt
-  #   - goheader
-  #   - goimports
-  #   - golint
-  #   - gomnd
-  #   - gomoddirectives
-  #   - gomodguard
-  #   - goprintffuncname
+    #   - gocyclo
+    #   - godot
+    #   - godox
+    #   - goerr113
+    #   - gofmt
+    #   - gofumpt
+    #   - goheader
+    #   - goimports
+    #   - golint
+    #   - gomnd
+    #   - gomoddirectives
+    #   - gomodguard
+    #   - goprintffuncname
     - gosec
     - gosimple
     - govet
-  #   - grouper
-  #   - ifshort
-  #   - importas
+    #   - grouper
+    #   - ifshort
+    #   - importas
     - ineffassign
-  #   - interfacebloat
-  #   - interfacer
-  #   - ireturn
-  #   - lll
-  #   - loggercheck
-  #   - maintidx
-  #   - makezero
-  #   - maligned
-  #   - misspell
-  #   - nakedret
-  #   - nestif
-  #   - nilerr
-  #   - nilnil
-  #   - nlreturn
-  #   - noctx
-  #   - nolintlint
-  #   - nonamedreturns
-  #   - nosnakecase
-  #   - nosprintfhostport
-  #   - paralleltest
-  #   - prealloc
+    #   - interfacebloat
+    #   - interfacer
+    - ireturn
+    #   - lll
+    #   - loggercheck
+    - maintidx
+    #   - makezero
+    #   - maligned
+    - musttag
+    #   - misspell
+    #   - nakedret
+    #   - nestif
+    - nilerr
+    #   - nilnil
+    - nlreturn
+    #   - noctx
+    #   - nolintlint
+    #   - nonamedreturns
+    #   - nosnakecase
+    - nosprintfhostport
+    #   - paralleltest
+    - prealloc
     - predeclared
-  #   - promlinter
+    - perfsprint
+    #   - promlinter
     - reassign
     - revive
-  #   - rowserrcheck
-  #   - scopelint
-  #   - sqlclosecheck
+    #   - rowserrcheck
+    #   - scopelint
+    #   - sqlclosecheck
     - staticcheck
-  #   - structcheck
-  #   - stylecheck
-  #   - tagliatelle
-  #   - tenv
-  #   - testableexamples
-  #   - testpackage
-  #   - thelper
-  #   - tparallel
-  #   - typecheck
-  #   - unconvert
+    #   - structcheck
+    #   - stylecheck
+    #   - tagliatelle
+    #   - tenv
+    #   - testableexamples
+    #   - testpackage
+    #   - thelper
+    #   - tparallel
+    #   - typecheck
+    #   - unconvert
     - unparam
     - unused
     - usestdlibvars
-  #   - varcheck
-  #   - varnamelen
+    #   - varcheck
+    #   - varnamelen
     - wastedassign
   #   - whitespace
   #   - wrapcheck
   #   - wsl
-	# Enable presets.
+  # Enable presets.
   # https://golangci-lint.run/usage/linters
   # presets:
   #   - bugs
@@ -224,6 +227,46 @@ linters:
   # fast: true
 
 linters-settings:
+  # asasalint:
+    # To specify a set of function names to exclude.
+    # The values are merged with the builtin exclusions.
+    # The builtin exclusions can be disabled by setting `use-builtin-exclusions` to `false`.
+    # Default: ["^(fmt|log|logger|t|)\.(Print|Fprint|Sprint|Fatal|Panic|Error|Warn|Warning|Info|Debug|Log)(|f|ln)$"]
+    ## exclude:
+    #  - Append
+    #  - \.Wrapf
+    # To enable/disable the asasalint builtin exclusions of function names.
+    # See the default value of `exclude` to get the builtin exclusions.
+    # Default: true
+    ## use-builtin-exclusions: false
+    # Ignore *_test.go files.
+    # Default: false
+    ## ignore-test: true
+  ginkgolinter:
+    # Suppress the wrong length assertion warning.
+    # Default: false
+    ## suppress-len-assertion: true
+    # Suppress the wrong nil assertion warning.
+    # Default: false
+    ## suppress-nil-assertion: true
+    # Suppress the wrong error assertion warning.
+    # Default: false
+    ## suppress-err-assertion: true
+    # Suppress the wrong comparison assertion warning.
+    # Default: false
+    ## suppress-compare-assertion: true
+    # Suppress the function all in async assertion warning.
+    # Default: false
+    ## suppress-async-assertion: true
+    # Suppress warning for comparing values from different types, like int32 and uint32
+    # Default: false
+    ## suppress-type-compare-assertion: true
+    # Trigger warning for ginkgo focus containers like FDescribe, FContext, FWhen or FIt
+    # Default: false
+    ## forbid-focus-container: true
+    # Don't trigger warnings for HaveLen(0)
+    # Default: false
+    ## allow-havelen-zero: true
   gocritic:
     # Which checks should be enabled; can't be combined with 'disabled-checks'.
     # See https://go-critic.github.io/overview#checks-overview.
@@ -269,17 +312,17 @@ linters-settings:
     # Run `go tool vet help` to see all analyzers.
     # Default: []
     disable:
-    #   - asmdecl
-    #   - assign
-    #   - atomic
-    #   - atomicalign
-    #   - bools
-    #   - buildtag
-    #   - cgocall
-    #   - composites
-    #   - copylocks
-    #   - deepequalerrors
-    #   - errorsas
+      #   - asmdecl
+      #   - assign
+      #   - atomic
+      #   - atomicalign
+      #   - bools
+      #   - buildtag
+      #   - cgocall
+      #   - composites
+      #   - copylocks
+      #   - deepequalerrors
+      #   - errorsas
       - fieldalignment
     #   - findcall
     #   - framepointer
@@ -305,6 +348,59 @@ linters-settings:
     #   - unsafeptr
     #   - unusedresult
     #   - unusedwrite
+  # ireturn:
+    # ireturn does not allow using `allow` and `reject` settings at the same time.
+    # Both settings are lists of the keywords and regular expressions matched to interface or package names.
+    # keywords:
+    # - `empty` for `interface{}`
+    # - `error` for errors
+    # - `stdlib` for standard library
+    # - `anon` for anonymous interfaces
+    # - `generic` for generic interfaces added in go 1.18
+    # By default, it allows using errors, empty interfaces, anonymous interfaces,
+    # and interfaces provided by the standard library.
+    # allow:
+    #  - anon
+    #  - error
+    #  - empty
+    #  - stdlib
+    #  # You can specify idiomatic endings for interface
+    #  - (or|er)$
+    # reject-list of interfaces
+    # reject:
+    #  - github.com\/user\/package\/v4\.Type
+  maintidx:
+    # Show functions with maintainability index lower than N.
+    # A high index indicates better maintainability (it's kind of the opposite of complexity).
+    # Default: 20
+    # under: 100
+  musttag:
+    # A set of custom functions to check in addition to the builtin ones.
+    # Default: json, xml, gopkg.in/yaml.v3, BurntSushi/toml, mitchellh/mapstructure, jmoiron/sqlx
+    ## functions:
+      # The full name of the function, including the package.
+      ## - name: github.com/hashicorp/hcl/v2/hclsimple.DecodeFile
+        # The struct tag whose presence should be ensured.
+        ## tag: hcl
+        # The position of the argument to check.
+        ## arg-pos: 2
+  nlreturn:
+    # Size of the block (including return statement that is still "OK")
+    # so no return split required.
+    # Default: 1
+    block-size: 0
+  prealloc:
+    # IMPORTANT: we don't recommend using this linter before doing performance profiling.
+    # For most programs usage of prealloc will be a premature optimization.
+    # Report pre-allocation suggestions only on simple loops that have no returns/breaks/continues/gotos in them.
+    # Default: true
+    # simple: false
+    # Report pre-allocation suggestions on range loops.
+    # Default: true
+    # range-loops: false
+    # Report pre-allocation suggestions on for loops.
+    # Default: false
+    for-loops: true
   revive:
     enable-all-rules: true
     ignore-generated-header: true
@@ -314,10 +410,10 @@ linters-settings:
         severity: warning
         disabled: false
         arguments:
-          - maxLitCount: "3"
+          - maxLitCount: '3'
             allowStrs: '""'
-            allowInts: "0,1"
-            allowFloats: "0.0,1.0"
+            allowInts: '0,1'
+            allowFloats: '0.0,1.0'
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#argument-limit
       - name: argument-limit
         severity: warning
@@ -331,7 +427,7 @@ linters-settings:
       - name: banned-characters
         severity: warning
         disabled: false
-        arguments: ["Ω", "Σ", "σ", "7"]
+        arguments: ['Ω', 'Σ', 'σ', '7']
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#bare-return
       - name: bare-return
         severity: warning
@@ -355,9 +451,9 @@ linters-settings:
         arguments: [10]
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#comment-spacings
       # - name: comment-spacings
-        # severityt: warning
-        # disabled: false
-        # arguments: []
+      # severityt: warning
+      # disabled: false
+      # arguments: []
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#confusing-naming
       - name: confusing-naming
         severity: warning
@@ -375,7 +471,7 @@ linters-settings:
         severity: warning
         disabled: false
         arguments:
-          - allowTypesBefore: "*testing.T"
+          - allowTypesBefore: '*testing.T'
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#context-keys-type
       - name: context-keys-type
         severity: warning
@@ -440,13 +536,13 @@ linters-settings:
         severity: warning
         disabled: false
         arguments:
-          - "checkPrivateReceivers"
-          - "sayRepetitiveInsteadOfStutters"
+          - 'checkPrivateReceivers'
+          - 'sayRepetitiveInsteadOfStutters'
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#file-header
       - name: file-header
         severity: warning
         disabled: true
-        arguments: [""]
+        arguments: ['']
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#flag-parameter
       - name: flag-parameter
         severity: warning
@@ -486,8 +582,8 @@ linters-settings:
         severity: warning
         disabled: false
         arguments:
-          - "crypto/md5"
-          - "crypto/sha1"
+          - 'crypto/md5'
+          - 'crypto/sha1'
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#import-shadowing
       - name: import-shadowing
         severity: warning
@@ -581,8 +677,8 @@ linters-settings:
         severity: warning
         disabled: false
         arguments:
-          - ["ID"] # AllowList
-          - ["VM"] # DenyList
+          - ['ID'] # AllowList
+          - ['VM'] # DenyList
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#var-declaration
       - name: var-declaration
         severity: warning
@@ -604,7 +700,7 @@ linters-settings:
         severity: warning
         disabled: false
         arguments:
-          - "fmt.Printf"
+          - 'fmt.Printf'
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#unnecessary-stmt
       - name: unnecessary-stmt
         severity: warning
@@ -629,6 +725,43 @@ linters-settings:
       - name: waitgroup-by-value
         severity: warning
         disabled: false
+  usestdlibvars:
+    # Suggest the use of http.MethodXX.
+    # Default: true
+    # http-method: false
+    # Suggest the use of http.StatusXX.
+    # Default: true
+    # http-status-code: false
+    # Suggest the use of time.Weekday.String().
+    # Default: true
+    # time-weekday: true
+    # Suggest the use of time.Month.String().
+    # Default: false
+    time-month: true
+    # Suggest the use of time.Layout.
+    # Default: false
+    time-layout: true
+    # Suggest the use of crypto.Hash.String().
+    # Default: false
+    crypto-hash: true
+    # Suggest the use of rpc.DefaultXXPath.
+    # Default: false
+    default-rpc-path: true
+    # DEPRECATED Suggest the use of os.DevNull.
+    # Default: false
+    os-dev-null: true
+    # Suggest the use of sql.LevelXX.String().
+    # Default: false
+    sql-isolation-level: true
+    # Suggest the use of tls.SignatureScheme.String().
+    # Default: false
+    tls-signature-scheme: true
+    # Suggest the use of constant.Kind.String().
+    # Default: false
+    constant-kind: true
+    # DEPRECATED Suggest the use of syslog.Priority.
+    # Default: false
+    syslog-priority: true
 
 issues:
   # List of regexps of issue texts to exclude.
@@ -739,3 +872,4 @@ severity:
     - linters:
         - gocritic
       severity: warning
+

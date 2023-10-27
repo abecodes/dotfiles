@@ -15,6 +15,13 @@ vim.api.nvim_create_autocmd({"ColorScheme"}, {
 			hi link RainbowDelimiterViolet String
 			hi link RainbowDelimiterCyan Special
 		]], true)
+		vim.api.nvim_set_hl(0, '@text.uri.comment', {
+			cterm = {
+				underline = true
+			},
+			underline = true,
+			sp = '#e09142'
+		})
 		vim.api.nvim_set_hl(0, 'markdownUrl', {
 			cterm = {
 				underline = true

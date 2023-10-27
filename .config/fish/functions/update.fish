@@ -13,4 +13,5 @@ function update
   go install github.com/divan/expvarmon@latest
   go install github.com/segmentio/golines@latest
   go install github.com/onsi/ginkgo/v2/ginkgo@latest
+  go install github.com/daixiang0/gci@latest
 end

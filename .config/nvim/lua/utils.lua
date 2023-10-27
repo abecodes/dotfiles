@@ -29,6 +29,8 @@ local M = {}
 
 M.log = logger
 
+-- pumps the content of the current buffer to stdin of the command
+-- and replaces the buffer with the cmd stdout
 --- @param cmd string
 M.get_buf_func = function(cmd)
 	if not (type(cmd) == 'string') then
@@ -39,6 +41,21 @@ M.get_buf_func = function(cmd)
 	return function()
 		vim.api.nvim_command(
 			':%!'..cmd
+		)
+	end
+end
+
+-- executes function with the filepath of the current file
+--- @param cmd string
+M.get_buf_file_func = function(cmd)
+	if not (type(cmd) == 'string') then
+		logger.warn(logger.dump(cmd)..' in no valid param to get_buf_func')
+		return nil
+	end
+
+	return function()
+		vim.api.nvim_command(
+			':!'..cmd..' %'
 		)
 	end
 end

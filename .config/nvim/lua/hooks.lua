@@ -29,9 +29,13 @@ local h = {
 			-- 	func = require('modules.addHeader')('// abe.codes was here'),
 			-- 	order = 99,
 			-- },
-			-- break lines if they are to long
-			-- includes gofumpt
-			require('modules.go.breakLines'),
+			function()
+				-- break lines if they are to long
+				-- includes gofumpt
+				require('modules.go.breakLines')()
+				-- sort imports following some rules
+				require('modules.go.sortImports')()
+			end,
 		},
 		['BufWritePost'] = {
 			-- lint code and add to diagnostics
