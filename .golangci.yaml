@@ -179,7 +179,7 @@ linters:
     #   - paralleltest
     - prealloc
     - predeclared
-    - perfsprint
+    # - perfsprint
     #   - promlinter
     - reassign
     - revive
@@ -228,20 +228,20 @@ linters:
 
 linters-settings:
   # asasalint:
-    # To specify a set of function names to exclude.
-    # The values are merged with the builtin exclusions.
-    # The builtin exclusions can be disabled by setting `use-builtin-exclusions` to `false`.
-    # Default: ["^(fmt|log|logger|t|)\.(Print|Fprint|Sprint|Fatal|Panic|Error|Warn|Warning|Info|Debug|Log)(|f|ln)$"]
-    ## exclude:
-    #  - Append
-    #  - \.Wrapf
-    # To enable/disable the asasalint builtin exclusions of function names.
-    # See the default value of `exclude` to get the builtin exclusions.
-    # Default: true
-    ## use-builtin-exclusions: false
-    # Ignore *_test.go files.
-    # Default: false
-    ## ignore-test: true
+  # To specify a set of function names to exclude.
+  # The values are merged with the builtin exclusions.
+  # The builtin exclusions can be disabled by setting `use-builtin-exclusions` to `false`.
+  # Default: ["^(fmt|log|logger|t|)\.(Print|Fprint|Sprint|Fatal|Panic|Error|Warn|Warning|Info|Debug|Log)(|f|ln)$"]
+  ## exclude:
+  #  - Append
+  #  - \.Wrapf
+  # To enable/disable the asasalint builtin exclusions of function names.
+  # See the default value of `exclude` to get the builtin exclusions.
+  # Default: true
+  ## use-builtin-exclusions: false
+  # Ignore *_test.go files.
+  # Default: false
+  ## ignore-test: true
   ginkgolinter:
     # Suppress the wrong length assertion warning.
     # Default: false
@@ -349,26 +349,26 @@ linters-settings:
     #   - unusedresult
     #   - unusedwrite
   # ireturn:
-    # ireturn does not allow using `allow` and `reject` settings at the same time.
-    # Both settings are lists of the keywords and regular expressions matched to interface or package names.
-    # keywords:
-    # - `empty` for `interface{}`
-    # - `error` for errors
-    # - `stdlib` for standard library
-    # - `anon` for anonymous interfaces
-    # - `generic` for generic interfaces added in go 1.18
-    # By default, it allows using errors, empty interfaces, anonymous interfaces,
-    # and interfaces provided by the standard library.
-    # allow:
-    #  - anon
-    #  - error
-    #  - empty
-    #  - stdlib
-    #  # You can specify idiomatic endings for interface
-    #  - (or|er)$
-    # reject-list of interfaces
-    # reject:
-    #  - github.com\/user\/package\/v4\.Type
+  # ireturn does not allow using `allow` and `reject` settings at the same time.
+  # Both settings are lists of the keywords and regular expressions matched to interface or package names.
+  # keywords:
+  # - `empty` for `interface{}`
+  # - `error` for errors
+  # - `stdlib` for standard library
+  # - `anon` for anonymous interfaces
+  # - `generic` for generic interfaces added in go 1.18
+  # By default, it allows using errors, empty interfaces, anonymous interfaces,
+  # and interfaces provided by the standard library.
+  # allow:
+  #  - anon
+  #  - error
+  #  - empty
+  #  - stdlib
+  #  # You can specify idiomatic endings for interface
+  #  - (or|er)$
+  # reject-list of interfaces
+  # reject:
+  #  - github.com\/user\/package\/v4\.Type
   maintidx:
     # Show functions with maintainability index lower than N.
     # A high index indicates better maintainability (it's kind of the opposite of complexity).
@@ -378,12 +378,12 @@ linters-settings:
     # A set of custom functions to check in addition to the builtin ones.
     # Default: json, xml, gopkg.in/yaml.v3, BurntSushi/toml, mitchellh/mapstructure, jmoiron/sqlx
     ## functions:
-      # The full name of the function, including the package.
-      ## - name: github.com/hashicorp/hcl/v2/hclsimple.DecodeFile
-        # The struct tag whose presence should be ensured.
-        ## tag: hcl
-        # The position of the argument to check.
-        ## arg-pos: 2
+    # The full name of the function, including the package.
+    ## - name: github.com/hashicorp/hcl/v2/hclsimple.DecodeFile
+    # The struct tag whose presence should be ensured.
+    ## tag: hcl
+    # The position of the argument to check.
+    ## arg-pos: 2
   nlreturn:
     # Size of the block (including return statement that is still "OK")
     # so no return split required.
@@ -872,4 +872,3 @@ severity:
     - linters:
         - gocritic
       severity: warning
-

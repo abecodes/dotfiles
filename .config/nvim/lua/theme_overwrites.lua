@@ -31,10 +31,30 @@ vim.api.nvim_create_autocmd({"ColorScheme"}, {
 			fg= '#e09142'
 		})
 		-- overwrite for lsp/diagnostics
+		-- DiagnosticError xxx guifg=#ffad5c guibg=#363342
+		-- DiagnosticWarn xxx guifg=#d8d1ca guibg=#363342
+		-- DiagnosticInfo xxx guifg=#d8d1ca guibg=#363342
+		-- DiagnosticVirtualTextError xxx guifg=#ffad5c
+		-- DiagnosticVirtualTextWarn xxx guifg=#d8d1ca
+		-- DiagnosticVirtualTextInfo xxx guifg=#d8d1ca
+		-- DiagnosticVirtualTextHint xxx guifg=#bab8c7
 		-- DiagnosticUnderlineError xxx cterm=undercurl gui=undercurl guisp=#ffad5c
 		-- DiagnosticUnderlineWarn xxx cterm=undercurl gui=undercurl guisp=#d8d1ca
 		-- DiagnosticUnderlineInfo xxx cterm=undercurl gui=undercurl guisp=#d8d1ca
 		-- DiagnosticUnderlineHint xxx cterm=undercurl gui=undercurl guisp=#bab8c7
+		vim.api.nvim_set_hl(0, 'DiagnosticError', {
+			fg = '#f70067'
+		})
+		vim.api.nvim_set_hl(0, 'DiagnosticWarn', {
+			fg = '#ffb870'
+		})
+		vim.api.nvim_set_hl(0, 'DiagnosticInfo', {
+			fg = '#c4b9fe'
+		})
+		vim.api.nvim_set_hl(0, 'DiagnosticVirtualTextError', { link = 'DiagnosticError' })
+		vim.api.nvim_set_hl(0, 'DiagnosticVirtualTextWarn', { link = 'DiagnosticWarn' })
+		vim.api.nvim_set_hl(0, 'DiagnosticVirtualTextInfo', { link = 'DiagnosticInfo' })
+		vim.api.nvim_set_hl(0, 'DiagnosticVirtualTextHint', { link = 'DiagnosticInfo' })
 		vim.api.nvim_set_hl(0, 'DiagnosticUnderlineError', {
 			cterm = {
 				undercurl = true

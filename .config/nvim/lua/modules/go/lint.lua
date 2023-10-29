@@ -50,6 +50,7 @@ local handle_stdout = function(_, data)
 			local msg = {
 				bufnr = vim.api.nvim_get_current_buf(),
 				lnum = issue.Pos.Line - 1,
+				end_lnum = issue.Pos.Line,
 				col = 0,
 				severity = vim.diagnostic.severity.WARN,
 				source = issue.FromLinter,
@@ -68,7 +69,16 @@ local handle_stdout = function(_, data)
 		::continue::
 	end
 
-	vim.diagnostic.set(namespace, vim.api.nvim_get_current_buf(), out, {})
+	vim.diagnostic.set(
+		namespace,
+		vim.api.nvim_get_current_buf(),
+		out,
+		{
+			severity_sort = true,
+			virtual_text = true,
+			underline = true,
+		}
+	)
 end
 
 
