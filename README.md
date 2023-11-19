@@ -39,11 +39,13 @@ stow -t ~/ /
 ```
 
 ```bash
-brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go golangci-lint node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu httpie
+brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go golangci-lint node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu httpie fx epr slides
 
 brew install --cask rectangle mark-text bloomrpc vscodium pritunl librewolf gaphor motrix mongodb-compass keepassxc
 
 npm i -g eslint_d @fsouza/prettierd vscode-langservers-extracted typescript typescript-language-server https://github.com/jez/bars.git
+
+pip3 install epy-reader
 
 # packer
 git clone https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim
@@ -292,7 +294,7 @@ curl -Ls https://raw.githubusercontent.com/jarun/nnn/master/plugins/getplugs | s
 # jq for better JSON handling https://stedolan.github.io/jq/
 brew install jq
 # JSON gui explorer
-go get -u github.com/gulyasm/jsonui
+brew install fx
 
 # show lines and types of code in a project https://github.com/XAMPPRocky/tokei
 brew install tokei
@@ -323,6 +325,10 @@ npm install -g https://github.com/jez/bars.git
 
 # viu can display images in a kitty terminal
 brew install viu
+
+# terminal epub reader
+brew install epr
+pip3 install epy-reader # fork of epr
 ```
 
 ## :nerd_face: Programming languages

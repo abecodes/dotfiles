@@ -29,7 +29,7 @@ return {
         return nvim_lsp.util.root_pattern('package.json', '.git')(fname) or
 					nvim_lsp.util.path.dirname(fname)
     end,
-    cmd = {'typescript-language-server', '--stdio', '--tsserver-path=tsserver'},
+    cmd = {'typescript-language-server', '--stdio'},
     filetypes = {
         'javascript', 'javascriptreact', 'javascript.jsx', 'typescript',
         'typescriptreact', 'typescript.tsx'

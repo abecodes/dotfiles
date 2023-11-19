@@ -54,7 +54,7 @@ run:
   # Define the Go version limit.
   # Mainly related to generics support since go1.18.
   # Default: use Go version from the go.mod file, fallback on the env var `GOVERSION`, fallback on 1.18
-  go: '1.19'
+  # go: '1.19'
 
 # output configuration options
 output:
@@ -179,7 +179,7 @@ linters:
     #   - paralleltest
     - prealloc
     - predeclared
-    # - perfsprint
+    - perfsprint
     #   - promlinter
     - reassign
     - revive
@@ -728,13 +728,13 @@ linters-settings:
   usestdlibvars:
     # Suggest the use of http.MethodXX.
     # Default: true
-    # http-method: false
+    http-method: true
     # Suggest the use of http.StatusXX.
     # Default: true
-    # http-status-code: false
+    http-status-code: true
     # Suggest the use of time.Weekday.String().
     # Default: true
-    # time-weekday: true
+    time-weekday: true
     # Suggest the use of time.Month.String().
     # Default: false
     time-month: true
@@ -762,6 +762,27 @@ linters-settings:
     # DEPRECATED Suggest the use of syslog.Priority.
     # Default: false
     syslog-priority: true
+  # custom:
+  # nilaway:
+  # path: go/bin/nilaway
+  # description: better nil checks
+  # original-url: https://github.com/uber-go/nilaway
+  # settings:
+  # A comma-separated list of package prefixes to include for analysis.
+  # Default "" (all packages are included)
+  # include-pkgs: ''
+  # A comma-separated list of package prefixes to exclude for analysis. This takes precedence over include-pkgs.
+  # Default "" (no packages are excluded)
+  # exclude-pkgs: ''
+  # A comma-separated list of strings to search for in a file's docstrings to exclude a file from analysis.
+  # Default "" (no files are excluded)
+  # exclude-file-docstrings: ''
+  # A boolean flag indicating if the NilAway errors should be printed in JSON format for further post-processing.
+  # Default false
+  # json: true
+  # A boolean flag indicating if NilAway should pretty print the errors (with ANSI color codes to highlight different components in the errors).
+  # Default false
+  # pretty-print: false
 
 issues:
   # List of regexps of issue texts to exclude.

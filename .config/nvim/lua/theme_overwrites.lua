@@ -90,5 +90,29 @@ vim.api.nvim_create_autocmd({"ColorScheme"}, {
 		vim.api.nvim_set_hl(0, 'SpellCap', { link = 'SpellBad' })
 		vim.api.nvim_set_hl(0, 'SpellRare', { link = 'SpellBad' })
 		vim.api.nvim_set_hl(0, 'SpellLocal', { link = 'SpellBad' })
+
+		for _, s in pairs({
+			'FloatBorder',
+			'FloatTitle',
+		}) do
+			vim.api.nvim_set_hl(
+				0,
+				s,
+				{
+					fg = '#6c6f93',
+					ctermfg = 242,
+					bg = 'none',
+					ctermbg = 'none',
+				}
+			)
+		end
+
+		vim.api.nvim_set_hl(
+			0,
+			'PmenuSel',
+			{
+				link = 'Todo',
+			}
+		)
   end
 })

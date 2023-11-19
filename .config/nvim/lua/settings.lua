@@ -37,6 +37,9 @@ cmd 'set noshowcmd'
 -- cmd 'set nobackup'
 -- cmd 'set nowritebackup'
 
+-- for plugin nvim-ts-context-commentstring
+g.skip_ts_context_commentstring_module = true
+
 if fn.has("termguicolors") then opt.termguicolors = true end
 
 opt.background = 'dark'
