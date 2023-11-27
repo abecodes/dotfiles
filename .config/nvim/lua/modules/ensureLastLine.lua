@@ -1,19 +1,17 @@
 return function()
 	local maxLines = vim.api.nvim_buf_line_count(0)
+	local nonBlank = vim.fn.prevnonblank(maxLines)
 
-	if not (vim.fn.getline(maxLines) == '') then
-		vim.fn.append(vim.fn.line('$'), '')
-	else
-		while vim.fn.getline(maxLines) == '' and vim.fn.getline(maxLines - 1) == '' do
-			vim.api.nvim_buf_set_lines(
-				0,
-				-2,
-				-1,
-				false,
-				{}
-			)
+	while nonBlank < maxLines do
+		vim.api.nvim_buf_set_lines(
+			0,
+			nonBlank,
+			maxLines,
+			true,
+			{''}
+		)
 
-			maxLines = vim.api.nvim_buf_line_count(0)
-		end
+		maxLines = vim.api.nvim_buf_line_count(0)
+		nonBlank = vim.fn.prevnonblank(maxLines)
 	end
 end
