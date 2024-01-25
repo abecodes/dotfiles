@@ -1,6 +1,6 @@
 local utils = require('utils')
 local lint = require('modules.go.lint')
-local format = require('modules.go.breakLines')
+local format = require('modules.go.format')
 local impl = require('modules.go.impl')
 local tests = require('modules.go.tests')
 require('modules.go.json2struct')()
