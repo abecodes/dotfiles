@@ -58,10 +58,28 @@ local handle_stdout = function(_, data)
 				user_data = {},
 			}
 
-			if issue.Severity == "error" then
-				msg.severity = vim.diagnostic.severity.ERROR
+			-- if issue.Severity == "error" then
+			msg.severity = vim.diagnostic.severity.ERROR
+			-- end
+
+			if utils.str_has_prefix(issue.Text, "shadow") then
+				msg.severity = vim.diagnostic.severity.WARN
+
+				goto insert_into
 			end
 
+			if string.find(issue.Text, "is missing field") then
+				msg.severity = vim.diagnostic.severity.HINT
+
+				goto insert_into
+			end
+
+			if utils.str_has_prefix(issue.Text, "function-length") or
+				utils.str_has_prefix(issue.Text, "ifElseChain") then
+				msg.severity = vim.diagnostic.severity.INFO
+			end
+
+			::insert_into::
 			table.insert(out, msg)
 			::continue_issue::
 		end
@@ -69,15 +87,24 @@ local handle_stdout = function(_, data)
 		::continue::
 	end
 
-	vim.diagnostic.set(
+	if #out > 0 then
+		vim.diagnostic.set(
+			namespace,
+			vim.api.nvim_get_current_buf(),
+			out,
+			{
+				severity_sort = true,
+				virtual_text = true,
+				underline = true,
+			}
+		)
+
+		return
+	end
+
+	vim.diagnostic.reset(
 		namespace,
-		vim.api.nvim_get_current_buf(),
-		out,
-		{
-			severity_sort = true,
-			virtual_text = true,
-			underline = true,
-		}
+		vim.api.nvim_get_current_buf()
 	)
 end
 

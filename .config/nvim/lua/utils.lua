@@ -29,6 +29,14 @@ local M = {}
 
 M.log = logger
 
+M.str_has_prefix = function(str, prefix)
+	return str:sub(1, #prefix) == prefix
+end
+
+M.str_has_suffix = function(str, suffix)
+	return suffix == "" or str:sub(-#suffix) == suffix
+end
+
 -- pumps the content of the current buffer to stdin of the command
 -- and replaces the buffer with the cmd stdout
 --- @param cmd string
