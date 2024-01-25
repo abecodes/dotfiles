@@ -30,11 +30,7 @@ local h = {
 			-- 	order = 99,
 			-- },
 			function()
-				-- break lines if they are to long
-				-- includes gofumpt
-				require('modules.go.breakLines')()
-				-- sort imports following some rules
-				require('modules.go.sortImports')()
+				require('modules.go.format')()
 			end,
 		},
 		['BufWritePost'] = {
