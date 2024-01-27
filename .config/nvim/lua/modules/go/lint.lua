@@ -62,7 +62,8 @@ local handle_stdout = function(_, data)
 			msg.severity = vim.diagnostic.severity.ERROR
 			-- end
 
-			if utils.str_has_prefix(issue.Text, "shadow") then
+			if utils.str_has_prefix(issue.Text, "shadow") or
+				utils.str_has_prefix(issue.Text, "add-constant") then
 				msg.severity = vim.diagnostic.severity.WARN
 
 				goto insert_into
@@ -75,7 +76,8 @@ local handle_stdout = function(_, data)
 			end
 
 			if utils.str_has_prefix(issue.Text, "function-length") or
-				utils.str_has_prefix(issue.Text, "ifElseChain") then
+				utils.str_has_prefix(issue.Text, "ifElseChain") or
+				utils.str_has_prefix(issue.Text, "cyclomatic") then
 				msg.severity = vim.diagnostic.severity.INFO
 			end
 
