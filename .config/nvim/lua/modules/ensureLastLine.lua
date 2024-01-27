@@ -2,8 +2,7 @@ return function()
 	local maxLines = vim.api.nvim_buf_line_count(0)
 	local nonBlank = vim.fn.prevnonblank(maxLines)
 
-	if maxLines == 0 or
-		maxLines == nonBlank then
+	if maxLines == 0 then
 		return
 	end
 
