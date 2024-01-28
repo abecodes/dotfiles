@@ -63,7 +63,9 @@ local handle_stdout = function(_, data)
 			-- end
 
 			if utils.str_has_prefix(issue.Text, "shadow") or
-				utils.str_has_prefix(issue.Text, "add-constant") then
+				utils.str_has_prefix(issue.Text, "add-constant") or
+				utils.str_has_prefix(issue.Text, "unhandled-error") or
+				utils.str_has_prefix(issue.Text, "cognitive-complexity") then
 				msg.severity = vim.diagnostic.severity.WARN
 
 				goto insert_into
@@ -77,7 +79,8 @@ local handle_stdout = function(_, data)
 
 			if utils.str_has_prefix(issue.Text, "function-length") or
 				utils.str_has_prefix(issue.Text, "ifElseChain") or
-				utils.str_has_prefix(issue.Text, "cyclomatic") then
+				utils.str_has_prefix(issue.Text, "cyclomatic") or
+				utils.str_has_prefix(issue.Text, "argument-limit") then
 				msg.severity = vim.diagnostic.severity.INFO
 			end
 
