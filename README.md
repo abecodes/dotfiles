@@ -41,7 +41,7 @@ stow -t ~/ /
 ```bash
 brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go golangci-lint node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu httpie fx epr slides
 
-brew install --cask rectangle mark-text bloomrpc vscodium pritunl librewolf gaphor motrix mongodb-compass keepassxc
+brew install --cask rectangle mark-text bloomrpc vscodium pritunl librewolf gaphor motrix mongodb-compass keepassxc drawio
 
 npm i -g eslint_d @fsouza/prettierd vscode-langservers-extracted typescript typescript-language-server https://github.com/jez/bars.git
 
@@ -265,6 +265,12 @@ brew install --cask motrix
 
 ```bash
 brew install --cask mongodb-compass
+```
+
+[drawio](https://draw.io) Draw flowcharts and programming diagrams
+
+```bash
+brew install --cask drawio
 ```
 
 [httpie](https://httpie.io/download) A gui for httpie (postman replacement)

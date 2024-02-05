@@ -795,14 +795,19 @@ issues:
   # exclude:
   #   - abcdef
   # Excluding configuration per-path, per-linter, per-text and per-source
-  # exclude-rules:
-  # Exclude some linters from running on tests files.
-  # - path: _test\.go
-  #   linters:
-  #     - gocyclo
-  #     - errcheck
-  #     - dupl
-  #     - gosec
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: (.+)_test.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+        - exhaustruct
+    - path: (.+)_test.go
+      text: 'import-alias-naming'
+    - path: (.+)_test.go
+      text: 'dot-imports'
   # Exclude known linters from partially hard-vendored code,
   # which is impossible to exclude via `nolint` comments.
   # `/` will be replaced by current OS file path separator to properly work on Windows.

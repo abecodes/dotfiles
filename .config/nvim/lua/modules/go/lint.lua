@@ -80,7 +80,8 @@ local handle_stdout = function(_, data)
 			if utils.str_has_prefix(issue.Text, "function-length") or
 				utils.str_has_prefix(issue.Text, "ifElseChain") or
 				utils.str_has_prefix(issue.Text, "cyclomatic") or
-				utils.str_has_prefix(issue.Text, "argument-limit") then
+				utils.str_has_prefix(issue.Text, "argument-limit") or
+				utils.str_has_prefix(issue.Text, "redundant-import-alias") then
 				msg.severity = vim.diagnostic.severity.INFO
 			end
 
