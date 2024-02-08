@@ -27,4 +27,13 @@ require'nvim-treesitter.configs'.setup {
         -- Instead of true it can also be a list of languages
         additional_vim_regex_highlighting = false,
     },
+    context_commentstring = {
+        enable = true,
+        commentary_integration = {
+            -- change default mapping
+            Commentary = '<leader>/',
+            -- disable default mapping
+            -- CommentaryLine = false,
+        },
+    },
 }
