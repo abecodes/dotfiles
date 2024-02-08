@@ -273,9 +273,12 @@ return require('packer').startup(function()
         after = {'nvim-lspconfig'}
     }
     use {
-        'romgrk/nvim-treesitter-context',
+        'nvim-treesitter/nvim-treesitter-context',
         setup = [[require('plugins.nvim-treesitter-context.setup')]],
         config = [[require('plugins.nvim-treesitter-context.config')]],
+        requires = {
+            'nvim-treesitter/nvim-treesitter'
+        },
         wants = {'nvim-treesitter'}
     }
     use {
