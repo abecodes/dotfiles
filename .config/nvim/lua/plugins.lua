@@ -196,6 +196,10 @@ return require('packer').startup(function()
         setup = [[require('plugins.telekasten.setup')]],
         wants = {'plenary.nvim', 'telescope.nvim'},
     }
+    use {
+        'JellyApple102/flote.nvim',
+        config = [[require('plugins.flote.config')]],
+    }
 
     -- documentation
     use {
