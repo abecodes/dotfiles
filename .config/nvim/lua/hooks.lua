@@ -3,6 +3,10 @@ local hooks = require('hooks.hooks')
 local h = {
 	-- *************[GLOBAL]*************
 	['*'] = {
+		-- BufNew bc BufWinEnter is not fired if nvim starts in a buffer
+		['BufNew,BufWinEnter'] = {
+			require('modules.ensureTabstop'),
+		},
 		['BufEnter,FocusGained,InsertLeave'] = {
 			require('modules.showLineNumbers'),
 		},
