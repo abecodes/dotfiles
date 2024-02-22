@@ -145,6 +145,7 @@ vim.highlight.create('CursorLineNR', { guifg=white, ctermfg=white }, true) ]]
 	• ctermfg: Sets foreground of cterm color |ctermfg|
 	• ctermbg: Sets background of cterm color |ctermbg|
 ]]--
+
 local color = {
 	red = {
 		fg = {
@@ -276,6 +277,7 @@ local color = {
 	• link: name of another highlight group to link to, see|:hi-link|.
 	• default: Don't override existing definition |:hi-default|
 ]]--
+
 local style = {
 	bold = {
 		bold = true,
@@ -347,7 +349,7 @@ local update_highlight = function(id, ...)
 end
 
 --[[
--- Recolor
+-- Recolor for horizon
 --- Blue
 for _, s in pairs({
 	'@namespace',
@@ -477,3 +479,6 @@ update_highlight(
 	'SpellBad',
 	color.none.fg
 )
+
+-- changes for do.nvim
+-- vim.api.nvim_set_hl(0, 'TabLineSel', { link = 'DiagnosticOk' })

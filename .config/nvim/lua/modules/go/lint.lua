@@ -63,8 +63,15 @@ local handle_stdout = function(_, data)
 			-- end
 
 			if utils.str_has_prefix(issue.Text, "shadow") or
+				utils.str_has_prefix(issue.Text, "use-any") or
 				utils.str_has_prefix(issue.Text, "add-constant") or
 				utils.str_has_prefix(issue.Text, "unhandled-error") or
+				utils.str_has_prefix(issue.Text, "nested-structs") or
+				utils.str_has_prefix(issue.Text, "unexported-return") or
+				utils.str_has_prefix(issue.Text, "unused-receiver") or
+				utils.str_has_prefix(issue.Text, "unused-parameter") or
+				utils.str_has_prefix(issue.Text, "singleCaseSwitch") or
+				utils.str_has_prefix(issue.Text, "var-declaration") or
 				utils.str_has_prefix(issue.Text, "cognitive-complexity") then
 				msg.severity = vim.diagnostic.severity.WARN
 

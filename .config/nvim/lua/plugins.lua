@@ -244,7 +244,7 @@ return require('packer').startup(function()
         'neovim/nvim-lspconfig',
         config = [[require('plugins.nvim-lspconfig.config')]],
         setup = [[require('plugins.nvim-lspconfig.setup')]],
-        wants = {'nvim-treesitter', 'coq_nvim'},
+        wants = {'nvim-treesitter', 'coq_nvim', 'nvim-navic'},
     }
     use {
         'nvim-treesitter/nvim-treesitter',
@@ -337,7 +337,8 @@ return require('packer').startup(function()
     use {
         'SmiteshP/nvim-navic',
         -- config = [[require('plugins.nvim-navic.config')]],
-        requires = 'neovim/nvim-lspconfig'
+        requires = 'neovim/nvim-lspconfig',
+        wants = {'nvim-treesitter'}
     }
     use {
         'nvim-lualine/lualine.nvim',

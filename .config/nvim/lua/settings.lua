@@ -42,6 +42,11 @@ g.skip_ts_context_commentstring_module = true
 
 if fn.has("termguicolors") then opt.termguicolors = true end
 
+if fn.executable('rg') then
+	opt.grepformat = '%f:%l:%c:%m'
+	opt.grepprg = 'rg --vimgrep --no-heading --smart-case'
+end
+
 opt.background = 'dark'
 opt.relativenumber = true
 opt.spelllang = 'en_us'
@@ -54,10 +59,6 @@ opt.updatetime = 100 -- for vim-signify
 opt.signcolumn = 'yes'
 -- Yank and paste with the system clipboard
 opt.clipboard = 'unnamed'
--- Change number of spaces that a <Tab> counts for during editing ops
-opt.softtabstop = 2
-opt.tabstop = 2
-opt.shiftwidth = 2
 -- Set preview window to appear at bottom
 opt.splitbelow = true
 -- ignore case when searching

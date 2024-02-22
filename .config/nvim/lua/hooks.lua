@@ -17,13 +17,13 @@ local h = {
 			-- redraw on resize
 			function() vim.api.nvim_command(":redraw!") end
 		},
-		['BufWritePre'] = {
-			{
-				-- ensure empty last line on each file
-				func = require('modules.ensureLastLine'),
-				order = 9999, -- default is 100
-			},
-		},
+		-- ['BufWritePre'] = {
+		-- 	{
+		-- 		-- ensure empty last line on each file
+		-- 		func = require('modules.ensureLastLine'),
+		-- 		order = 9999, -- default is 100
+		-- 	},
+		-- },
 	},
 	-- *************[GO]*************
 	['*.go'] = {

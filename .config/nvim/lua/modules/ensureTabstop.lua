@@ -33,7 +33,7 @@ return function()
       return
   end
 
-  print("setting tabs for", vim.bo.filetype)
+  -- print("setting tabs for", vim.bo.filetype)
   vim.opt.tabstop = 8 -- recommended default
   vim.opt.softtabstop = -1 -- if negative, it uses the shiftwidth value
   vim.opt.shiftwidth = 2

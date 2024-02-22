@@ -31,7 +31,7 @@ M.warn = function(msg) M.log(msg, vim.log.levels.WARN) end
 M.debug = function(msg) if debug then M.log(msg, vim.log.levels.DEBUG) end end
 
 M.dump = function(o)
-	M.warn('rather use vim.pretty_print')
+	M.warn('rather use vim.print')
 	if type(o) == 'table' then
 		local s = '{ '
 		for k,v in pairs(o) do
