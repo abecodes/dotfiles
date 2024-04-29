@@ -233,9 +233,9 @@ return require('packer').startup(function()
     }
     use {
         'abecodes/tabout.nvim',
-        branch = 'feature/tabout-md',
+        -- branch = 'feature/tabout-md',
         config = [[require('plugins.tabout.config')]],
-        wants = {'nvim-treesitter'},
+        requires = {'nvim-treesitter'},
         after = {'coq_nvim'}
     }
 
@@ -324,6 +324,7 @@ return require('packer').startup(function()
     use {
         'rcarriga/nvim-dap-ui',
         config = [[require('plugins.nvim-dap-ui.config')]],
+        requires = {'nvim-neotest/nvim-nio'},
         wants = {'nvim-dap'}
     }
     use {

@@ -26,7 +26,8 @@ return function()
     return
   end
 
-  if vim.api.nvim_get_option('tabstop') == 8 and
+  if vim.api.nvim_get_option('tabstop') == 2 and
+    -- vim.api.nvim_get_option('tabstop') == 8 and
     vim.api.nvim_get_option('shiftwidth') == 2 and
     vim.api.nvim_get_option('softtabstop') == -1 and
     vim.api.nvim_get_option('expandtab') == not vim.tbl_contains(needs_tab, vim.bo.filetype) then
@@ -34,9 +35,10 @@ return function()
   end
 
   -- print("setting tabs for", vim.bo.filetype)
-  vim.opt.tabstop = 8 -- recommended default
+  -- vim.opt.tabstop = 8 -- recommended default
+  vim.opt.tabstop = 2
   vim.opt.softtabstop = -1 -- if negative, it uses the shiftwidth value
   vim.opt.shiftwidth = 2
   vim.opt.expandtab = not vim.tbl_contains(needs_tab, vim.bo.filetype)
-  vim.cmd('retab')
+  -- vim.cmd('retab')
 end
