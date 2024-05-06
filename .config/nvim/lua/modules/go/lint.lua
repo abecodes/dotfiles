@@ -72,6 +72,7 @@ local handle_stdout = function(_, data)
 				utils.str_has_prefix(issue.Text, "unused-parameter") or
 				utils.str_has_prefix(issue.Text, "singleCaseSwitch") or
 				utils.str_has_prefix(issue.Text, "var-declaration") or
+				utils.str_has_prefix(issue.Text, "composites") or
 				utils.str_has_prefix(issue.Text, "cognitive-complexity") then
 				msg.severity = vim.diagnostic.severity.WARN
 

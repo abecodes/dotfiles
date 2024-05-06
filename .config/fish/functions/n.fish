@@ -1,11 +1,10 @@
-
 # Rename this file to match the name of the function
 # e.g. ~/.config/fish/functions/n.fish
 # or, add the lines to the 'config.fish' file.
 
 function n --wraps nnn --description 'support nnn quit and change directory'
     # Block nesting of nnn in subshells
-    if test -n "$NNNLVL" - a "$NNNLVL" -ge 1
+    if test -n "$NNNLVL" -a "$NNNLVL" -ge 1
         echo "nnn is already running"
         return
     end
@@ -26,6 +25,8 @@ function n --wraps nnn --description 'support nnn quit and change directory'
     # stty lwrap undef
     # stty lnext undef
 
+    # The command function allows one to alias this function to `nnn` without
+    # making an infinitely recursive alias
     command nnn -P p $argv
 
     if test -e $NNN_TMPFILE

@@ -83,6 +83,12 @@ vim.api.nvim_create_autocmd({"ColorScheme"}, {
 			undercurl = true,
 			sp = '#c4b9fe'
 		})
+		vim.api.nvim_set_hl(0, 'DiagnosticHint', {
+			bg = 'none',
+			ctermbg = 'none',
+			fg = '#6a51e6',
+			ctermfg = '56',
+		})
 		-- overwrite for spell
 		-- SpellCap       xxx guifg=#ffa142 guibg=#2a2734
 		-- SpellRare      xxx guifg=#9a86fd guibg=#2a2734

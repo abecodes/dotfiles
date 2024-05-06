@@ -7,15 +7,24 @@ local home = vim.fn.expand("~/Documents/zettelkasten")
 -- - Using `vim.fn.expand("~/zettelkasten")` should work now but mileage will vary with anything outside of finding and opening files
 require('telekasten').setup({
     home = home,
+    vaults = {
+        personal = {
+            -- configuration for personal vault. E.g.:
+            home = vim.fn.expand("~/Documents/zettelkasten"),
+            dailies = home .. '/zettel/_fleeting',
+            weeklies = home .. '/zettel/_fleeting',
+            templates = vim.fn.expand("~/.config/nvim/_template"),
+        }
+    },
     -- if true, telekasten will be enabled when opening a note within the configured home
     take_over_my_home = true,
     -- auto-set telekasten filetype: if false, the telekasten filetype will not be used
     --                               and thus the telekasten syntax will not be loaded either
     auto_set_filetype = true,
     -- dir names for special notes (absolute path or subdir name)
-    dailies      = home .. '/' .. 'zettel/_fleeting',
-    weeklies     = home .. '/' .. 'zettel/_fleeting',
-    templates    = vim.fn.expand("~/.config/nvim/_template"),
+    dailies = home .. '/zettel/_fleeting',
+    weeklies = home .. '/zettel/_fleeting',
+    templates = vim.fn.expand("~/.config/nvim/_template"),
     -- image (sub)dir for pasting
     -- dir name (absolute path or subdir name)
     -- or nil if pasted images shouldn't go into a special subdir
@@ -41,7 +50,7 @@ require('telekasten').setup({
     journal_auto_open = false,
     -- template for new notes (new_note, follow_link)
     -- set to `nil` or do not specify if you do not want a template
-    template_new_note = '/Users/abe/Repos/dotfiles/.config/nvim/_template/note.md',
+    template_new_note = vim.fn.expand("~/.config/nvim/_template/note.md"),
     -- template for newly created daily notes (goto_today)
     -- set to `nil` or do not specify if you do not want a template
     template_new_daily = nil,
