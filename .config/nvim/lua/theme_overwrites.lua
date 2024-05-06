@@ -87,7 +87,7 @@ vim.api.nvim_create_autocmd({"ColorScheme"}, {
 			bg = 'none',
 			ctermbg = 'none',
 			fg = '#6a51e6',
-			ctermfg = '56',
+			ctermfg = 56,
 		})
 		-- overwrite for spell
 		-- SpellCap       xxx guifg=#ffa142 guibg=#2a2734
