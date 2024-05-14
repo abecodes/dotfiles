@@ -1,8 +1,8 @@
 require('flote').setup{
 	q_to_quit = true,
 	window_style = 'minimal',
-	window_border = 'solid',
-	window_title = false,
+	window_border = 'rounded',
+	window_title = true,
 	notes_dir = vim.fn.stdpath('cache') .. '/flote',
 	files = {
 			global = 'flote-global.md',

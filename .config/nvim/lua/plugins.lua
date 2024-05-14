@@ -200,6 +200,11 @@ return require('packer').startup(function()
         'JellyApple102/flote.nvim',
         config = [[require('plugins.flote.config')]],
     }
+    use {
+        'yujinyuz/gitpad.nvim',
+        config = [[require('plugins.gitpad.config')]],
+        setup = [[require('plugins.gitpad.setup')]],
+    }
 
     -- documentation
     use {
