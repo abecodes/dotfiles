@@ -123,7 +123,7 @@ return require('packer').startup(function()
         'machakann/vim-highlightedyank',
         config = [[require('plugins.vim-highlightedyank.config')]]
     }
-    use {'edluffy/specs.nvim', config = [[require('plugins.specs.config')]]}
+    -- use {'edluffy/specs.nvim', config = [[require('plugins.specs.config')]]}
     use {
         'andymass/vim-matchup',
         config = [[require('plugins.vim-matchup.config')]],

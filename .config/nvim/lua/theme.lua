@@ -342,7 +342,9 @@ local update_highlight = function(id, ...)
 		vim.tbl_extend(
 			'force',
 			{},
-			vim.api.nvim_get_hl_by_name(id, true),
+			-- DEPRECATED
+			-- vim.api.nvim_get_hl_by_name(id, true),
+			vim.api.nvim_get_hl(0, { name=id, create=true }),
 			unpack(args, select('#', args))
 		)
 	)
