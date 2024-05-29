@@ -39,14 +39,14 @@ return {
 			]], true)
 		end,
     on_exit = function()
-			vim.api.nvim_command('!prettierd stop')
-			vim.api.nvim_command('!eslint_d stop')
+			vim.schedule(vim.api.nvim_command('!prettierd stop'))
+			vim.schedule(vim.api.nvim_command('!eslint_d stop'))
 			vim.api.nvim_exec([[
 				augroup LspEfmCleanup
 						autocmd!
 				augroup END
 			]], true)
-			vim.api.nvim_command('aug! LspEfmCleanup')
+			vim.schedule(vim.api.nvim_command('aug! LspEfmCleanup'))
     end,
     cmd = {'efm-langserver', '-loglevel', '10', '-logfile', '/tmp/efm.log'},
     init_options = {documentFormatting = true},
