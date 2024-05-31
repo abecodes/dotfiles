@@ -170,7 +170,10 @@ return require('packer').startup(function()
         setup = [[require('plugins.telescope.setup')]],
         config = [[require('plugins.telescope.config')]]
     }
-    use 'brooth/far.vim'
+    use {
+        'brooth/far.vim',
+        setup = [[require('plugins.far.setup')]],
+    }
 
     -- writing/reading
     use {

@@ -12,11 +12,7 @@ Setting up a new system? Messed up the old one again?
 
 Here are some easy to follow along steps to speed the process up. Maybe you will finally take the time and use some automation for that...
 
-## Prerequisits
-
-**wasiqman**
-
-[wasiqman](https://github.com/qisaw/wasiqman) is a fork of the great [workman layout](https://workmanlayout.org/). It fixes an issue where some ctrl codes are not correctly transmitted to the terminal emulator.
+## Prerequisites
 
 **homebrew**
 
@@ -42,6 +38,10 @@ stow -t ~/ /
 brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go golangci-lint node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu httpie fx epr slides
 
 brew install --cask rectangle mark-text bloomrpc vscodium pritunl librewolf gaphor motrix mongodb-compass keepassxc drawio
+
+# make alternative
+brew tap joerdav/xc
+brew install xc
 
 npm i -g eslint_d @fsouza/prettierd vscode-langservers-extracted typescript typescript-language-server https://github.com/jez/bars.git
 
@@ -72,6 +72,10 @@ chsh -s /usr/local/bin/fish
 # For M1 cpus
 sudo sh -c 'echo /opt/homebrew/bin/fish >> /etc/shells'
 chsh -s /opt/homebrew/bin/fish
+
+# Set github user globally
+git config --global user.name "xxx"
+git config --global user.email "x@y.z"
 ```
 
 ## :fire: Firewall
@@ -142,25 +146,26 @@ git clone https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pac
 
 > _dont forget to create a session dir for startify in the nvim folder_
 
-> If you like your mouse, VS-Code is also a solid choice  
-> [vscodium](https://vscodium.com/): VS-Code without all the telemetry stuff
->
-> `brew install --cask vscodium`
->
-> _By default VS-Codium uses [open-vsx.org](https://open-vsx.org) as plugin marketplace. To use the original marketplace overwrite the `product.json`_
->
-> ````JSON
-> // /Applications/VSCodium.app/Contents/Resources/app/product.json
->
-> "extensionsGallery": {
->  "serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
->  "cacheUrl": "https://vscode.blob.core.windows.net/gallery/index",
->  "itemUrl": "https://marketplace.visualstudio.com/items",
->  "controlUrl": "",
->  "recommendationsUrl": ""
-> }```
-> ````
->
+If you like your mouse, VS-Code is also a solid choice
+
+[vscodium](https://vscodium.com/): VS-Code without all the telemetry stuff
+
+`brew install --cask vscodium`
+
+_By default VS-Codium uses [open-vsx.org](https://open-vsx.org) as plugin marketplace. To use the original marketplace overwrite the `product.json`_
+
+```JSON
+// /Applications/VSCodium.app/Contents/Resources/app/product.json
+
+"extensionsGallery": {
+  "serviceUrl": "https://marketplace.visualstudio.com/_apis/public/gallery",
+  "cacheUrl": "https://vscode.blob.core.windows.net/gallery/index",
+  "itemUrl": "https://marketplace.visualstudio.com/items",
+  "controlUrl": "",
+  "recommendationsUrl": ""
+}
+```
+
 > **Extensions**
 >
 > To use extensions that are not available through VS-Codium [see migration guide](https://github.com/VSCodium/vscodium/blob/master/DOCSmd#migrating-from-visual-studio-code-to-vscodium)
@@ -274,6 +279,17 @@ brew install --cask drawio
 ```
 
 [httpie](https://httpie.io/download) A gui for httpie (postman replacement)
+
+```bash
+brew install httpie
+```
+
+[xc](https://xcfile.dev/getting-started/#installation) as make replacement (better task runner baked into the README)
+
+```bash
+brew tap joerdav/xc
+brew install xc
+```
 
 Additions to the CLI would be:
 
@@ -408,5 +424,3 @@ npm i -g vscode-langservers-extracted
 - `### lists ###`
 - [Font-List](https://coding-fonts.css-tricks.com/)
 - [Font-List 2](https://www.programmingfonts.org/)
-
-## :white_check_mark: todo
