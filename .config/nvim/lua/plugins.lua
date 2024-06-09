@@ -129,7 +129,8 @@ return require('packer').startup(function()
         config = [[require('plugins.vim-matchup.config')]],
         wants = {'nvim-treesitter'}
     }
-    use {'sunjon/shade.nvim', config = [[require('plugins.shade.config')]]}
+    -- Broken in nvim 0.10
+    -- use {'sunjon/shade.nvim', config = [[require('plugins.shade.config')]]}
 
     -- project
     use {
@@ -174,13 +175,18 @@ return require('packer').startup(function()
         'brooth/far.vim',
         setup = [[require('plugins.far.setup')]],
     }
+    use {
+        'MagicDuck/grug-far.nvim',
+        config = [[require('plugins.grug-far.config')]],
+        setup = [[require('plugins.grug-far.setup')]],
+    }
 
     -- writing/reading
-    use {
-        'shortcuts/no-neck-pain.nvim',
-        tag = '*',
-        config = [[require('plugins.no-neck-pain.config')]],
-    }
+    -- use {
+    --     'shortcuts/no-neck-pain.nvim',
+    --     tag = '*',
+    --     config = [[require('plugins.no-neck-pain.config')]],
+    -- }
     use 'nullchilly/fsread.nvim'
     use {
         'folke/zen-mode.nvim',
@@ -210,12 +216,17 @@ return require('packer').startup(function()
     }
 
     -- documentation
+    -- use {
+    --     'kkoomen/vim-doge',
+    --     run = ':call doge#install()'
+    --     --[[ config = function()
+    --         vim.g.doge_doc_standard_python = 'google'
+    --     end, ]]
+    -- }
     use {
-        'kkoomen/vim-doge',
-        run = ':call doge#install()'
-        --[[ config = function()
-            vim.g.doge_doc_standard_python = 'google'
-        end, ]]
+        'danymat/neogen',
+        config = [[require('plugins.neogen.config')]],
+        wants = {'nvim-treesitter'}
     }
 
     -- comments
@@ -357,7 +368,7 @@ return require('packer').startup(function()
 
     -- theme
     use { 'atelierbram/Base2Tone-nvim' }
-    use {'ntk148v/vim-horizon', as = 'horizon'}
+    -- use {'ntk148v/vim-horizon', as = 'horizon'}
 
     -- ui
     use {

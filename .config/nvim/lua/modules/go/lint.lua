@@ -72,6 +72,8 @@ local handle_stdout = function(_, data)
 				utils.str_has_prefix(issue.Text, "unused-parameter") or
 				utils.str_has_prefix(issue.Text, "singleCaseSwitch") or
 				utils.str_has_prefix(issue.Text, "var-declaration") or
+				utils.str_has_prefix(issue.Text, "flag-parameter") or
+				utils.str_has_prefix(issue.Text, "return with no blank line before") or
 				utils.str_has_prefix(issue.Text, "composites") or
 				utils.str_has_prefix(issue.Text, "cognitive-complexity") then
 				msg.severity = vim.diagnostic.severity.WARN
@@ -79,7 +81,9 @@ local handle_stdout = function(_, data)
 				goto insert_into
 			end
 
-			if string.find(issue.Text, "is missing field") then
+			if string.find(issue.Text, "is missing field") or
+				utils.str_has_prefix(issue.Text, "confusing-naming") or
+				utils.str_has_suffix(issue.Text, "is unused") then
 				msg.severity = vim.diagnostic.severity.HINT
 
 				goto insert_into
@@ -87,9 +91,10 @@ local handle_stdout = function(_, data)
 
 			if utils.str_has_prefix(issue.Text, "function-length") or
 				utils.str_has_prefix(issue.Text, "ifElseChain") or
+				utils.str_has_prefix(issue.Text, "max-public-structs") or
 				utils.str_has_prefix(issue.Text, "cyclomatic") or
 				utils.str_has_prefix(issue.Text, "argument-limit") or
-				utils.str_has_prefix(issue.Text, "confusing-naming") or
+				utils.str_has_prefix(issue.Text, "function-result-limit") or
 				string.find(issue.Text, "returns generic interface") or
 				utils.str_has_prefix(issue.Text, "redundant-import-alias") then
 				msg.severity = vim.diagnostic.severity.INFO

@@ -1,6 +1,7 @@
 local map = require'utils'.map_key
 
 vim.g.mapleader = ','
+vim.g.maplocalleader = ','
 
 -- bind terminal ESC to exit terminal mode
 map('t', '<Esc>', '<C-\\><C-n>', {silent = true})

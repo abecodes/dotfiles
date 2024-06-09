@@ -2,28 +2,28 @@ local cmd = vim.cmd
 
 cmd 'set cursorline'
 -- cmd 'colorscheme horizon'
+cmd 'colorscheme base2tone_lavender_dark'
 -- dark schemes
-cmd 'colorscheme base2tone_evening_dark'
--- or any of the other schemes:
--- cmd 'colorscheme base2tone_morning_dark'
--- cmd 'colorscheme base2tone_sea_dark'
--- cmd 'colorscheme base2tone_space_dark'
--- cmd 'colorscheme base2tone_earth_dark'
--- cmd 'colorscheme base2tone_forest_dark'
--- cmd 'colorscheme base2tone_field_dark'
--- cmd 'colorscheme base2tone_garden_dark'
+-- cmd 'colorscheme base2tone_cave_dark'
 -- cmd 'colorscheme base2tone_desert_dark'
--- cmd 'colorscheme base2tone_lake_dark'
--- cmd 'colorscheme base2tone_meadow_dark'
 -- cmd 'colorscheme base2tone_drawbridge_dark'
--- cmd 'colorscheme base2tone_mall_dark'
--- cmd 'colorscheme base2tone_suburb_dark'
+-- cmd 'colorscheme base2tone_earth_dark'
+-- cmd 'colorscheme base2tone_evening_dark'
+-- cmd 'colorscheme base2tone_field_dark'
+-- cmd 'colorscheme base2tone_forest_dark'
+-- cmd 'colorscheme base2tone_garden_dark'
+-- cmd 'colorscheme base2tone_heath_dark'
+-- cmd 'colorscheme base2tone_lake_dark'
 -- cmd 'colorscheme base2tone_lavender_dark'
+-- cmd 'colorscheme base2tone_mall_dark'
+-- cmd 'colorscheme base2tone_meadow_dark'
+-- cmd 'colorscheme base2tone_morning_dark'
+-- cmd 'colorscheme base2tone_motel_dark'
 -- cmd 'colorscheme base2tone_pool_dark'
 -- cmd 'colorscheme base2tone_porch_dark'
--- cmd 'colorscheme base2tone_heath_dark'
--- cmd 'colorscheme base2tone_cave_dark'
--- cmd 'colorscheme base2tone_motel_dark'
+-- cmd 'colorscheme base2tone_sea_dark'
+-- cmd 'colorscheme base2tone_space_dark'
+-- cmd 'colorscheme base2tone_suburb_dark'
 
 -- light schemes
 -- cmd 'colorscheme base2tone_evening_light'
@@ -147,106 +147,6 @@ vim.highlight.create('CursorLineNR', { guifg=white, ctermfg=white }, true) ]]
 ]]--
 
 local color = {
-	red = {
-		fg = {
-			fg = '#eC6a88',
-			ctermfg = 203,
-		},
-		bg = {
-			bg = '#eC6a88',
-			ctermbg = 203,
-		},
-	},
-	green = {
-		fg = {
-			fg = '#09f7a0',
-			ctermfg = 48,
-		},
-		bg = {
-			bg = '#09f7a0',
-			ctermbg = 48,
-		},
-	},
-	yellow = {
-		fg = {
-			fg = '#fab795',
-			ctermfg = 209,
-		},
-		bg = {
-			bg = '#fab795',
-			ctermbg = 209,
-		},
-	},
-	blue = {
-		fg = {
-			fg = '#599eff',
-			ctermfg = 75,
-		},
-		bg = {
-			bg = '#599eff',
-			ctermbg = 75,
-		},
-	},
-	orange = {
-		fg = {
-			fg = '#f09483',
-			ctermfg = 209,
-		},
-		bg = {
-			bg = '#f09483',
-			ctermbg = 209,
-		},
-	},
-	purple = {
-		fg = {
-			fg = '#b877db',
-			ctermfg = 171,
-		},
-		bg = {
-			bg = '#b877db',
-			ctermbg = 171,
-		},
-	},
-	cyan = {
-		fg = {
-			fg = '#25b0bc',
-			ctermfg = 37,
-		},
-		bg = {
-			bg = '#25b0bc',
-			ctermbg = 37,
-		},
-	},
-	white = {
-		fg = {
-			fg = '#dcdfe4',
-			ctermfg = 188,
-		},
-		bg = {
-			bg = '#dcdfe4',
-			ctermbg = 188,
-		},
-	},
-	grey = {
-		fg = {
-			fg = '#6c6f93',
-			ctermfg = 242,
-		},
-		bg = {
-			bg = '#6c6f93',
-			ctermbg = 242,
-		}
-	},
-	grey_l = {
-		fg = {
-			fg = '#272c42',
-			ctermfg=236,
-		},
-		bg = {
-			bg = '#272c42',
-			ctermbg=236,
-		},
-	},
 	none = {
 		fg = {
 			fg = 'none',
@@ -350,71 +250,7 @@ local update_highlight = function(id, ...)
 	)
 end
 
---[[
--- Recolor for horizon
---- Blue
-for _, s in pairs({
-	'@namespace',
-	-- '@parameter',
-	'@operator'
-}) do
-	update_highlight(s, color.blue.fg)
-end
---- Red
-for _, s in pairs({
-	'@constant.builtin',
-}) do
-	update_highlight(s, color.red.fg)
-end
---- Purple
-for _, s in pairs({
-	'Keyword',
-	'Conditional',
-	'Repeat',
-	'Label',
-	'Exception',
-	'Include'
-}) do
-	update_highlight(s, color.purple.fg)
-end
---- orange
-for _, s in pairs({
-	'@string.special',
-	'@string.escape',
-	'@character.special',
-}) do
-	update_highlight(s, color.orange.fg)
-end
---- Yellow
-for _, s in pairs({
-	'@type',
-	'@type.definition',
-}) do
-	update_highlight(s, color.yellow.fg)
-end
---- White
-for _, s in pairs({
-	'@variable',
-}) do
-	update_highlight(s, color.white.fg)
-end
---- none
-update_highlight('Todo', color.none.bg)
-update_highlight('Pmenu', color.white.fg, color.none.bg)
-update_highlight('PmenuSel', color.green.fg, color.none.bg)
-update_highlight('FloatBorder', color.grey.fg, color.none.bg)
-update_highlight('WinSeparator', color.grey.fg, color.none.bg)
-]]--
-
 set_highlight("none", color.none.fg, color.none.bg, style.none)
-
--- Recolor for base2tone_evening_dark
-for _, s in pairs({
-	'FloatBorder',
-	'FloatTitle',
-}) do
-	update_highlight(s, color.grey.fg, color.none.bg)
-end
 
 -- Italic
 for _, s in pairs({

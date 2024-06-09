@@ -10,46 +10,50 @@ local highlight = {
 	'RainbowDelimiterCyan',
 }
 
-
 hooks.register(
 	hooks.type.HIGHLIGHT_SETUP,
 	function()
-		-- unfortunately indent_blanklines does not work with linked groupes
-		-- so we need to hardcode the colers here
-		vim.api.nvim_set_hl(0, 'RainbowDelimiterRed', { fg = '#6a51e6' }) -- Macro
-    vim.api.nvim_set_hl(0, 'RainbowDelimiterYellow', { fg = '#9a86fd' }) -- Define
-    vim.api.nvim_set_hl(0, 'RainbowDelimiterBlue', { fg = '#c4b9fe' }) -- Tag
-    vim.api.nvim_set_hl(0, 'RainbowDelimiterOrange', { fg = '#ffa142' }) -- SpellCap
-    vim.api.nvim_set_hl(0, 'RainbowDelimiterGreen', { fg = '#ffb870' }) -- Question
-    vim.api.nvim_set_hl(0, 'RainbowDelimiterViolet', { fg = '#eeebff' }) -- String
-    vim.api.nvim_set_hl(0, 'RainbowDelimiterCyan', { fg = '#bab8c7' }) -- Special
-		--[[vim.api.nvim_exec([[
-			hi link RainbowRed RainbowDelimiterRed
-			hi link RainbowYellow RainbowDelimiterYellow
-			hi link RainbowBlue RainbowDelimiterBlue
-			hi link RainbowOrange RainbowDelimiterOrange
-			hi link RainbowGreen RainbowDelimiterGreen
-			hi link RainbowViolet RainbowDelimiterViolet
-			hi link RainbowCyan RainbowDelimiterCyan
-		]]--[[, true)]]--
+		-- ibl behaves super weird
+		-- these highlights are setup by rainbow-delimiter and theme overwrites
+		-- but instead of inheriting them ibl does some stuff and gets wrong colors
+		-- therefore we need this code here again, to set the correct colors
+		vim.api.nvim_set_hl(0, 'RainbowDelimiterRed', { link = 'Macro' })
+		vim.api.nvim_set_hl(0, 'RainbowDelimiterYellow', { link = 'Define' })
+		vim.api.nvim_set_hl(0, 'RainbowDelimiterBlue', { link = 'Tag' })
+		vim.api.nvim_set_hl(0, 'RainbowDelimiterOrange', { link = 'PreProc' })
+		vim.api.nvim_set_hl(0, 'RainbowDelimiterGreen', { link = 'Question' })
+		vim.api.nvim_set_hl(0, 'RainbowDelimiterViolet', { link = 'String' })
+		vim.api.nvim_set_hl(0, 'RainbowDelimiterCyan', { link = 'Special' })
 	end
 )
-
 
 -- vim.g.rainbow_delimiters = { highlight = highlight }
 require('ibl').setup({
 	indent = {
-		-- char = "▎",
-		-- tab_char = { "a", "b", "c" },
-		highlight = { 'WinSeparator' },
+		char = '▏',
+		-- char = '▎',
+		-- tab_char = { 'a', 'b', 'c' },
+		-- highlight = { 'WinSeparator' },
 		-- smart_indent_cap = true,
 		-- priority = 2,
-},
+	},
 	scope = {
-		char = '▏',
+		enabled = true,
+		char = '▎',
+		-- char = '▏',
 		highlight = highlight,
 		-- show_start = false,
 		-- show_end = false,
+		include = {
+			node_type = {
+				go = {
+					-- get name of current node:
+					-- lua vim.print(vim.treesitter.get_node():type())
+					'field_declaration_list',
+					'import_spec_list'
+				},
+			},
+		},
 	},
 	exclude = {
 		filetypes = {
@@ -65,7 +69,7 @@ require('ibl').setup({
 			'""',
 		}
 	}
-	-- whitespace = { highlight = { "Whitespace", "NonText" }},
+	-- whitespace = { highlight = { 'Whitespace', 'NonText' }},
 })
 
 hooks.register(
@@ -75,10 +79,10 @@ hooks.register(
 
 -- local g = vim.g
 --[[ g.indent_blankline_char_highlight_list = {
-	"Boolean",
-	"Function",
-	"Reference",
-	"Keyword"
+	'Boolean',
+	'Function',
+	'Reference',
+	'Keyword'
 } ]] -- define the highlight groups with only background colors (or leave odd empty to just show the normal background)
 
 -- vim.cmd [[highlight IndentEven guifg=NONE guibg=#0000ff gui=nocombine]]
@@ -86,12 +90,12 @@ hooks.register(
 -- vim.cmd [[highlight link IndentEven CursorLine]]
 
 -- and then use the highlight groups
--- g.indent_blankline_char_highlight_list = {"IndentOdd", "IndentEven"}
--- g.indent_blankline_space_char_highlight_list = {"IndentOdd", "IndentEven"}
+-- g.indent_blankline_char_highlight_list = {'IndentOdd', 'IndentEven'}
+-- g.indent_blankline_space_char_highlight_list = {'IndentOdd', 'IndentEven'}
 
 -- don't show any characters
--- g.indent_blankline_char = " "
--- g.indent_blankline_space_char = " "
+-- g.indent_blankline_char = ' '
+-- g.indent_blankline_space_char = ' '
 
 -- when using background, the trailing indent is not needed / looks wrong
 -- g.indent_blankline_show_trailing_blankline_indent = false

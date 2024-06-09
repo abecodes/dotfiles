@@ -21,7 +21,8 @@ require('lualine').setup({
   options = {
     icons_enabled = true,
     -- theme = 'horizon',
-		theme = 'base2tone_evening_dark',
+		-- theme = 'base2tone_evening_dark',
+		theme = 'base2tone_lavender_dark',
 		component_separators = '',
     section_separators = '',
     -- component_separators = { left = '', right = ''},
