@@ -11,7 +11,7 @@ return {
     g = {',tg', 'Find file in git project'},
     h = {',th', 'Find in help tags'},
     I = {',tI', 'Find lsp implementations'},
-    m = {',tm', 'Find in harpoon marks'},
+    -- m = {',tm', 'Find in harpoon marks'},
     q = {',tq', 'Find in quickfix list'},
     r = {',tr', 'Find in refactor actions'},
     R = {',tR', 'Find lsp references'},
