@@ -61,11 +61,6 @@ return require('packer').startup(function()
         setup = [[require('plugins.undotree.setup')]]
     }
     use {
-        'simrat39/symbols-outline.nvim',
-        setup = [[require('plugins.symbols-outline.setup')]],
-        config = [[require('plugins.symbols-outline.config')]]
-    }
-    use {
         'folke/todo-comments.nvim',
         requires = 'nvim-lua/plenary.nvim',
         config = [[require('plugins.todo-comments.config')]]
@@ -85,11 +80,11 @@ return require('packer').startup(function()
         'gennaro-tedesco/nvim-peekup',
         config = [[require('plugins.nvim-peekup.config')]]
     }
-    use {
-        'wfxr/minimap.vim',
-        setup = [[require('plugins.minimap.setup')]],
-        disable = true
-    }
+    -- use {
+    --     'wfxr/minimap.vim',
+    --     setup = [[require('plugins.minimap.setup')]],
+    --     disable = true
+    -- }
     use {
         'NeogitOrg/neogit',
         config = [[require('plugins.neogit.config')]],
@@ -244,12 +239,12 @@ return require('packer').startup(function()
             'tpope/vim-repeat'
         }
     }
-    use {
-        'declancm/cinnamon.nvim',
-        config = [[require('plugins.cinnamon.config')]],
-        setup = [[require('plugins.cinnamon.setup')]],
-        wants = {'plenary.nvim'}
-    }
+    -- use {
+    --     'declancm/cinnamon.nvim',
+    --     config = [[require('plugins.cinnamon.config')]],
+    --     setup = [[require('plugins.cinnamon.setup')]],
+    --     wants = {'plenary.nvim'}
+    -- }
     use {
         'abecodes/tabout.nvim',
         -- branch = 'feature/tabout-md',
@@ -281,7 +276,6 @@ return require('packer').startup(function()
         'windwp/nvim-ts-autotag',
         config = [[require('plugins.nvim-ts-autotag.config')]]
     }
-    use {'folke/lsp-colors.nvim'}
     use {
         'nvim-lua/lsp_extensions.nvim',
         config = [[require('plugins.lsp_extensions.config')]]
@@ -335,7 +329,7 @@ return require('packer').startup(function()
         }
     }
 
-    -- testing
+    -- debugging
     use {
         'mfussenegger/nvim-dap',
         config = [[require('plugins.nvim-dap.config')]]
@@ -375,14 +369,6 @@ return require('packer').startup(function()
         'stevearc/dressing.nvim',
         config = [[require('plugins.dressing.config')]],
     }
-
-    -- tryouts:
-    -- use {'tpope/vim-dispatch', cmd = {'Dispatch', 'Make', 'Focus', 'Start'}}
-    -- replacement for lightline, is it working with the theme?
-    --[[ use {
-    'glepnir/galaxyline.nvim', branch = 'main', config = function() require'statusline' end,
-    requires = {'nvim-tree/nvim-web-devicons'}
-  } ]]
 end)
 
 --[[ config = {

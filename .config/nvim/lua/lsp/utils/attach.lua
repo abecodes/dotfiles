@@ -1,6 +1,10 @@
 local navic = require("nvim-navic")
 
 local custom_attach = function(client, bufnr)
+    if client.server_capabilities.semanticTokensProvider then
+        vim.treesitter.stop(bufnr)
+    end
+
     if client.server_capabilities.documentSymbolProvider then
         navic.attach(client, bufnr)
     end

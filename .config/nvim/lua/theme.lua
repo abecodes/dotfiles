@@ -318,5 +318,15 @@ update_highlight(
 	color.none.fg
 )
 
+-- for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
+-- 	vim.api.nvim_set_hl(0, group, {})
+-- end
+
 -- changes for do.nvim
 -- vim.api.nvim_set_hl(0, 'TabLineSel', { link = 'DiagnosticOk' })
+
+return {
+	style = style,
+	set_highlight = set_highlight,
+	update_highlight = update_highlight
+}
