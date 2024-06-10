@@ -289,6 +289,11 @@ return require('packer').startup(function()
         config = [[require('plugins.lsp_signature.config')]],
         after = {'nvim-lspconfig'}
     }
+    use({
+        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+        config = [[require('plugins.lsp_lines.config')]],
+        setup = [[require('plugins.lsp_lines.setup')]]
+    })
     use {
         'nvim-treesitter/nvim-treesitter-context',
         setup = [[require('plugins.nvim-treesitter-context.setup')]],

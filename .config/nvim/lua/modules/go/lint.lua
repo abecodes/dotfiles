@@ -18,6 +18,10 @@ local handle_stdout = function(_, data)
 						"\t\tctx, span := c.trc.Tracer(\"\").Start("
 					],
 					"Replacement":null,
+					"LineRange": {
+						"From": 13,
+						"To": 127
+					},
 					"Pos":{
 						"Filename":"msg.go",
 						"Offset":4435,
@@ -49,14 +53,20 @@ local handle_stdout = function(_, data)
 			end
 			local msg = {
 				bufnr = vim.api.nvim_get_current_buf(),
-				lnum = issue.Pos.Line - 1,
-				end_lnum = issue.Pos.Line,
-				col = 0,
+				lnum = issue.LineRange.From-1,
+				end_lnum = issue.LineRange.To-1,
+				col = issue.Pos.Column - 1,
+				end_col = issue.Pos.Column,
 				severity = vim.diagnostic.severity.WARN,
 				source = issue.FromLinter,
 				message = issue.Text,
 				user_data = {},
 			}
+
+			if msg.end_lnum > msg.lnum then
+				msg.end_lnum = msg.lnum + 1
+				msg.end_col = 0
+			end
 
 			-- if issue.Severity == "error" then
 			msg.severity = vim.diagnostic.severity.ERROR
@@ -115,7 +125,7 @@ local handle_stdout = function(_, data)
 			out,
 			{
 				severity_sort = true,
-				virtual_text = true,
+				-- virtual_text = true,
 				underline = true,
 			}
 		)

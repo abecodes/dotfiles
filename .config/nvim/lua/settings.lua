@@ -72,3 +72,9 @@ opt.autoread = true
 -- use on mac if neovim/fish is installed with brew
 --[[ opt.shell = '/usr/local/bin/fish' ]]
 opt.jumpoptions = 'stack' -- how items in the jumplist are arranged
+
+vim.diagnostic.config({
+	float = {
+		source = true,
+	}
+})
