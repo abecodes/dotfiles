@@ -51,6 +51,14 @@ local handle_stdout = function(_, data)
 			if not (vim.fn.fnamemodify(issue.Pos.Filename, ':t') == utils.get_filename()) then
 				goto continue_issue
 			end
+
+			if not issue.LineRange then
+				issue.LineRange = {
+					From = issue.Pos.Column - 1,
+					To = issue.Pos.Column - 1,
+				}
+			end
+
 			local msg = {
 				bufnr = vim.api.nvim_get_current_buf(),
 				lnum = issue.LineRange.From-1,
@@ -93,6 +101,8 @@ local handle_stdout = function(_, data)
 
 			if string.find(issue.Text, "is missing field") or
 				utils.str_has_prefix(issue.Text, "confusing-naming") or
+				utils.str_has_prefix(issue.Text, "line-length-limit") or
+				utils.str_has_prefix(issue.Text, "get-return") or
 				utils.str_has_suffix(issue.Text, "is unused") then
 				msg.severity = vim.diagnostic.severity.HINT
 
