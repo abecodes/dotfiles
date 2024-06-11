@@ -6,6 +6,9 @@ vim.g.maplocalleader = ','
 -- bind terminal ESC to exit terminal mode
 map('t', '<Esc>', '<C-\\><C-n>', {silent = true})
 
+-- keep cursor position after yanking
+map('v', 'y', 'ygv<ESC>', {silent = true})
+
 -- center screen before typing
 map('n', 'a', 'zza', {silent = true})
 map('n', 'A', 'zzA', {silent = true})
@@ -44,6 +47,7 @@ map('v', '<', '<gv', {silent = true})
 map('v', '>', '>gv', {silent = true})
 
 -- lines
+-- move lines up an down
 map('n', '<A-S-Up>', ':m -2<CR>', {silent = true})
 map('n', '<A-S-Down>', ':m +1<CR>', {silent = true})
 map('v', '<A-S-Up>', ':m \'<-2<CR>gv=gv', {silent = true})

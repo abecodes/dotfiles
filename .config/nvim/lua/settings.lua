@@ -36,6 +36,7 @@ cmd 'set noshowcmd'
 -- Some servers have issues with backup files, see #649
 -- cmd 'set nobackup'
 -- cmd 'set nowritebackup'
+-- set later once merged into nvim master cmd 'set completeopt+=fuzzy'
 
 -- for plugin nvim-ts-context-commentstring
 g.skip_ts_context_commentstring_module = true
