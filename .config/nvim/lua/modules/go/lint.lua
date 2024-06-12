@@ -1,5 +1,6 @@
 local utils = require('utils')
 local logger = require('logger')
+local ts = require('vim.treesitter')
 local namespace = vim.api.nvim_create_namespace('codes.abe.hooks.golangci')
 
 local handle_stdout = function(_, data)
@@ -52,19 +53,32 @@ local handle_stdout = function(_, data)
 				goto continue_issue
 			end
 
+			start_col = issue.Pos.Column - 1
+			end_col = issue.Pos.Column
+
 			if not issue.LineRange then
 				issue.LineRange = {
-					From = issue.Pos.Column - 1,
-					To = issue.Pos.Column - 1,
+					From = issue.Pos.Line,
+					To = issue.Pos.Line,
 				}
+
+				_, start_col, _, end_col = ts.get_node_range(
+					ts.get_node({
+						bufnr = 0,
+						pos = {
+							issue.Pos.Line-1,
+							issue.Pos.Column
+						}
+					})
+				)
 			end
 
 			local msg = {
 				bufnr = vim.api.nvim_get_current_buf(),
 				lnum = issue.LineRange.From-1,
 				end_lnum = issue.LineRange.To-1,
-				col = issue.Pos.Column - 1,
-				end_col = issue.Pos.Column,
+				col = start_col,
+				end_col = end_col,
 				severity = vim.diagnostic.severity.WARN,
 				source = issue.FromLinter,
 				message = issue.Text,
