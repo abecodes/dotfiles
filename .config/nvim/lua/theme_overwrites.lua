@@ -7,12 +7,13 @@ vim.api.nvim_create_autocmd({"VimEnter", "ColorScheme"}, {
 		for _, s in pairs({
 			'@lsp.type.parameter.go',
 			'@lsp.type.keyword.go',
+			'@lsp.type.string.go'
 		}) do
 			vim.api.nvim_set_hl(0, s, {})
 		end
 
 		theme.update_highlight(
-			'@lsp.type.string.go',
+			'goString',
 			{ link = 'SpellCap' }
 		)
 
