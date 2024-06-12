@@ -19,6 +19,7 @@ local handle_stdout = function(_, data)
 						"\t\tctx, span := c.trc.Tracer(\"\").Start("
 					],
 					"Replacement":null,
+					-- LineRange may not be present
 					"LineRange": {
 						"From": 13,
 						"To": 127
