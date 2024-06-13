@@ -62,17 +62,17 @@ local handle_stdout = function(_, data)
 					From = issue.Pos.Line,
 					To = issue.Pos.Line,
 				}
-
-				_, start_col, _, end_col = ts.get_node_range(
-					ts.get_node({
-						bufnr = 0,
-						pos = {
-							issue.Pos.Line-1,
-							issue.Pos.Column
-						}
-					})
-				)
 			end
+
+			_, start_col, _, end_col = ts.get_node_range(
+				ts.get_node({
+					bufnr = 0,
+					pos = {
+						issue.Pos.Line-1,
+						issue.Pos.Column
+					}
+				})
+			)
 
 			local msg = {
 				bufnr = vim.api.nvim_get_current_buf(),
