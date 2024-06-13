@@ -233,8 +233,9 @@ return require('packer').startup(function()
 
     -- motion
     use {
-        'ggandor/lightspeed.nvim',
-        config = [[require('plugins.lightspeed-nvim.config')]],
+        'ggandor/leap.nvim',
+        config = [[require('plugins.leap.config')]],
+        setup = [[require('plugins.leap.setup')]],
         requires = {
             'tpope/vim-repeat'
         }
