@@ -4,6 +4,7 @@ local format = require('modules.go.format')
 local impl = require('modules.go.impl')
 local tests = require('modules.go.tests')
 require('modules.go.json2struct')()
+require('modules.ensureTabstop')()
 
 utils.new_buf_cmd('Golint', lint, {})
 utils.new_buf_cmd('Goformat', format, {})

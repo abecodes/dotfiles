@@ -1,10 +1,15 @@
 local hooks = require('hooks.hooks')
 
+-- *************[STARTUP]*************
+-- set immediately after nvim started
+-- (none atm)
+
 local h = {
 	-- *************[GLOBAL]*************
 	['*'] = {
-		-- BufNew bc BufWinEnter is not fired if nvim starts in a buffer
-		['BufNew,BufWinEnter'] = {
+		-- ['BufNew,BufWinEnter'] = {
+		['BufWinEnter'] = {
+			-- initial calls are in nvim/after/ftplugin/<filetype>.lua
 			require('modules.ensureTabstop'),
 		},
 		['BufEnter,FocusGained,InsertLeave'] = {

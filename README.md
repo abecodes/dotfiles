@@ -35,7 +35,7 @@ stow -t ~/ /
 ```
 
 ```bash
-brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go golangci-lint node rustup-init rust-analyzer efm-langserver llvm exa bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu httpie fx epr slides
+brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go golangci-lint node rustup-init rust-analyzer efm-langserver llvm eza bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu httpie fx epr slides
 
 brew install --cask rectangle mark-text bloomrpc vscodium pritunl librewolf gaphor motrix mongodb-compass keepassxc drawio
 
@@ -175,7 +175,7 @@ _By default VS-Codium uses [open-vsx.org](https://open-vsx.org) as plugin market
 The rise of [rust](https://www.rust-lang.org/) and its recent _adoption_ to the UNIX kernel brings us more and more improved rewrites of system tools. Some of them are great replacements already.
 
 ```bash
-brew install exa # ls replacement https://github.com/ogham/exa
+brew install eza # ls replacement https://github.com/eza-community/eza
 brew install bat # cat replacement https://github.com/sharkdp/bat
 brew install mdcat # cat replacement for md files https://github.com/lunaryorn/mdcat
 brew install zoxide # cd replacement https://github.com/ajeetdsouza/zoxide
