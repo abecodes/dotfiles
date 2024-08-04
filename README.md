@@ -37,7 +37,7 @@ stow -t ~/ /
 ```bash
 brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go golangci-lint node rustup-init rust-analyzer efm-langserver llvm eza bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu httpie fx epr slides
 
-brew install --cask rectangle mark-text bloomrpc vscodium pritunl librewolf gaphor motrix mongodb-compass keepassxc drawio
+brew install --cask rectangle mark-text vscodium pritunl librewolf gaphor motrix mongodb-compass keepassxc drawio vienna
 
 # make alternative
 brew tap joerdav/xc
@@ -218,12 +218,6 @@ brew install --cask librewolf
 brew install --cask pritunl
 ```
 
-[bloomrpc](https://github.com/bloomrpc/bloomrpc) postman for grpc:
-
-```bash
-brew install --cask bloomrpc
-```
-
 [Mark-text](https://marktext.app/) as markdown editor
 
 ```bash
@@ -276,6 +270,12 @@ brew install --cask mongodb-compass
 
 ```bash
 brew install --cask drawio
+```
+
+[vienna](https://www.vienna-rss.com/) RSS reader (alternative: [NetNewsWire](https://netnewswire.com/))
+
+```bash
+brew install --cask vienna
 ```
 
 [httpie](https://httpie.io/download) A gui for httpie (postman replacement)
