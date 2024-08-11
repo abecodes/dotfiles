@@ -1,0 +1,9 @@
+---
+BasedOnStyle: Google
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+ColumnLimit: 80
+# IncludeBlocks: Regroup
+# InsertNewlineAtEOF: true
+UseTab: Always
