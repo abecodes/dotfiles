@@ -691,13 +691,14 @@ linters-settings:
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#unexported-return
       - name: unexported-return
         severity: warning
-        disabled: true
+        disabled: false
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#unhandled-error
       - name: unhandled-error
         severity: warning
         disabled: false
         arguments:
           - 'fmt.Printf'
+          - 'fmt.Println'
       # https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md#unnecessary-stmt
       - name: unnecessary-stmt
         severity: warning
