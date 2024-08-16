@@ -21,15 +21,6 @@ require('grug-far').setup({
   -- max number of parallel replacements tasks
   maxWorkers = 4,
 
-  -- ripgrep executable to use, can be a different path if you need to configure
-  -- deprecated, please use engines.ripgrep.path
-  rgPath = 'rg',
-
-  -- extra args that you always want to pass to rg
-  -- like for example if you always want context lines around matches
-  -- deprecated, please use engines.ripgrep.extraArgs
-  extraRgArgs = '',
-
   -- search and replace engines configuration
   engines = {
     -- see https://github.com/BurntSushi/ripgrep
