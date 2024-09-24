@@ -1,6 +1,6 @@
 local nvim_lsp = require('lspconfig')
 local custom_attach = require('lsp.utils.attach')
-local organize_imports = require('lsp.servers.tsserver.functions.organize_imports')
+local organize_imports = require('lsp.servers.ts_ls.functions.organize_imports')
 local hooks = require('hooks.hooks')
 
 hooks.register(

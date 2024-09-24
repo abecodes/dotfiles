@@ -9,7 +9,7 @@ local servers = {
 	'gopls',
 	'html',
 	'rust_analyzer',
-	'tsserver',
+	'ts_ls',
 	'zls',
 }
 
