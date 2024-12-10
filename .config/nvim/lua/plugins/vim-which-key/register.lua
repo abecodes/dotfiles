@@ -1,6 +1,7 @@
 local g = vim.g
 
 local normal_singles = require("plugins.vim-which-key.normal.singles")
+local normal_d = require("plugins.vim-which-key.normal.d")
 local normal_p = require("plugins.vim-which-key.normal.p")
 local normal_r = require("plugins.vim-which-key.normal.r")
 local normal_R = require("plugins.vim-which-key.normal._r")
@@ -20,6 +21,7 @@ local which_key_map = vim.fn.get(g, 'which_key_map', {})
 local which_key_map_visual = vim.fn.get(g, 'which_key_map_visual', {})
 
 which_key_map = normal_singles
+which_key_map.d = normal_d
 which_key_map.p = normal_p
 which_key_map.r = normal_r
 which_key_map.R = normal_R

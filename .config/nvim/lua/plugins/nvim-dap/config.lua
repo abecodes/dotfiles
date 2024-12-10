@@ -23,3 +23,17 @@
 --   - `${workspaceFolderBasename}`: The name of the folder opened in Neovim
 require('dap.c-like')
 require('dap.node')
+require('dap-go').setup()
+
+vim.fn.sign_define('DapBreakpoint',{ text ='🟥', texthl ='', linehl ='', numhl =''})
+vim.fn.sign_define('DapStopped',{ text ='▶️', texthl ='', linehl ='', numhl =''})
+
+local map = require'utils'.map_key
+local opts = { noremap = true, silent = true }
+
+map('n', '<leader>dd', '<CMD>lua require("dap").continue()<CR>', opts)
+map('n', '<leader>dt', '<CMD>lua require("dap").terminate()<CR>', opts)
+map('n', '<leader>do', '<CMD>lua require("dap").step_over()<CR>', opts)
+map('n', '<leader>dn', '<CMD>lua require("dap").step_into()<CR>', opts)
+map('n', '<leader>dp', '<CMD>lua require("dap").step_out()<CR>', opts)
+map('n', '<leader>db', '<CMD>lua require("dap").toggle_breakpoint()<CR>', opts)
