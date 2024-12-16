@@ -140,13 +140,6 @@ return require('packer').startup(function()
 		end
 	}
 
-    -- terminal
-    use {
-        'numToStr/FTerm.nvim',
-        config = [[require('plugins.fterm.config')]],
-        setup = [[require('plugins.fterm.setup')]]
-    }
-
     -- search
     use {
         'nvim-telescope/telescope.nvim',
