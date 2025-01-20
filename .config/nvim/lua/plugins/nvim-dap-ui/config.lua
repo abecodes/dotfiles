@@ -43,7 +43,7 @@ dapui.setup()
 dap.listeners.before.attach.dapui_config = function()
   dapui.open()
 end
-dap.listeners.after.attach.dapui_config = function()
+dap.listeners.after.attach.dapui_config = function(session, body)
   if (not body or not body.body) then
     return
   end
@@ -60,7 +60,7 @@ end
 dap.listeners.before.launch.dapui_config = function()
   dapui.open()
 end
-dap.listeners.after.launch.dapui_config = function()
+dap.listeners.after.launch.dapui_config = function(session, body)
   if (not body or not body.body) then
     return
   end
