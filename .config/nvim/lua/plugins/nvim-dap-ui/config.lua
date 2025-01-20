@@ -43,8 +43,39 @@ dapui.setup()
 dap.listeners.before.attach.dapui_config = function()
   dapui.open()
 end
+dap.listeners.after.attach.dapui_config = function()
+  if (not body or not body.body) then
+    return
+  end
+
+  if body.body.error then
+    print(
+      "unable to attach to debug process: ",
+      body.body.error.format
+    )
+
+    dapui.close()
+  end
+end
 dap.listeners.before.launch.dapui_config = function()
   dapui.open()
+end
+dap.listeners.after.launch.dapui_config = function()
+  if (not body or not body.body) then
+    return
+  end
+
+  if body.body.error then
+    print(
+      "unable to launch debug process: ",
+      body.body.error.format
+    )
+
+    dapui.close()
+  end
+end
+dap.listeners.before.disconnect.dapui_config = function()
+  dapui.close()
 end
 dap.listeners.before.event_terminated.dapui_config = function()
   dapui.close()

@@ -21,9 +21,79 @@
 --   - `${relativeFileDirname}`: The current file's dirname relative to |getcwd()|
 --   - `${workspaceFolder}`: The current working directory of Neovim
 --   - `${workspaceFolderBasename}`: The name of the folder opened in Neovim
-require('dap.c-like')
-require('dap.node')
-require('dap-go').setup()
+-- require('dap.c-like')
+-- require('dap.node')
+require('dap-go').setup({
+	dap_configuration = {
+		{
+			type = "go",
+			name = "Debug (Go)",
+			mode = "debug",
+			request = "launch",
+			program = "./${relativeFileDirname}/.",
+			cwd = "${workspaceFolder}",
+		},
+		{
+			type = "go",
+			name = "Debug (Go [find main])",
+			mode = "debug",
+			request = "launch",
+			program = function()
+				local cd = vim.fn.expand("%:p:h")
+				local root = cd
+
+				while #root > 0 do
+					local f = io.open(root .. "/go.mod")
+
+					if f ~= nil and io.close(f) then
+						breakpoints
+					end
+
+					root = root:gsub("/+[^/]*$", "")
+				end
+
+				while #cd > 0 and cd ~= root do
+					local f = io.open(cd .. "/main.go")
+
+					if f ~= nil and io.close(f) then
+						break
+					end
+
+					cd = cd:gsub("/+[^/]*$", "")
+				end
+
+				if #cd == 0 then {
+					return "./{relativeFileDirname}/."
+				}
+
+				if cd == root then {
+					return "."
+				}
+
+				return cd:gsub(root, ".") .. "/."
+			end,
+			cwd = function()
+				local root = vim.fn.expand("%:p:h")
+
+				while #root > 0 do
+					local f = io.open(root .. "/go.mod")
+
+					if f ~= nil and io.close(f) then
+						breakpoints
+					end
+
+					root = root:gsub("/+[^/]*$", "")
+				end
+
+				if #root == 0 then
+					return "${workspaceFolder}"
+				end
+
+				return root
+			end
+		}
+	}
+})
 
 vim.fn.sign_define('DapBreakpoint',{ text ='🟥', texthl ='', linehl ='', numhl =''})
 vim.fn.sign_define('DapStopped',{ text ='▶️', texthl ='', linehl ='', numhl =''})

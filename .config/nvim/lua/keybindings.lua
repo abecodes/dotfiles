@@ -18,8 +18,8 @@ map('n', 'o', 'zzo', {silent = true})
 map('n', 'O', 'zzO', {silent = true})
 
 -- navigate the quickfix window
-map('n', 'q[', ':cn<CR>', {silent = true})
-map('n', 'q]', ':cp<CR>', {silent = true})
+map('n', '[q', ':cn<CR>', {silent = true})
+map('n', ']q', ':cp<CR>', {silent = true})
 map('n', 'qo', ':copen<CR>', {silent = true})
 map('n', 'qc', ':ccl<CR>', {silent = true})
 

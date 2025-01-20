@@ -2,13 +2,25 @@ local term_func = function()
 	if not vim.api.nvim_buf_is_valid(vim.g.terminal_buf or -1) then
 		vim.g.terminal_buf = vim.api.nvim_create_buf(false, false)
 
+		vim.api.nvim_create_autocmd({"BufEnter","FocusGained","InsertLeave"}, {
+			-- buffer is not working for some reason but should be the better way
+			-- buffer = vim.g.terminal_buf,
+			pattern = "*",
+			callback = function(args)
+				if args.buf == vim.g.terminal_buf then
+					vim.api.nvim_set_option_value('number', false, { win = vim.g.terminal })
+					vim.api.nvim_set_option_value('relativenumber', false, { win = vim.g.terminal })
+				end
+			end,
+		})
+
 		vim.api.nvim_buf_call(
 			vim.g.terminal_buf,
 			vim.cmd.term
 		)
 	end
 
-	if not vim.g.terminal then
+	if not vim.api.nvim_win_is_valid(vim.g.terminal or -1) then
 		vim.g.terminal = vim.api.nvim_open_win(
 			vim.g.terminal_buf,
 			false,
@@ -48,13 +60,7 @@ local term_func = function()
 end
 
 vim.keymap.set(
-	'n',
-	'<leader>T',
-	term_func
-)
-
-vim.keymap.set(
-	't',
+	{ 'n', 't' },
 	'<leader>T',
 	term_func
 )
