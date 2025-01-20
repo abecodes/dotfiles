@@ -79,7 +79,7 @@ require('dap-go').setup({
 					local f = io.open(root .. "/go.mod")
 
 					if f ~= nil and io.close(f) then
-						breakpoints
+						break
 					end
 
 					root = root:gsub("/+[^/]*$", "")
