@@ -62,13 +62,13 @@ require('dap-go').setup({
 					cd = cd:gsub("/+[^/]*$", "")
 				end
 
-				if #cd == 0 then {
+				if #cd == 0 then
 					return "./{relativeFileDirname}/."
-				}
+				end
 
-				if cd == root then {
+				if cd == root then
 					return "."
-				}
+				end
 
 				return cd:gsub(root, ".") .. "/."
 			end,
