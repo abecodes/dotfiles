@@ -1,7 +1,7 @@
 local utils = require('utils')
 
 return function()
-	local content = vim.api.nvim_buf_get_line(0, 0, -1, false)
+	local content = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 	local view = vim.fn.winsaveview()
 
 	-- breaking lines
