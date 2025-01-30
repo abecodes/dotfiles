@@ -69,7 +69,7 @@ dap.configurations.go = {
 	-- 	program = "./${relativeFileDirname}"
 	-- }
 	{
-		type = "go",
+		type = "delve",
 		name = "Debug (Go)",
 		mode = "debug",
 		request = "launch",
@@ -77,7 +77,7 @@ dap.configurations.go = {
 		cwd = "${workspaceFolder}",
 	},
 	{
-		type = "go",
+		type = "delve",
 		name = "Debug (Go [find main])",
 		mode = "debug",
 		request = "launch",
