@@ -331,7 +331,6 @@ return require('packer').startup(function()
     use {
         'mfussenegger/nvim-dap',
         config = [[require('plugins.nvim-dap.config')]],
-        requires = {'leoluz/nvim-dap-go'}
     }
     use {
         'rcarriga/nvim-dap-ui',

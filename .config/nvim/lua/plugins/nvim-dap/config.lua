@@ -23,77 +23,119 @@
 --   - `${workspaceFolderBasename}`: The name of the folder opened in Neovim
 -- require('dap.c-like')
 -- require('dap.node')
-require('dap-go').setup({
-	dap_configuration = {
-		{
-			type = "go",
-			name = "Debug (Go)",
-			mode = "debug",
-			request = "launch",
-			program = "./${relativeFileDirname}/.",
-			cwd = "${workspaceFolder}",
-		},
-		{
-			type = "go",
-			name = "Debug (Go [find main])",
-			mode = "debug",
-			request = "launch",
-			program = function()
-				local cd = vim.fn.expand("%:p:h")
-				local root = cd
+local dap = require('dap')
 
-				while #root > 0 do
-					local f = io.open(root .. "/go.mod")
+dap.adapters.delve = function(callback, config)
+	if config.mode == 'remote' and config.request == 'attach' then
+		callback({
+			type = 'server',
+			host = config.host or '127.0.0.1',
+			port = config.port or '38697'
+		})
+	else
+		callback({
+			type = 'server',
+			port = '${port}',
+			executable = {
+				command = 'dlv',
+				args = { 'dap', '-l', '127.0.0.1:${port}', '--log', '--log-output=dap' },
+				detached = vim.fn.has("win32") == 0,
+			}
+		})
+	end
+end
 
-					if f ~= nil and io.close(f) then
-						break
-					end
+-- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
+dap.configurations.go = {
+	{
+		type = "delve",
+		name = "Debug",
+		request = "launch",
+		program = "${file}"
+	},
+	{
+		type = "delve",
+		name = "Debug test", -- configuration for debugging test files
+		request = "launch",
+		mode = "test",
+		program = "${file}"
+	},
+	-- works with go.mod packages and sub packages
+	-- {
+	-- 	type = "delve",
+	-- 	name = "Debug test (go.mod)",
+	-- 	request = "launch",
+	-- 	mode = "test",
+	-- 	program = "./${relativeFileDirname}"
+	-- }
+	{
+		type = "go",
+		name = "Debug (Go)",
+		mode = "debug",
+		request = "launch",
+		program = "./${relativeFileDirname}/.",
+		cwd = "${workspaceFolder}",
+	},
+	{
+		type = "go",
+		name = "Debug (Go [find main])",
+		mode = "debug",
+		request = "launch",
+		program = function()
+			local cd = vim.fn.expand("%:p:h")
+			local root = cd
 
-					root = root:gsub("/+[^/]*$", "")
+			while #root > 0 do
+				local f = io.open(root .. "/go.mod")
+
+				if f ~= nil and io.close(f) then
+					break
 				end
 
-				while #cd > 0 and cd ~= root do
-					local f = io.open(cd .. "/main.go")
-
-					if f ~= nil and io.close(f) then
-						break
-					end
-
-					cd = cd:gsub("/+[^/]*$", "")
-				end
-
-				if #cd == 0 then
-					return "./{relativeFileDirname}/."
-				end
-
-				if cd == root then
-					return "."
-				end
-
-				return cd:gsub(root, ".") .. "/."
-			end,
-			cwd = function()
-				local root = vim.fn.expand("%:p:h")
-
-				while #root > 0 do
-					local f = io.open(root .. "/go.mod")
-
-					if f ~= nil and io.close(f) then
-						break
-					end
-
-					root = root:gsub("/+[^/]*$", "")
-				end
-
-				if #root == 0 then
-					return "${workspaceFolder}"
-				end
-
-				return root
+				root = root:gsub("/+[^/]*$", "")
 			end
-		}
+
+			while #cd > 0 and cd ~= root do
+				local f = io.open(cd .. "/main.go")
+
+				if f ~= nil and io.close(f) then
+					break
+				end
+
+				cd = cd:gsub("/+[^/]*$", "")
+			end
+
+			if #cd == 0 then
+				return "./{relativeFileDirname}/."
+			end
+
+			if cd == root then
+				return "."
+			end
+
+			return cd:gsub(root, ".") .. "/."
+		end,
+		cwd = function()
+			local root = vim.fn.expand("%:p:h")
+
+			while #root > 0 do
+				local f = io.open(root .. "/go.mod")
+
+				if f ~= nil and io.close(f) then
+					break
+				end
+
+				root = root:gsub("/+[^/]*$", "")
+			end
+
+			if #root == 0 then
+				return "${workspaceFolder}"
+			end
+
+			return root
+		end
 	}
-})
+}
 
 vim.fn.sign_define('DapBreakpoint',{ text ='🟥', texthl ='', linehl ='', numhl =''})
 vim.fn.sign_define('DapStopped',{ text ='▶️', texthl ='', linehl ='', numhl =''})

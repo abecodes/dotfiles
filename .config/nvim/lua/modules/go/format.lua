@@ -46,5 +46,13 @@ return function()
 	end
 
 	vim.api.nvim_buf_set_lines(0, 0, -1, false, content)
+
+	local maxLines = vim.api.nvim_buf_line_count(0)
+	local nonBlank = vim.fn.prevnonblan(maxLines)
+
+	if maxLines ~= 0 then
+		vim.api.nvim_buf_set_lines(0, nonBlank, -1, false, {})
+	end
+
 	vim.fn.winrestview(view)
 end
