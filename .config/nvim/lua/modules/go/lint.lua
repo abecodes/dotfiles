@@ -108,6 +108,7 @@ local handle_stdout = function(_, data)
 				utils.str_has_prefix(issue.Text, "flag-parameter") or
 				utils.str_has_prefix(issue.Text, "return with no blank line before") or
 				utils.str_has_prefix(issue.Text, "composites") or
+				utils.str_has_prefix(issue.Text, "SA 4006") or
 				utils.str_has_prefix(issue.Text, "cognitive-complexity") or
 				string.find(issue.Text, "returns interface") then
 				msg.severity = vim.diagnostic.severity.WARN
@@ -120,6 +121,8 @@ local handle_stdout = function(_, data)
 				utils.str_has_prefix(issue.Text, "line-length-limit") or
 				utils.str_has_prefix(issue.Text, "get-return") or
 				utils.str_has_prefix(issue.Text, "error-strings") or
+				utils.str_has_prefix(issue.Text, "empty-block") or
+				utils.str_has_prefix(issue.Text, "import-alias-naming") or
 				utils.str_has_suffix(issue.Text, "is unused") then
 				msg.severity = vim.diagnostic.severity.HINT
 
