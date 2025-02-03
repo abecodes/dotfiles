@@ -202,6 +202,12 @@ return require('packer').startup(function()
         config = [[require('plugins.gitpad.config')]],
         setup = [[require('plugins.gitpad.setup')]],
     }
+    use {
+        'Hashino/doing.nvim',
+        config = [[require('plugins.doing.config')]],
+        setup = [[require('plugins.doing.setup')]],
+        wants = {'lualine'},
+    }
 
     -- documentation
     -- use {
