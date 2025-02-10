@@ -8,6 +8,8 @@ local servers = {
 	'efm',
 	'gopls',
 	'html',
+	'pyright',
+	'ruff',
 	'rust_analyzer',
 	'ts_ls',
 	'zls',

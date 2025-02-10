@@ -1,6 +1,8 @@
 local navic = require("nvim-navic")
+local cmp = require('lsp.completion.completion')
 
 local custom_attach = function(client, bufnr)
+    cmp.Setup(client, bufnr)
     if client.server_capabilities.semanticTokensProvider then
         vim.treesitter.stop(bufnr)
     end
@@ -48,6 +50,7 @@ local custom_attach = function(client, bufnr)
     -- elseif client.server_capabilities.document_range_formatting then
     --     buf_set_keymap("n", "ff", "<Cmd>LspRangeFormatting<CR>", opts)
     -- end
+    -- TODO: disable for go, is already in after plugin
     if client.server_capabilities.documentFormattingProvider then
         local shouldMap = true
         -- looks like keymap.set ignores noremap
@@ -85,6 +88,13 @@ local custom_attach = function(client, bufnr)
         ]], false)
     end
 
+    -- overwrites
+    -- TODO: move somewhere better
+    -- see https://docs.astral.sh/ruff/editors/setup/#neovim
+    if client.name == 'ruff' then
+        -- Disable hover in favor of Pyright
+        client.server_capabilities.hoverProvider = false
+    end
 end
 
 return custom_attach

@@ -30,6 +30,7 @@ return function()
     -- vim.api.nvim_get_option('tabstop') == 8 and
     vim.api.nvim_get_option('shiftwidth') == 2 and
     vim.api.nvim_get_option('softtabstop') == -1 and
+    vim.api.nvim_get_option('smartindent') == true and
     vim.api.nvim_get_option('expandtab') == not vim.tbl_contains(needs_tab, vim.bo.filetype) then
       return
   end
@@ -39,6 +40,7 @@ return function()
   vim.opt.tabstop = 2
   vim.opt.softtabstop = -1 -- if negative, it uses the shiftwidth value
   vim.opt.shiftwidth = 2
+  vim.opt.smartindent = true
   vim.opt.expandtab = not vim.tbl_contains(needs_tab, vim.bo.filetype)
   -- vim.cmd('retab')
 end

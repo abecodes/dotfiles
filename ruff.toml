@@ -1,0 +1,9 @@
+# Allow lines to be as long as 120.
+line-length = 120
+indent-width = 2
+
+[format]
+# Use tabs instead of 4 space indentation.
+indent-style = "tab"
+quote-style = "single"
+docstring-code-format = true
