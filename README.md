@@ -35,7 +35,7 @@ stow -t ~/ /
 ```
 
 ```bash
-brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go golangci-lint node rustup-init rust-analyzer efm-langserver llvm eza bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu httpie fx epr slides ruff pyright
+brew install neovim neofetch kitty lulu fish jesseduffield/lazygit/lazygit jesseduffield/lazynpm/lazynpm jesseduffield/lazydocker/lazydocker fzf nnn ripgrep go golangci-lint node rustup-init rust-analyzer efm-langserver llvm eza bat mdcat zoxide tealdeer bottom dust sd procs fd tokei jq starship yt-dlp/taps/yt-dlp silicon code-minimap kind kustomize kubectl staticcheck ncdu danvergara/tools/dblab jez/formulae/git-heatmap viu httpie fx epr slides ruff pyright lua-language-server
 
 brew install --cask rectangle mark-text vscodium pritunl librewolf gaphor motrix mongodb-compass keepassxc drawio vienna
 
@@ -407,6 +407,8 @@ brew install efm-langserver
 brew install ruff
 # pyright python static linter
 brew install pyright
+# lua-language-server lsp for lua
+brew install lua-language-server
 # Javascript/Typescript
 npm install -g eslint_d @fsouza/prettierd
 npm install -g typescript typescript-language-server

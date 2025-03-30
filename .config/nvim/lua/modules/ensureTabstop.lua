@@ -4,7 +4,7 @@ local excludes = {
   "dashboard",
   "help",
   "lir",
-	"no-neck-pain",
+  "no-neck-pain",
   "NeogitConsole",
   "neogitstatus",
   "NvimTree",
@@ -22,17 +22,17 @@ local needs_tab = {
 }
 
 return function()
-	if vim.tbl_contains(excludes, vim.bo.filetype) then
+  if vim.tbl_contains(excludes, vim.bo.filetype) then
     return
   end
 
-  if vim.api.nvim_get_option('tabstop') == 2 and
-    -- vim.api.nvim_get_option('tabstop') == 8 and
-    vim.api.nvim_get_option('shiftwidth') == 2 and
-    vim.api.nvim_get_option('softtabstop') == -1 and
-    vim.api.nvim_get_option('smartindent') == true and
-    vim.api.nvim_get_option('expandtab') == not vim.tbl_contains(needs_tab, vim.bo.filetype) then
-      return
+  if vim.api.nvim_get_option_value('tabstop', {}) == 2 and
+      -- vim.api.nvim_get_option('tabstop') == 8 and
+      vim.api.nvim_get_option_value('shiftwidth', {}) == 2 and
+      vim.api.nvim_get_option_value('softtabstop', {}) == -1 and
+      vim.api.nvim_get_option_value('smartindent', {}) == true and
+      vim.api.nvim_get_option_value('expandtab', {}) == not vim.tbl_contains(needs_tab, vim.bo.filetype) then
+    return
   end
 
   -- print("setting tabs for", vim.bo.filetype)
