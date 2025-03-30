@@ -17,9 +17,9 @@ local excludes = {
   "Trouble",
 }
 
-local needs_tab = {
-  "make",
-}
+-- local needs_tab = {
+--   "make",
+-- }
 
 return function()
   if vim.tbl_contains(excludes, vim.bo.filetype) then
@@ -31,7 +31,8 @@ return function()
       vim.api.nvim_get_option_value('shiftwidth', {}) == 2 and
       vim.api.nvim_get_option_value('softtabstop', {}) == -1 and
       vim.api.nvim_get_option_value('smartindent', {}) == true and
-      vim.api.nvim_get_option_value('expandtab', {}) == not vim.tbl_contains(needs_tab, vim.bo.filetype) then
+      -- vim.api.nvim_get_option_value('expandtab', {}) == not vim.tbl_contains(needs_tab, vim.bo.filetype) then
+      vim.api.nvim_get_option_value('expandtab', {}) == false then
     return
   end
 
@@ -41,6 +42,7 @@ return function()
   vim.opt.softtabstop = -1 -- if negative, it uses the shiftwidth value
   vim.opt.shiftwidth = 2
   vim.opt.smartindent = true
-  vim.opt.expandtab = not vim.tbl_contains(needs_tab, vim.bo.filetype)
-  -- vim.cmd('retab')
+  -- vim.opt.expandtab = not vim.tbl_contains(needs_tab, vim.bo.filetype)
+  vim.opt.expandtab = false
+  vim.cmd('retab')
 end
