@@ -54,8 +54,8 @@ local handle_stdout = function(_, data)
 				goto continue_issue
 			end
 
-			start_col = issue.Pos.Column - 1
-			end_col = issue.Pos.Column
+			local start_col = issue.Pos.Column - 1
+			local end_col = issue.Pos.Column
 
 			if not issue.LineRange then
 				issue.LineRange = {
@@ -68,7 +68,7 @@ local handle_stdout = function(_, data)
 				ts.get_node({
 					bufnr = 0,
 					pos = {
-						issue.Pos.Line-1,
+						issue.Pos.Line - 1,
 						issue.Pos.Column
 					}
 				})
@@ -76,8 +76,8 @@ local handle_stdout = function(_, data)
 
 			local msg = {
 				bufnr = vim.api.nvim_get_current_buf(),
-				lnum = issue.LineRange.From-1,
-				end_lnum = issue.LineRange.To-1,
+				lnum = issue.LineRange.From - 1,
+				end_lnum = issue.LineRange.To - 1,
 				col = start_col,
 				end_col = end_col,
 				severity = vim.diagnostic.severity.WARN,
@@ -96,47 +96,47 @@ local handle_stdout = function(_, data)
 			-- end
 
 			if utils.str_has_prefix(issue.Text, "shadow") or
-				utils.str_has_prefix(issue.Text, "use-any") or
-				utils.str_has_prefix(issue.Text, "add-constant") or
-				utils.str_has_prefix(issue.Text, "unhandled-error") or
-				utils.str_has_prefix(issue.Text, "nested-structs") or
-				utils.str_has_prefix(issue.Text, "unexported-return") or
-				utils.str_has_prefix(issue.Text, "unused-receiver") or
-				utils.str_has_prefix(issue.Text, "unused-parameter") or
-				utils.str_has_prefix(issue.Text, "singleCaseSwitch") or
-				utils.str_has_prefix(issue.Text, "var-declaration") or
-				utils.str_has_prefix(issue.Text, "flag-parameter") or
-				utils.str_has_prefix(issue.Text, "return with no blank line before") or
-				utils.str_has_prefix(issue.Text, "composites") or
-				utils.str_has_prefix(issue.Text, "SA 4006") or
-				utils.str_has_prefix(issue.Text, "cognitive-complexity") or
-				string.find(issue.Text, "returns interface") then
+					utils.str_has_prefix(issue.Text, "use-any") or
+					utils.str_has_prefix(issue.Text, "add-constant") or
+					utils.str_has_prefix(issue.Text, "unhandled-error") or
+					utils.str_has_prefix(issue.Text, "nested-structs") or
+					utils.str_has_prefix(issue.Text, "unexported-return") or
+					utils.str_has_prefix(issue.Text, "unused-receiver") or
+					utils.str_has_prefix(issue.Text, "unused-parameter") or
+					utils.str_has_prefix(issue.Text, "singleCaseSwitch") or
+					utils.str_has_prefix(issue.Text, "var-declaration") or
+					utils.str_has_prefix(issue.Text, "flag-parameter") or
+					utils.str_has_prefix(issue.Text, "return with no blank line before") or
+					utils.str_has_prefix(issue.Text, "composites") or
+					utils.str_has_prefix(issue.Text, "SA 4006") or
+					utils.str_has_prefix(issue.Text, "cognitive-complexity") or
+					string.find(issue.Text, "returns interface") then
 				msg.severity = vim.diagnostic.severity.WARN
 
 				goto insert_into
 			end
 
 			if string.find(issue.Text, "is missing field") or
-				utils.str_has_prefix(issue.Text, "confusing-naming") or
-				utils.str_has_prefix(issue.Text, "line-length-limit") or
-				utils.str_has_prefix(issue.Text, "get-return") or
-				utils.str_has_prefix(issue.Text, "error-strings") or
-				utils.str_has_prefix(issue.Text, "empty-block") or
-				utils.str_has_prefix(issue.Text, "import-alias-naming") or
-				utils.str_has_suffix(issue.Text, "is unused") then
+					utils.str_has_prefix(issue.Text, "confusing-naming") or
+					utils.str_has_prefix(issue.Text, "line-length-limit") or
+					utils.str_has_prefix(issue.Text, "get-return") or
+					utils.str_has_prefix(issue.Text, "error-strings") or
+					utils.str_has_prefix(issue.Text, "empty-block") or
+					utils.str_has_prefix(issue.Text, "import-alias-naming") or
+					utils.str_has_suffix(issue.Text, "is unused") then
 				msg.severity = vim.diagnostic.severity.HINT
 
 				goto insert_into
 			end
 
 			if utils.str_has_prefix(issue.Text, "function-length") or
-				utils.str_has_prefix(issue.Text, "ifElseChain") or
-				utils.str_has_prefix(issue.Text, "max-public-structs") or
-				utils.str_has_prefix(issue.Text, "cyclomatic") or
-				utils.str_has_prefix(issue.Text, "argument-limit") or
-				utils.str_has_prefix(issue.Text, "function-result-limit") or
-				string.find(issue.Text, "returns generic interface") or
-				utils.str_has_prefix(issue.Text, "redundant-import-alias") then
+					utils.str_has_prefix(issue.Text, "ifElseChain") or
+					utils.str_has_prefix(issue.Text, "max-public-structs") or
+					utils.str_has_prefix(issue.Text, "cyclomatic") or
+					utils.str_has_prefix(issue.Text, "argument-limit") or
+					utils.str_has_prefix(issue.Text, "function-result-limit") or
+					string.find(issue.Text, "returns generic interface") or
+					utils.str_has_prefix(issue.Text, "redundant-import-alias") then
 				msg.severity = vim.diagnostic.severity.INFO
 			end
 
@@ -177,8 +177,6 @@ return function()
 		{
 			'golangci-lint',
 			'run',
-			'--out-format',
-			'json',
 			'-c',
 			vim.fn.expand('$HOME/.golangci.yaml'),
 			'./...'

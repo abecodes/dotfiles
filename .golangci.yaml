@@ -1,7 +1,14 @@
 version: "2"
 run:
+  relative-path-mode: gomod
   modules-download-mode: readonly
   allow-parallel-runners: false
+  tests: true
+output:
+  formats:
+    json:
+      path: stdout
+  show-stats: false
 linters:
   default: none
   enable:
@@ -317,11 +324,11 @@ linters:
       constant-kind: true
   exclusions:
     generated: lax
-    presets:
-      - comments
-      - common-false-positives
-      - legacy
-      - std-error-handling
+    # presets:
+      # - comments
+      # - common-false-positives
+      # - legacy
+      # - std-error-handling
     rules:
       - linters:
           - dupl
