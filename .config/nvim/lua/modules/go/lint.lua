@@ -123,6 +123,8 @@ local handle_stdout = function(_, data)
 					utils.str_has_prefix(issue.Text, "error-strings") or
 					utils.str_has_prefix(issue.Text, "empty-block") or
 					utils.str_has_prefix(issue.Text, "import-alias-naming") or
+					utils.str_has_prefix(issue.Text, "exported") or
+					utils.str_has_prefix(issue.Text, "package-comments") or
 					utils.str_has_suffix(issue.Text, "is unused") then
 				msg.severity = vim.diagnostic.severity.HINT
 
