@@ -1,4 +1,4 @@
-local map = require'utils'.map_key
+local map = require 'utils'.map_key
 
 map('n', "<leader>pc",
-    "<CMD>TSContextToggle<CR>", {silent = true})
+	"<CMD>TSContext toggle<CR>", { silent = true })

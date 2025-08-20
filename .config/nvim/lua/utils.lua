@@ -22,19 +22,23 @@ local logger = require('logger')
 ---@class CmdOpts
 ---@field force boolean (default true) Override any previous definition
 
-local id = 0
-
----@class Luna
 local M = {}
 
 M.log = logger
+
+---string is nil or blank
+---@param str string
+---@return boolean
+M.str_is_empty = function(str)
+	return str == nil or str == ''
+end
 
 M.str_has_prefix = function(str, prefix)
 	return str:sub(1, #prefix) == prefix
 end
 
 M.str_has_suffix = function(str, suffix)
-	return suffix == "" or str:sub(-#suffix) == suffix
+	return suffix == "" or str:sub(- #suffix) == suffix
 end
 
 -- pumps the content of the current buffer to stdin of the command
@@ -42,13 +46,13 @@ end
 --- @param cmd string
 M.get_buf_func = function(cmd)
 	if not (type(cmd) == 'string') then
-		logger.warn(logger.dump(cmd)..' in no valid param to get_buf_func')
+		logger.warn(logger.dump(cmd) .. ' in no valid param to get_buf_func')
 		return nil
 	end
 
 	return function()
 		vim.api.nvim_command(
-			':%!'..cmd
+			':%!' .. cmd
 		)
 	end
 end
@@ -57,13 +61,13 @@ end
 --- @param cmd string
 M.get_buf_file_func = function(cmd)
 	if not (type(cmd) == 'string') then
-		logger.warn(logger.dump(cmd)..' in no valid param to get_buf_func')
+		logger.warn(logger.dump(cmd) .. ' in no valid param to get_buf_func')
 		return nil
 	end
 
 	return function()
 		vim.api.nvim_command(
-			':!'..cmd..' %'
+			':!' .. cmd .. ' %'
 		)
 	end
 end
@@ -132,16 +136,16 @@ end
 ---@param col number
 ---@return boolean
 M.is_cursor_at_position = function(line, col)
-    local cursor = vim.api.nvim_win_get_cursor(0)
+	local cursor = vim.api.nvim_win_get_cursor(0)
 
-    return line == cursor[1] - 1 and col == cursor[2]
+	return line == cursor[1] - 1 and col == cursor[2]
 end
 
 ---registers a command!
 ---@param command string
 ---@param fn_string string
 M.register_command = function(command, fn_string)
-    vim.api.nvim_command('command! ' .. command .. ' ' .. fn_string)
+	vim.api.nvim_command('command! ' .. command .. ' ' .. fn_string)
 end
 
 ---split a string
@@ -149,42 +153,35 @@ end
 ---@param str string
 ---@param sep string
 ---@return string[]
-M.split = function (str, sep)
-    local t={}
+M.split = function(str, sep)
+	local t = {}
 
-    if str == nil then
-        return t
-    end
-    if sep == nil then
-        sep = '%s'
-    end
+	if str == nil then
+		return t
+	end
+	if sep == nil then
+		sep = '%s'
+	end
 
 	-- for s in (str .. sep):gmatch("(.-)" .. sep) do
-    for s in string.gmatch(str, "([^"..sep.."]+)") do
-        table.insert(t, s)
-    end
-    return t
-end
-
----string is nil or blank
----@param str string
----@return boolean
-M.str_is_empty = function (str)
-    return str == nil or str == ''
+	for s in string.gmatch(str, "([^" .. sep .. "]+)") do
+		table.insert(t, s)
+	end
+	return t
 end
 
 ---uppercase first char of a string
 ---@param str string
 ---@return string
-M.str_capitalize = function (str)
-    return (str:gsub("^%l", string.upper))
+M.str_capitalize = function(str)
+	return (str:gsub("^%l", string.upper))
 end
 
 ---lowercase first char of a string
 ---@param str string
 ---@return string
-M.str_lowerlize = function (str)
-    return (str:gsub("^%u", string.lower))
+M.str_lowerlize = function(str)
+	return (str:gsub("^%u", string.lower))
 end
 
 ---map a key in mode
@@ -193,9 +190,9 @@ end
 ---@param rhs string
 ---@param opts? {silent: boolean, expr: boolean}
 M.map_key = function(mode, lhs, rhs, opts)
-    local options = {noremap = true}
-    if opts then options = vim.tbl_extend('force', options, opts) end
-    vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+	local options = { noremap = true }
+	if opts then options = vim.tbl_extend('force', options, opts) end
+	vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 
 ---unmap a key in mode
@@ -206,7 +203,7 @@ M.unmap_key = function(mode, lhs) vim.api.nvim_del_keymap(mode, lhs) end
 ---escape a string
 ---@param str string
 M.replace_key = function(str)
-    return vim.api.nvim_replace_termcodes(str, true, true, true)
+	return vim.api.nvim_replace_termcodes(str, true, true, true)
 end
 
 ---get the global rhs for a lhs
@@ -214,20 +211,20 @@ end
 ---@param mode string | "'n'" | "'v'" | "'x'" | "'s'" | "'o'" | "'!'" | "'i'" | "'l'" | "'c'" | "'t'" | "''"
 ---@return string
 M.get_rhs = function(lhs, mode)
-    local rhs = ''
+	local rhs = ''
 
-    for _, mapping in ipairs(vim.api.nvim_get_keymap(mode)) do
-        if mapping.lhs == lhs then
-            if mapping.rhs ~= '' then rhs = mapping.rhs end
-            break
-        end
-    end
+	for _, mapping in ipairs(vim.api.nvim_get_keymap(mode)) do
+		if mapping.lhs == lhs then
+			if mapping.rhs ~= '' then rhs = mapping.rhs end
+			break
+		end
+	end
 
-    return rhs
+	return rhs
 end
 
 M.git_branch = function()
-    return vim.fn.system("git rev-parse --abbrev-ref HEAD 2> /dev/null | echo ''")
+	return vim.fn.system("git rev-parse --abbrev-ref HEAD 2> /dev/null | echo ''")
 end
 
 return M
