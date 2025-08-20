@@ -15,7 +15,10 @@ local excludes = {
 	"help",
 	"startify",
 	"packer",
-	"neogitstatus",
+	"NeogitStatus",
+	"NeogitDiffView",
+	"NeogitPopup",
+	"gitcommit",
 	-- TODO: check if those are still used
 	"Trouble",
 	"Outline",
