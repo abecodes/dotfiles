@@ -1,7 +1,5 @@
-local nvim_lsp = require('lspconfig')
-local custom_attach = require('lsp.utils.attach')
-local prettier = require 'lsp.servers.efm.formatters.prettier'
-local eslint = require 'lsp.servers.efm.linters.eslint'
+local prettier = require 'lsp.formatters.prettier'
+local eslint = require 'lsp.linters.eslint'
 -- local clippy = require 'lsp.servers.efm.linters.clippy'
 -- local rustfmt = require 'lsp.servers.efm.formatters.rustfmt'
 
@@ -24,19 +22,16 @@ local languages = {
 
 
 return {
-    on_attach = function(client, bufnr)
-        custom_attach(client, bufnr)
-    end,
 		on_init = function ()
 			vim.api.nvim_command('silent! !prettierd start')
 			vim.api.nvim_command('silent! !eslint_d start')
-			vim.api.nvim_exec([[
+			vim.api.nvim_exec2([[
 				augroup LspEfmCleanup
 						autocmd!
 						autocmd VimLeavePre * silent! :!prettierd stop
 						autocmd VimLeavePre * silent! :!eslint_d stop
 				augroup END
-			]], true)
+			]], {output = false})
 		end,
     on_exit = function()
         vim.schedule_wrap(function()
@@ -54,13 +49,12 @@ return {
     cmd = {'efm-langserver', '-loglevel', '10', '-logfile', '/tmp/efm.log'},
     init_options = {documentFormatting = true},
     filetypes = vim.tbl_keys(languages),
-    -- root_dir = nvim_lsp.util.root_pattern('package.json', '.git'),
-    root_dir = function(fname)
-        return nvim_lsp.util.root_pattern('package.json', '.git')(fname) or
-            nvim_lsp.util.path.dirname(fname)
-    end,
+		root_markers = {
+			'package.json',
+			'.git'
+		},
     settings = {
-        rootMarkers = {vim.loop.cwd()},
+        rootMarkers = {vim.fn.getcwd()},
         lintDebounce = 100,
         languages = languages
     }

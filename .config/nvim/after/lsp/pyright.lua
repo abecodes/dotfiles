@@ -1,17 +1,16 @@
-local nvim_lsp = require('lspconfig')
-
 -- see https://www.andersevenrud.net/neovim.github.io/lsp/configurations/pyright/
 
--- 'ruff.toml', '.ruff.toml'
-local root_files = {'pyproject.toml', 'pyvenv.cfg'}
-
 return {
+	cmd = { 'pyright-langserver', '--stdio' },
+	single_file_support = true,
 	filetypes = {'python'},
-	root_dir = function(filename)
-		return nvim_lsp.util.root_pattern(unpack(root_files))(filename)
-			or vim.fs.dirname(vim.fs.find('.git', { path = filename, upward = true })[1])
-			-- or nvim_lsp.util.path.dirname(filename)
-	end,
+	root_markers = {
+		'pyproject.toml',
+		'pyvenv.cfg',
+		'ruff.toml',
+		'.ruff.toml',
+		'.git'
+	},
 	settings = {
 		pyright = {
 			-- Using Ruff's import organizer

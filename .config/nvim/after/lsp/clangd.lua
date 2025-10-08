@@ -1,5 +1,3 @@
-local nvim_lsp = require('lspconfig')
-local util = require('lspconfig.util')
 local hooks = require('hooks.hooks')
 
 hooks.register(
@@ -18,7 +16,7 @@ return {
     -- '--log=verbose'}
     cmd = {'/usr/bin/clangd', '--background-index', '--clang-tidy'},
     single_file_support = true,
-    root_dir = util.root_pattern(
+    root_markers = {
         '.clangd',
         '.clang-tidy',
         'compile_commands.json',
@@ -26,7 +24,7 @@ return {
         'configure.ac',
         'build.zig',
         '.git'
-    ),
+		},
     -- initialization_options = {
     --     fallback_flags = { '-std=c++17' },
     -- },

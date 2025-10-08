@@ -1,4 +1,3 @@
-local nvim_lsp = require('lspconfig')
 local hooks = require('hooks.hooks')
 
 -- see https://docs.astral.sh/ruff/installation/
@@ -13,16 +12,17 @@ hooks.register(
 	}
 )
 
--- 'ruff.toml', '.ruff.toml'
-local root_files = {'pyproject.toml', 'pyvenv.cfg'}
-
 return {
+	cmd = { 'ruff', 'server' },
+	single_file_support = true,
 	filetypes = {'python'},
-	root_dir = function(filename)
-		return nvim_lsp.util.root_pattern(unpack(root_files))(filename)
-			or vim.fs.dirname(vim.fs.find('.git', { path = filename, upward = true })[1])
-			-- or nvim_lsp.util.path.dirname(filename)
-	end,
+	root_markers = {
+		'ruff.toml',
+		'.ruff.toml',
+		'pyproject.toml',
+		'pyvenv.cfg',
+		'.git',
+	},
 	-- see https://docs.astral.sh/ruff/editors/settings/
 	init_options = {
 		settings = {

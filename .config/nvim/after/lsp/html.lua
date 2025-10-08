@@ -1,4 +1,3 @@
-local nvim_lsp = require('lspconfig')
 local custom_attach = require('lsp.utils.attach')
 
 return {
@@ -13,7 +12,6 @@ return {
         configurationSection = {'html', 'css', 'javascript'},
         embeddedLanguages = {css = true, javascript = true}
     },
-    -- root_dir = vim.loop.cwd(),
-		root_dir = nvim_lsp.util.path.dirname,
+		root_markers = {vim.fn.getcwd()},
     settings = {}
 }

@@ -12,6 +12,8 @@ hooks.register(
 )
 
 return {
+	cmd = { 'lua-language-server' },
+	single_file_support = true,
 	filetypes = {'lua'},
 	on_init = function(client)
     if client.workspace_folders then
