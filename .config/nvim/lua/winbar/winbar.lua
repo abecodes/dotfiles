@@ -12,6 +12,7 @@ local path_limit = 15
 local rendering = false
 
 local excludes = {
+	-- use :echo &filetype
 	"help",
 	"startify",
 	"packer",
@@ -136,10 +137,11 @@ local function render_diagnostics()
 	local count = { 0, 0, 0, 0 }
 
 	for _, diagnostic in ipairs(diagnostics) do
-		if vim.startswith(vim.diagnostic.get_namespace(diagnostic.namespace).name, 'vim.lsp') then
-			count[diagnostic.severity] = count[diagnostic.severity] + 1
-		end
+		-- if vim.startswith(vim.diagnostic.get_namespace(diagnostic.namespace).name, 'vim.lsp') then
+		count[diagnostic.severity] = count[diagnostic.severity] + 1
+		-- end
 	end
+
 	local msg = ''
 
 	if count[vim.diagnostic.severity.ERROR] > 0 then
