@@ -1,39 +1,22 @@
--- for plugin nvim-ts-context-commentstring
-require('ts_context_commentstring').setup {
-    enable_autocmd = false,
-}
+-- nvim-treesitter.configs was removed in the main branch rewrite.
+-- Parser installation is handled by :TSUpdate (automated via PackChanged hook in plugins_ii.lua).
+-- Highlighting is managed by nvim-treesitter's own ftplugins via vim.treesitter.start().
 
-require'nvim-treesitter.configs'.setup {
-    ensure_installed = "all", -- one of "all", or a list of languages
-    ignore_install = { "php", "phpdoc" }, -- List of parsers to ignore installing
-    highlight = {
-        enable = true,
-        -- NOTE: these are the names of the parsers and not the filetype. (for example if you want to
-        -- disable highlighting for the `tex` filetype, you need to include `latex` in this list as this is
-        -- the name of the parser)
-        -- list of language that will be disabled
-        disable = {},
-        -- Or use a function for more flexibility, e.g. to disable slow treesitter highlight for large files
-        disable = function(lang, buf)
-            local max_filesize = 100 * 1024 -- 100 KB
-            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-            if ok and stats and stats.size > max_filesize then
-                return true
-            end
-        end,
-        -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
-        -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
-        -- Using this option may slow down your editor, and you may see some duplicate highlights.
-        -- Instead of true it can also be a list of languages
-        additional_vim_regex_highlighting = false,
+-- ts-context-commentstring — separate plugin, keep its own setup
+require('ts_context_commentstring').setup({
+    enable_autocmd = false,
+    commentary_integration = {
+        Commentary = '<leader>/',
     },
-    context_commentstring = {
-        enable = true,
-        commentary_integration = {
-            -- change default mapping
-            Commentary = '<leader>/',
-            -- disable default mapping
-            -- CommentaryLine = false,
-        },
-    },
-}
+})
+
+-- Disable treesitter highlighting for large files (> 100 KB).
+-- Runs after BufReadPost so ftplugins have already started treesitter.
+vim.api.nvim_create_autocmd('BufReadPost', {
+    callback = function(ev)
+        local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(ev.buf))
+        if ok and stats and stats.size > 100 * 1024 then
+            vim.treesitter.stop(ev.buf)
+        end
+    end,
+})

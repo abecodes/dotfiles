@@ -1,7 +1,7 @@
 function update
   brew upgrade
   brew upgrade --cask --greedy
-  npm i -g eslint_d @fsouza/prettierd vscode-langservers-extracted typescript typescript-language-server https://github.com/jez/bars.git
+  npm i -g eslint_d @fsouza/prettierd vscode-langservers-extracted typescript typescript-language-server https://github.com/jez/bars.git tree-sitter-cli
   npm update -g
   go install mvdan.cc/gofumpt@latest
   go install github.com/fdaines/spm-go@latest

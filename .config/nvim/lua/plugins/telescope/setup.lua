@@ -25,7 +25,7 @@ map('n', "<leader>fb", "<CMD>Telescope buffers<CR>", {silent = true})
 map('n', "<leader>fh", "<CMD>Telescope help_tags<CR>", {silent = true}) ]]
 
 -- Using Lua functions
-map('n', "<leader>td", "<CMD>lua require('telescope.builtin').diagnostics()<CR>",
+map('n', "<leader>td", "<CMD>lua require('telescope.builtin').diagnostics({ previewer = false })<CR>",
 {silent = true})
 map('n', "<leader>te",
     "<CMD>lua require 'telescope'.extensions.file_browser.file_browser()<CR>", {silent = true})
@@ -78,3 +78,13 @@ map(
 -- 	"<CMD>Telescope harpoon marks<CR>",
 -- 	{ noremap = true }
 -- )
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "TelescopePreviewerLoaded",
+  callback = function(args)
+		vim.api.nvim_buf_set_option(args.buf, "tabstop", 2)
+		vim.api.nvim_buf_set_option(args.buf, "softtabstop", 2)
+		vim.api.nvim_buf_set_option(args.buf, "shiftwidth", 2)
+		--vim.cmd('retab')
+  end,
+})

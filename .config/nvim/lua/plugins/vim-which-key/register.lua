@@ -7,7 +7,7 @@ local normal_r = require("plugins.vim-which-key.normal.r")
 local normal_R = require("plugins.vim-which-key.normal._r")
 local normal_t = require("plugins.vim-which-key.normal.t")
 local normal_T = require("plugins.vim-which-key.normal.tt")
-local normal_x = require("plugins.vim-which-key.normal.x")
+-- local normal_x = require("plugins.vim-which-key.normal.x")
 local normal_z = require("plugins.vim-which-key.normal.z")
 
 local visual_singles = require("plugins.vim-which-key.visual.singles")

@@ -1,374 +1,231 @@
--- This file can be loaded by calling `lua require('plugins')` from your init.vim
--- vim.api.nvim_command('packadd packer.nvim')
---[[ use {
-  'myusername/example',        -- The plugin location string
-  -- The following keys are all optional
-  disable = boolean,           -- Mark a plugin as inactive
-  as = string,                 -- Specifies an alias under which to install the plugin
-  installer = function,        -- Specifies custom installer. See 'custom installers' below.
-  updater = function,          -- Specifies custom updater. See 'custom installers' below.
-  after = string or list,      -- Specifies plugins to load before this plugin. See 'sequencing' below
-  rtp = string,                -- Specifies a subdirectory of the plugin to add to runtimepath.
-  opt = boolean,               -- Manually marks a plugin as optional.
-  branch = string,             -- Specifies a git branch to use
-  tag = string,                -- Specifies a git tag to use
-  commit = string,             -- Specifies a git commit to use
-  lock = boolean,              -- Skip this plugin in updates/syncs
-  run = string, function, or table, -- Post-update/install hook. See 'update/install hooks'.
-  requires = string or list,   -- Specifies plugin dependencies. See 'dependencies'.
-  rocks = string or list,      -- Specifies Luarocks dependencies for the plugin
-  config = string or function, -- Specifies code to run after this plugin is loaded.
-  -- The setup key implies
-  setup = string or function,  -- Specifies code to run before this plugin is loaded.
-  -- The following keys all imply lazy-loading and imply
-  cmd = string or list,        -- Specifies commands which load this plugin.
-  ft = string or list,         -- Specifies filetypes which load this plugin.
-  keys = string or list,       -- Specifies maps which load this plugin. See 'Keybindings'.
-  event = string or list,      -- Specifies autocommand events which load this plugin.
-  fn = string or list          -- Specifies functions which load this plugin.
-  cond = string, function, or list of strings/functions,   -- Specifies a conditional test to load this plugin
-  module = string or list      -- Specifies Lua module names for require. When requiring a string which starts
-                               -- with one of these module names, the plugin will be loaded.
-} ]] -- recompile if this file changes
-vim.cmd [[autocmd BufWritePost plugins.lua PackerCompile]]
+local log = require('logger')
 
--- setup is called before load, config after
+-- ============================================================
+-- CLI dependency checks
+-- To add a new check: append to the list below.
+--   { cmd = 'binary-name', hint = 'how to install it' }
+-- ============================================================
+local cli_deps = {
+  { cmd = 'tree-sitter', req = 'nvim-treesitter', hint = 'npm install -g tree-sitter-cli' },
+}
 
-return require('packer').startup(function()
-	-- Packer can manage itself
-	use 'wbthomason/packer.nvim'
+for _, dep in ipairs(cli_deps) do
+  if vim.fn.executable(dep.cmd) == 0 then
+    log.warn('[vim.pack] missing CLI tool: `' .. dep.cmd .. '` (required by ' .. dep.req .. ')  →  ' .. dep.hint)
+  end
+end
 
-	use {
-		'nvim-tree/nvim-web-devicons',
-		version = 'nerd-v2-compat',
-		config = function()
-			require('nvim-web-devicons').setup()
-		end,
-	}
+-- ============================================================
+-- Section 0: Post-install/update hooks (replaces packer `run`)
+-- ============================================================
+-- vim.pack fires User PackChanged after any install or update.
+-- ev.data = { kind = "install"|"update"|"delete", spec, path, active }
+vim.api.nvim_create_autocmd('User', {
+  pattern = 'PackChanged',
+  callback = function(ev)
+    local d = ev.data
+    if d.kind ~= 'install' and d.kind ~= 'update' then return end
+    local name = d.spec.name or d.spec.src:match('[^/]+$')
 
-	-- Editor components
-	use {
-		'mhinz/vim-startify',
-		config = [[require('plugins.vim-startify.config')]],
-	}
-	use {
-		'liuchengxu/vim-which-key',
-		setup = [[require('plugins.vim-which-key.setup')]],
-		config = [[require('plugins.vim-which-key.config')]]
-	}
-	use {
-		'mbbill/undotree',
-		setup = [[require('plugins.undotree.setup')]]
-	}
-	use {
-		'folke/todo-comments.nvim',
-		requires = 'nvim-lua/plenary.nvim',
-		config = [[require('plugins.todo-comments.config')]]
-	}
-	use {
-		'folke/trouble.nvim',
-		requires = 'nvim-tree/nvim-web-devicons',
-		setup = [[require('plugins.trouble.setup')]],
-		config = [[require('plugins.trouble.config')]]
-	}
-	use {
-		'sindrets/diffview.nvim',
-		wants = { 'nvim-tree/nvim-web-devicons' },
-		config = [[require('plugins.diffview.config')]]
-	}
-	use {
-		'gennaro-tedesco/nvim-peekup',
-		config = [[require('plugins.nvim-peekup.config')]]
-	}
-	-- use {
-	--     'wfxr/minimap.vim',
-	--     setup = [[require('plugins.minimap.setup')]],
-	--     disable = true
-	-- }
-	use {
-		'NeogitOrg/neogit',
-		config = [[require('plugins.neogit.config')]],
-		setup = [[require('plugins.neogit.setup')]],
-		requires = {
-			'nvim-lua/plenary.nvim',
-			'nvim-telescope/telescope.nvim',
-			'sindrets/diffview.nvim'
-		}
-	}
-	-- use {
-	--     'ThePrimeagen/harpoon',
-	--     requires = 'nvim-lua/plenary.nvim',
-	--     config = [[require('plugins.harpoon.config')]],
-	--     setup = [[require('plugins.harpoon.setup')]],
-	-- }
-
-	-- Editor visuals
-	use { 'machakann/vim-sandwich' } -- maybe use nvim-surround
-	use {
-		'windwp/nvim-autopairs',
-		config = [[require('plugins.nvim-autopairs.config')]],
-		after = { 'coq_nvim' }
-	}
-	use {
-		'lukas-reineke/indent-blankline.nvim',
-		config = [[require('plugins.indent-blankline.config')]],
-		after = { 'rainbow-delimiters.nvim' }
-	}
-	use {
-		'machakann/vim-highlightedyank',
-		config = [[require('plugins.vim-highlightedyank.config')]]
-	}
-	-- use {'edluffy/specs.nvim', config = [[require('plugins.specs.config')]]}
-	use {
-		'andymass/vim-matchup',
-		config = [[require('plugins.vim-matchup.config')]],
-		wants = { 'nvim-treesitter' }
-	}
-	-- Broken in nvim 0.10
-	-- use {'sunjon/shade.nvim', config = [[require('plugins.shade.config')]]}
-
-	-- project
-	use {
-		'airblade/vim-rooter',
-		config = [[require('plugins.vim-rooter.config')]]
-	}
-	use {
-		'lewis6991/gitsigns.nvim',
-		requires = { 'nvim-lua/plenary.nvim' },
-		config = function()
-			require('gitsigns').setup()
-		end
-	}
-
-	-- search
-	use {
-		'nvim-telescope/telescope.nvim',
-		requires = {
-			{ 'nvim-lua/popup.nvim' }, { 'nvim-telescope/telescope-symbols.nvim' },
-			{ 'nvim-telescope/telescope-file-browser.nvim' },
-			{ 'nvim-telescope/telescope-fzf-native.nvim',  run = 'make' },
-			{ 'nvim-telescope/telescope-ui-select.nvim' }
-		},
-		wants = {
-			'plenary.nvim',
-			'popup.nvim',
-			'telescope-symbols.nvim',
-			'telescope-ui-select.nvim',
-			'refactoring.nvim'
-		},
-		setup = [[require('plugins.telescope.setup')]],
-		config = [[require('plugins.telescope.config')]]
-	}
-	use {
-		'brooth/far.vim',
-		setup = [[require('plugins.far.setup')]],
-	}
-	use {
-		'MagicDuck/grug-far.nvim',
-		config = [[require('plugins.grug-far.config')]],
-		setup = [[require('plugins.grug-far.setup')]],
-	}
-
-	-- writing/reading
-	-- use {
-	--     'shortcuts/no-neck-pain.nvim',
-	--     tag = '*',
-	--     config = [[require('plugins.no-neck-pain.config')]],
-	-- }
-	use 'nullchilly/fsread.nvim'
-	use {
-		'folke/zen-mode.nvim',
-		config = [[require('plugins.zen-mode.config')]],
-		requires = {
-			{
-				'folke/twilight.nvim',
-				config = [[require('plugins.twilight.config')]]
-			}
-		},
-		cmd = { 'ZenMode' }
-	}
-	use {
-		'renerocksai/telekasten.nvim',
-		config = [[require('plugins.telekasten.config')]],
-		setup = [[require('plugins.telekasten.setup')]],
-		wants = { 'plenary.nvim', 'telescope.nvim' },
-	}
-	use {
-		'JellyApple102/flote.nvim',
-		config = [[require('plugins.flote.config')]],
-	}
-	use {
-		'yujinyuz/gitpad.nvim',
-		config = [[require('plugins.gitpad.config')]],
-		setup = [[require('plugins.gitpad.setup')]],
-	}
-
-	-- documentation
-	-- use {
-	--     'kkoomen/vim-doge',
-	--     run = ':call doge#install()'
-	--     --[[ config = function()
-	--         vim.g.doge_doc_standard_python = 'google'
-	--     end, ]]
-	-- }
-	use {
-		'danymat/neogen',
-		config = [[require('plugins.neogen.config')]],
-		wants = { 'nvim-treesitter' }
-	}
-
-	-- comments
-	use {
-		'tpope/vim-commentary',
-		setup = [[require('plugins.vim-commentary.setup')]],
-		wants = 'nvim-ts-context-commentstring'
-	}
-
-	-- motion
-	use {
-		'ggandor/leap.nvim',
-		config = [[require('plugins.leap.config')]],
-		setup = [[require('plugins.leap.setup')]],
-		requires = {
-			'tpope/vim-repeat'
-		}
-	}
-	-- use {
-	--     'declancm/cinnamon.nvim',
-	--     config = [[require('plugins.cinnamon.config')]],
-	--     setup = [[require('plugins.cinnamon.setup')]],
-	--     wants = {'plenary.nvim'}
-	-- }
-	use {
-		'abecodes/tabout.nvim',
-		config = [[require('plugins.tabout.config')]],
-		requires = { 'nvim-treesitter' },
-		after = { 'coq_nvim' }
-	}
-
-	-- lsp
-	use {
-		'nvim-treesitter/nvim-treesitter',
-		run = ':TSUpdate',
-		config = [[require('plugins.nvim-treesitter.config')]],
-		requires = {
-			'JoosepAlviste/nvim-ts-context-commentstring' -- needs to be enabled in treesitter config
-		}
-	}
-	use {
-		'hiphish/rainbow-delimiters.nvim',
-		config = [[require('plugins.rainbow-delimiters.config')]]
-	}
-	use {
-		'windwp/nvim-ts-autotag',
-		config = [[require('plugins.nvim-ts-autotag.config')]]
-	}
-	use {
-		'nvim-lua/lsp_extensions.nvim',
-		config = [[require('plugins.lsp_extensions.config')]]
-	}
-	use {
-		'onsails/lspkind-nvim',
-		config = [[require('plugins.lspkind-nvim.config')]]
-	}
-	use {
-		'ray-x/lsp_signature.nvim',
-		config = [[require('plugins.lsp_signature.config')]],
-	}
-	use({
-		"https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-		config = [[require('plugins.lsp_lines.config')]],
-		setup = [[require('plugins.lsp_lines.setup')]]
-	})
-	use {
-		'nvim-treesitter/nvim-treesitter-context',
-		setup = [[require('plugins.nvim-treesitter-context.setup')]],
-		config = [[require('plugins.nvim-treesitter-context.config')]],
-		requires = {
-			'nvim-treesitter/nvim-treesitter'
-		},
-		wants = { 'nvim-treesitter' }
-	}
-	use {
-		'ms-jpq/coq_nvim',
-		branch = 'coq',
-		requires = { { 'ms-jpq/coq.artifacts', branch = 'artifacts' } },
-		config = [[require('plugins.coq_nvim.config')]],
-		setup = [[require('plugins.coq_nvim.setup')]],
-		wants = { 'nvim-treesitter' }
-	}
-	use {
-		'ThePrimeagen/refactoring.nvim',
-		config = [[require('plugins.refactoring.config')]],
-		setup = [[require('plugins.refactoring.setup')]],
-		wants = { 'plenary.nvim', 'nvim-treesitter' }
-	}
-
-	-- language suppport
-	use {
-		'maxmellon/vim-jsx-pretty',
-		ft = {
-			'javascriptreact', 'javascript.jsx', 'typescriptreact',
-			'typescript.tsx'
-		}
-	}
-	use {
-		'mattn/emmet-vim',
-		ft = {
-			'javascriptreact', 'javascript.jsx', 'typescriptreact',
-			'typescript.tsx', 'html'
-		}
-	}
-
-	-- debugging
-	use {
-		'mfussenegger/nvim-dap',
-		config = [[require('plugins.nvim-dap.config')]],
-	}
-	use {
-		'rcarriga/nvim-dap-ui',
-		config = [[require('plugins.nvim-dap-ui.config')]],
-		requires = { 'nvim-neotest/nvim-nio' },
-		wants = { 'nvim-dap' }
-	}
-	use {
-		'nvim-telescope/telescope-dap.nvim',
-		setup = [[require('plugins.telescope-dap.setup')]],
-		config = [[require('plugins.telescope-dap.config')]],
-		wants = { 'nvim-dap', 'nvim-treesitter', 'telescope.nvim' }
-	}
-
-	-- bars
-	use {
-		'SmiteshP/nvim-navic',
-		-- config = [[require('plugins.nvim-navic.config')]],
-		wants = { 'nvim-treesitter' }
-	}
-	use {
-		'nvim-lualine/lualine.nvim',
-		config = [[require('plugins.lualine.config')]],
-		wants = { 'nvim-tree/nvim-web-devicons', 'SmiteshP/nvim-navic' }
-	}
-
-	-- theme
-	use { 'atelierbram/Base2Tone-nvim' }
-	-- use {'ntk148v/vim-horizon', as = 'horizon'}
-
-	-- ui
-	use {
-		'stevearc/dressing.nvim',
-		config = [[require('plugins.dressing.config')]],
-	}
-end)
-
---[[ config = {
-  display = {
-    open_fn = function()
-      return require('packer.util').float({ border = 'single' })
+    if name == 'coq_nvim' then
+      log.log('[vim.pack] coq_nvim ' .. d.kind .. 'd — running :COQdeps', vim.log.levels.INFO)
+      vim.schedule(function() vim.cmd('COQdeps') end)
     end
-  },
-	profile = {
-    enable = true,
-    threshold = 1 -- the amount in ms that a plugins load time must be over for it to be included in the profile
-  }
-} ]]
+
+    if name == 'nvim-treesitter' then
+      log.log('[vim.pack] nvim-treesitter ' .. d.kind .. 'd — running :TSUpdate', vim.log.levels.INFO)
+      -- schedule so the plugin is fully on rtp before TSUpdate runs
+      vim.schedule(function() vim.cmd('TSUpdate') end)
+    end
+
+    if name == 'telescope-fzf-native.nvim' then
+      log.log('[vim.pack] telescope-fzf-native ' .. d.kind .. 'd — running make in ' .. d.path, vim.log.levels.INFO)
+      vim.fn.jobstart({ 'make' }, {
+        cwd = d.path,
+        on_exit = function(_, code)
+          if code == 0 then
+            log.log('[vim.pack] telescope-fzf-native: make succeeded', vim.log.levels.INFO)
+          else
+            log.error('[vim.pack] telescope-fzf-native: make failed (exit ' .. code .. ')')
+          end
+        end,
+      })
+    end
+  end,
+})
+
+-- ============================================================
+-- Section 1: Eager plugins — install + load immediately
+-- ============================================================
+vim.pack.add({
+  -- devicons (pinned to nerd-v2-compat tag)
+  { src = 'https://github.com/nvim-tree/nvim-web-devicons', version = 'nerd-v2-compat' },
+
+  -- shared dependencies
+  'https://github.com/nvim-lua/plenary.nvim',
+  'https://github.com/nvim-lua/popup.nvim',
+  'https://github.com/nvim-neotest/nvim-nio',
+
+  -- Editor components
+  'https://github.com/mhinz/vim-startify',
+  'https://github.com/liuchengxu/vim-which-key',
+  'https://github.com/mbbill/undotree',
+  'https://github.com/folke/todo-comments.nvim',
+  'https://github.com/folke/trouble.nvim',
+  'https://github.com/sindrets/diffview.nvim',
+  'https://github.com/gennaro-tedesco/nvim-peekup',
+  'https://github.com/NeogitOrg/neogit',
+
+  -- Editor visuals
+  'https://github.com/machakann/vim-sandwich',
+  'https://github.com/windwp/nvim-autopairs',
+  'https://github.com/lukas-reineke/indent-blankline.nvim',
+  'https://github.com/machakann/vim-highlightedyank',
+  'https://github.com/andymass/vim-matchup',
+
+  -- Project
+  'https://github.com/airblade/vim-rooter',
+  'https://github.com/lewis6991/gitsigns.nvim',
+
+  -- Search
+  'https://github.com/nvim-telescope/telescope.nvim',
+  'https://github.com/nvim-telescope/telescope-symbols.nvim',
+  'https://github.com/nvim-telescope/telescope-file-browser.nvim',
+  'https://github.com/nvim-telescope/telescope-fzf-native.nvim', -- make runs automatically via PackChanged
+  'https://github.com/nvim-telescope/telescope-ui-select.nvim',
+  'https://github.com/brooth/far.vim',
+  'https://github.com/MagicDuck/grug-far.nvim',
+
+  -- Writing / reading
+  'https://github.com/nullchilly/fsread.nvim',
+  'https://github.com/renerocksai/telekasten.nvim',
+  'https://github.com/JellyApple102/flote.nvim',
+  'https://github.com/yujinyuz/gitpad.nvim',
+
+  -- Documentation
+  'https://github.com/danymat/neogen',
+
+  -- Comments
+  'https://github.com/tpope/vim-commentary',
+
+  -- Motion
+  { src = 'https://codeberg.org/andyg/leap.nvim' },
+  'https://github.com/tpope/vim-repeat',
+  'https://github.com/abecodes/tabout.nvim',
+
+  -- LSP / Treesitter
+  { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },  -- :TSUpdate runs automatically via PackChanged
+  'https://github.com/JoosepAlviste/nvim-ts-context-commentstring',
+  'https://github.com/hiphish/rainbow-delimiters.nvim',
+  'https://github.com/windwp/nvim-ts-autotag',
+  'https://github.com/nvim-lua/lsp_extensions.nvim',
+  'https://github.com/onsails/lspkind-nvim',
+  'https://github.com/ray-x/lsp_signature.nvim',
+  { src = 'https://git.sr.ht/~whynothugo/lsp_lines.nvim' },   -- non-GitHub source
+  'https://github.com/nvim-treesitter/nvim-treesitter-context',
+  { src = 'https://github.com/ms-jpq/coq_nvim',    version = 'coq' },
+  { src = 'https://github.com/ms-jpq/coq.artifacts', version = 'artifacts' },
+  'https://github.com/ThePrimeagen/refactoring.nvim',
+
+  -- Debugging
+  'https://github.com/mfussenegger/nvim-dap',
+  'https://github.com/rcarriga/nvim-dap-ui',
+  'https://github.com/nvim-telescope/telescope-dap.nvim',
+
+  -- Bars
+  'https://github.com/SmiteshP/nvim-navic',
+  'https://github.com/nvim-lualine/lualine.nvim',
+
+  -- Theme
+  'https://github.com/atelierbram/Base2Tone-nvim',
+
+  -- UI
+  'https://github.com/stevearc/dressing.nvim',
+}, { load = true })
+
+-- ============================================================
+-- Section 2: ft-lazy plugins — install only, no immediate load
+-- ============================================================
+-- Loaded on-demand via the FileType autocommand in Section 5.
+vim.pack.add({
+  { src = 'https://github.com/maxmellon/vim-jsx-pretty', name = 'vim-jsx-pretty' },
+  { src = 'https://github.com/mattn/emmet-vim',          name = 'emmet-vim' },
+})
+
+-- ============================================================
+-- Section 3: setup() calls  (packer `setup` key — runs before config)
+-- ============================================================
+require('plugins.vim-which-key.setup')
+require('plugins.undotree.setup')
+require('plugins.trouble.setup')
+require('plugins.neogit.setup')
+require('plugins.coq_nvim.setup')
+require('plugins.telescope.setup')
+require('plugins.far.setup')
+require('plugins.grug-far.setup')
+require('plugins.leap.setup')
+require('plugins.lsp_lines.setup')
+require('plugins.nvim-treesitter-context.setup')
+require('plugins.refactoring.setup')
+require('plugins.telekasten.setup')
+require('plugins.gitpad.setup')
+require('plugins.vim-commentary.setup')
+require('plugins.telescope-dap.setup')
+
+-- ============================================================
+-- Section 4: config() calls  (packer `config` key — runs after load)
+-- ============================================================
+-- Load ordering preserved from packer `after` relationships:
+--   rainbow-delimiters  → indent-blankline
+--   coq_nvim            → nvim-autopairs, tabout
+
+require('nvim-web-devicons').setup()
+
+require('plugins.vim-startify.config')
+require('plugins.vim-which-key.config')
+require('plugins.todo-comments.config')
+require('plugins.trouble.config')
+require('plugins.diffview.config')
+require('plugins.nvim-peekup.config')
+require('plugins.neogit.config')
+require('plugins.vim-highlightedyank.config')
+require('plugins.vim-matchup.config')
+require('plugins.vim-rooter.config')
+require('gitsigns').setup()
+require('plugins.telescope.config')
+require('plugins.grug-far.config')
+require('plugins.telekasten.config')
+require('plugins.flote.config')
+require('plugins.gitpad.config')
+require('plugins.neogen.config')
+require('plugins.leap.config')
+require('plugins.nvim-treesitter.config')
+require('plugins.rainbow-delimiters.config')   -- must come before indent-blankline
+require('plugins.nvim-ts-autotag.config')
+require('plugins.lsp_extensions.config')
+require('plugins.lspkind-nvim.config')
+require('plugins.lsp_signature.config')
+require('plugins.lsp_lines.config')
+require('plugins.nvim-treesitter-context.config')
+require('plugins.coq_nvim.config')             -- must come before nvim-autopairs and tabout
+require('plugins.nvim-autopairs.config')
+require('plugins.indent-blankline.config')     -- after rainbow-delimiters
+require('plugins.tabout.config')               -- after coq_nvim
+require('plugins.refactoring.config')
+require('plugins.nvim-dap.config')
+require('plugins.nvim-dap-ui.config')
+require('plugins.telescope-dap.config')
+require('plugins.lualine.config')
+require('plugins.dressing.config')
+
+-- ============================================================
+-- Section 5: FileType autocommand for ft-lazy plugins
+-- ============================================================
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'javascriptreact', 'javascript.jsx', 'typescriptreact', 'typescript.tsx', 'html' },
+  once = true,
+  callback = function()
+    vim.cmd('packadd vim-jsx-pretty')
+    vim.cmd('packadd emmet-vim')
+  end,
+})

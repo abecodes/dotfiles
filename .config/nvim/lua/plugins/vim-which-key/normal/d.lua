@@ -1,9 +1,9 @@
 return {
-    name = '+Debug',
-    b = {'<leader>db', 'Set breakpoint'},
-    d = {'<leader>dd', 'Start debug session'},
-    n = {'<leader>dn', 'Step into'},
-    o = {'<leader>do', 'Step over'},
-    p = {'<leader>dp', 'Step out'},
-    t = {'<leader>dt', 'Terminate session'},
+	name = '+Debug',
+	b = { ',db', 'Set breakpoint' },
+	d = { ',dD', 'Start debug session' },
+	n = { ',dn', 'Step into' },
+	o = { ',do', 'Step over' },
+	p = { ',dp', 'Step out' },
+	t = { ',dT', 'Terminate session' },
 }

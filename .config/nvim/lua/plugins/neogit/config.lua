@@ -78,4 +78,6 @@
 
 require('neogit').setup {
   kind = 'replace',
+  disable_context_highlighting = true,
+  grapy_style = 'kitty',
 }

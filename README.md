@@ -43,7 +43,7 @@ brew install --cask rectangle mark-text vscodium pritunl librewolf gaphor motrix
 brew tap joerdav/xc
 brew install xc
 
-npm i -g eslint_d @fsouza/prettierd vscode-langservers-extracted typescript typescript-language-server https://github.com/jez/bars.git
+npm i -g eslint_d @fsouza/prettierd vscode-langservers-extracted typescript typescript-language-server https://github.com/jez/bars.git tree-sitter-cli
 
 pip3 install epy-reader
 
