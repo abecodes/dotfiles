@@ -1,6 +1,5 @@
 return {
 	cmd = { 'gopls' },
-	single_file_support = true,
   filetypes = {'go', 'gomod'},
 	root_markers = {
 		'go.mod',
@@ -10,7 +9,11 @@ return {
   	gopls = {
 			-- formatting and linting via hook functions
 			-- gofumpt = true,
+			buildFlags = { '-tags=integration' },
 			experimentalPostfixCompletions = true,
+			-- Re-enabled: lua/completion/snippet.lua expands `insertTextFormat
+			-- == Snippet` items via vim.snippet, which handles literal \n in
+			-- postfix templates correctly (the coq parser couldn't).
 			usePlaceholders = true,
 			semanticTokens = true,
 			-- analyses = {unusedparams = true, shadow = true},

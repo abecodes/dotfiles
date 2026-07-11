@@ -1,100 +1,150 @@
-local navic = require("nvim-navic")
-local cmp = require('lsp.completion.completion')
+local methods = require('vim.lsp.protocol').Methods
+local autocmd = require('utils.autocmd')
+local completion = require('completion')
+
+-- Severity-coloured floating-window border for hover / signature help /
+-- diagnostic floats. Reads the current window cursor and the diagnostics
+-- on that line, picks the DiagnosticHint/Info/Warn/Error highlight group
+-- for the worst severity, and returns the 8-tuple border table
+-- nvim_open_win accepts. Computed at call time so `<Cmd>LspDiagNext<CR>`
+-- can recompute after the jump.
+local BORDER_CHARS = { '╭', '─', '╮', '│', '╯', '─', '╰', '│' }
+
+local function severity_border(bufnr, lnum)
+    bufnr = bufnr or vim.api.nvim_get_current_buf()
+    lnum  = lnum  or (vim.api.nvim_win_get_cursor(0)[1] - 1)
+    local max_severity = vim.diagnostic.severity.HINT
+    for _, d in ipairs(vim.diagnostic.get(bufnr, { lnum = lnum })) do
+        if d.severity < max_severity then max_severity = d.severity end
+    end
+    local hl = ({
+        [vim.diagnostic.severity.HINT]  = 'DiagnosticHint',
+        [vim.diagnostic.severity.INFO]  = 'DiagnosticInfo',
+        [vim.diagnostic.severity.WARN]  = 'DiagnosticWarn',
+        [vim.diagnostic.severity.ERROR] = 'DiagnosticError',
+    })[max_severity]
+    local out = {}
+    for i, c in ipairs(BORDER_CHARS) do out[i] = { c, hl } end
+    return out
+end
 
 local custom_attach = function(client, bufnr)
-    cmp.Setup(client, bufnr)
-    if client.server_capabilities.semanticTokensProvider then
-        vim.treesitter.stop(bufnr)
-    end
+    completion.attach(client, bufnr)
 
-    if client.server_capabilities.documentSymbolProvider then
-        navic.attach(client, bufnr)
-    end
-
-    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
-    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
-
-    local opts = { noremap=true, silent=true }
-
-    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-    vim.cmd("command! LspDef lua vim.lsp.buf.definition()")
-    -- vim.cmd("command! LspFormatting lua vim.lsp.buf.formatting()")
-    vim.cmd("command! LspFormatting lua vim.lsp.buf.format(nil, 1000)")
-    -- vim.cmd("command! LspRangeFormatting lua vim.lsp.buf.range_formatting()")
-    vim.cmd("command! LspCodeAction lua vim.lsp.buf.code_action()")
-    vim.cmd("command! LspHover lua vim.lsp.buf.hover()")
-    vim.cmd("command! LspRename lua vim.lsp.buf.rename()")
-    vim.cmd("command! LspRefs lua vim.lsp.buf.references()")
-    vim.cmd("command! LspTypeDef lua vim.lsp.buf.type_definition()")
-    vim.cmd("command! LspImplementation lua vim.lsp.buf.implementation()")
-    vim.cmd("command! LspDiagPrev lua vim.diagnostic.goto_prev()")
-    vim.cmd("command! LspDiagNext lua vim.diagnostic.goto_next()")
-    vim.cmd("command! LspDiagLine lua vim.diagnostic.open_float()")
-    vim.cmd("command! LspSignatureHelp lua vim.lsp.buf.signature_help()")
-    buf_set_keymap("n", "gd", "<Cmd>LspDef<CR>", opts)
-    buf_set_keymap("n", "gr", "<Cmd>LspRename<CR>", opts)
-    buf_set_keymap("n", "gR", "<Cmd>LspRefs<CR>", opts)
-    buf_set_keymap("n", "gI", "<Cmd>LspImplementation<CR>", opts)
-    buf_set_keymap("n", "gy", "<Cmd>LspTypeDef<CR>", opts)
-    buf_set_keymap("n", "K", "<Cmd>LspHover<CR>", opts)
-    buf_set_keymap("n", "[a", "<Cmd>LspDiagPrev<CR>", opts)
-    buf_set_keymap("n", "]a", "<Cmd>LspDiagNext<CR>", opts)
-    buf_set_keymap("n", "ga", "<Cmd>LspCodeAction<CR>", opts)
-    buf_set_keymap("n", "<Leader>a", "<Cmd>LspDiagLine<CR>", opts)
-    buf_set_keymap("i", "<C-x><C-x>", "<Cmd>LspSignatureHelp<CR>", opts)
-
-    -- Set some keybinds conditional on server capabilities
-    -- if client.server_capabilities.document_formatting then
-    --     buf_set_keymap("n", "ff", "<Cmd>LspFormatting<CR>", opts)
-    -- elseif client.server_capabilities.document_range_formatting then
-    --     buf_set_keymap("n", "ff", "<Cmd>LspRangeFormatting<CR>", opts)
+    -- Disabled: most LSPs advertise textDocument/semanticTokens (gopls,
+    -- rust-analyzer, tsserver, clangd, lua_ls, ruff/pyright), so this
+    -- unconditionally disables treesitter highlighting nearly everywhere
+    -- an LSP attaches — and LSP semantic tokens are coarser than TS for
+    -- punctuation / operators / string escapes / etc. If a specific
+    -- language's LSP genuinely produces richer tokens than TS, gate by
+    -- filetype in an allowlist:
+    --   local TS_OFF_FT = { rust = true }
+    --   if TS_OFF_FT[vim.bo[bufnr].filetype] and
+    --        client:supports_method(methods.textDocument_semanticTokens_full) then
+    --     vim.treesitter.stop(bufnr)
+    --   end
+    -- if client:supports_method(methods.textDocument_semanticTokens_full) then
+    --     vim.treesitter.stop(bufnr)
     -- end
-    -- TODO: disable for go, is already in after plugin
-    if client.server_capabilities.documentFormattingProvider then
+
+    if client:supports_method(methods.textDocument_inlayHint) then
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+    end
+
+    local kopts = { buffer = bufnr, silent = true }
+
+    -- Buffer-local user commands: the keymaps dispatch through these
+    -- (`<Cmd>Lsp…<CR>`), and the commands stay discoverable via `:Lsp<Tab>`
+    -- in buffers that actually have an LSP attached.
+    local function bcmd(name, fn)
+        vim.api.nvim_buf_create_user_command(bufnr, name, fn, {})
+    end
+
+    bcmd('LspDef',            function() vim.lsp.buf.definition() end)
+    bcmd('LspFormatting',     function() vim.lsp.buf.format({ timeout_ms = 3000 }) end)
+    bcmd('LspCodeAction',     function() vim.lsp.buf.code_action() end)
+    bcmd('LspHover',          function() vim.lsp.buf.hover({ border = severity_border() }) end)
+    bcmd('LspRename',         function() vim.lsp.buf.rename() end)
+    bcmd('LspRefs',           function() vim.lsp.buf.references() end)
+    bcmd('LspTypeDef',        function() vim.lsp.buf.type_definition() end)
+    bcmd('LspImplementation', function() vim.lsp.buf.implementation() end)
+    -- Peek the destination with get_prev/get_next, compute the severity
+    -- border for that line up-front, then hand it to jump's built-in
+    -- `float = {opts}`. Letting jump own the open_float call avoids a race
+    -- where the previous float's CursorMoved close-handler and a manually
+    -- scheduled open_float land in the same deferred batch — the symptom
+    -- is the second invocation jumping but not showing a float.
+    bcmd('LspDiagPrev', function()
+        local d = vim.diagnostic.get_prev()
+        if not d then return end
+        vim.diagnostic.jump({
+            count = -1,
+            float = { border = severity_border(d.bufnr, d.lnum) },
+        })
+    end)
+    bcmd('LspDiagNext', function()
+        local d = vim.diagnostic.get_next()
+        if not d then return end
+        vim.diagnostic.jump({
+            count = 1,
+            float = { border = severity_border(d.bufnr, d.lnum) },
+        })
+    end)
+    bcmd('LspDiagLine',       function() vim.diagnostic.open_float({ border = severity_border() }) end)
+    bcmd('LspSignatureHelp',  function() vim.lsp.buf.signature_help({ border = severity_border() }) end)
+
+    vim.keymap.set('n', 'gd',        '<Cmd>LspDef<CR>',            kopts)
+    vim.keymap.set('n', 'gr',        '<Cmd>LspRename<CR>',         kopts)
+    vim.keymap.set('n', 'gR',        '<Cmd>LspRefs<CR>',           kopts)
+    vim.keymap.set('n', 'gI',        '<Cmd>LspImplementation<CR>', kopts)
+    vim.keymap.set('n', 'gy',        '<Cmd>LspTypeDef<CR>',        kopts)
+    vim.keymap.set('n', 'K',         '<Cmd>LspHover<CR>',          kopts)
+    vim.keymap.set('n', '[a',        '<Cmd>LspDiagPrev<CR>',       kopts)
+    vim.keymap.set('n', ']a',        '<Cmd>LspDiagNext<CR>',       kopts)
+    vim.keymap.set('n', 'ga',        '<Cmd>LspCodeAction<CR>',     kopts)
+    vim.keymap.set('n', '<Leader>a', '<Cmd>LspDiagLine<CR>',       kopts)
+    vim.keymap.set('i', '<C-x><C-x>','<Cmd>LspSignatureHelp<CR>',  kopts)
+
+    if client:supports_method(methods.textDocument_formatting) then
+        -- Only install the LSP-format `ff` mapping when nothing else already
+        -- claimed it (e.g. Go's ftplugin installs a golines|gci pipeline that
+        -- must win over vim.lsp.buf.format — losing golines means losing
+        -- width control, see pde/lang/go/format.lua header).
         local shouldMap = true
-        -- looks like keymap.set ignores noremap
-        for _, e in pairs(vim.api.nvim_buf_get_keymap(bufnr,'n')) do
+        for _, e in ipairs(vim.api.nvim_buf_get_keymap(bufnr, 'n')) do
             if e.lhs == 'ff' then
-                -- vim.pretty_print(e)
                 shouldMap = false
                 break
             end
         end
 
         if shouldMap then
-            vim.keymap.set('n', 'ff', function() vim.lsp.buf.format(nil, 1000) end, {buffer = bufnr})
+            vim.keymap.set('n', 'ff', function() vim.lsp.buf.format({ timeout_ms = 3000 }) end, { buffer = bufnr })
         end
-
-        -- buf_set_keymap('n', 'ff', ':LspFormatting<CR>', { noremap=true, silent=true })
-        -- vim.lsp.buf.range_formatting is deprecated, use vim.lsp.formatexpr or vim.lsp.buf.format instead. See :h deprecated
-        -- buf_set_keymap('v', 'ff', '<Cmd>LspRangeFormatting<CR>', opts)
     end
 
-    -- Set autocommands conditional on server_capabilities
-    -- hi LspReferenceRead cterm=bold ctermbg=DarkMagenta guibg=LightYellow
-    -- hi LspReferenceText cterm=bold ctermbg=DarkMagenta guibg=LightYellow
-    -- hi LspReferenceWrite cterm=bold ctermbg=DarkMagenta guibg=LightYellow
-    if client.server_capabilities.document_highlight then
-        vim.api.nvim_exec([[
-        hi def link LspReferenceText CursorLine
-        hi def link LspReferenceWrite CursorLine
-        hi def link LspReferenceRead CursorLine
-        augroup lsp_document_highlight
-            autocmd! * <buffer>
-            autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-            autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-        augroup END
-        ]], false)
+    if client:supports_method(methods.textDocument_documentHighlight) then
+        -- `default = true` mirrors the old `hi def link` semantic so a theme
+        -- or user override of these groups wins over our fallback.
+        vim.api.nvim_set_hl(0, 'LspReferenceText',  { link = 'CursorLine', default = true })
+        vim.api.nvim_set_hl(0, 'LspReferenceRead',  { link = 'CursorLine', default = true })
+        vim.api.nvim_set_hl(0, 'LspReferenceWrite', { link = 'CursorLine', default = true })
+
+        -- Shared augroup (not per-buffer) so empty groups don't accumulate as
+        -- buffers are wiped. Buffer-local autocmds inside it are GC'd by Neovim
+        -- with the buffer. Re-attach clears this buffer's prior autocmds first.
+        local grp = autocmd.new_augroup('lsp_document_highlight', false)
+        vim.api.nvim_clear_autocmds({ group = grp, buffer = bufnr })
+        autocmd.new_autocmd('CursorHold', grp, {
+            buffer = bufnr,
+            callback = function() vim.lsp.buf.document_highlight() end,
+        })
+        autocmd.new_autocmd('CursorMoved', grp, {
+            buffer = bufnr,
+            callback = function() vim.lsp.buf.clear_references() end,
+        })
     end
 
-    -- overwrites
-    -- TODO: move somewhere better
-    -- see https://docs.astral.sh/ruff/editors/setup/#neovim
-    if client.name == 'ruff' then
-        -- Disable hover in favor of Pyright
-        client.server_capabilities.hoverProvider = false
-    end
 end
 
 return custom_attach

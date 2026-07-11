@@ -1,90 +1,80 @@
-local map = require'utils'.map_key
+---@diagnostic disable-next-line: different-requires
+local telescope = require('telescope')
 
---[[ <C-n>/<Down>	Next item
-<C-p>/<Up>	Previous item
-j/k	Next/previous (in normal mode)
-<cr>	Confirm selection
-<C-x>	go to file selection as a split
-<C-v>	go to file selection as a vsplit
-<C-t>	go to a file in a new tab
-<C-u>	scroll up in preview window
-<C-d>	scroll down in preview window
-<C-c>	close telescope
-<Esc>	close telescope (in normal mode) ]]
+telescope.setup {
+    defaults = {
+        vimgrep_arguments = {
+            'rg', '--color=never', '--no-heading', '--with-filename',
+            '--line-number', '--column', '--smart-case', '--hidden', '--no-ignore'
+        },
+        prompt_prefix = '> ',
+        selection_caret = '> ',
+        entry_prefix = '  ',
+        initial_mode = 'insert',
+        selection_strategy = 'reset',
+        sorting_strategy = 'descending',
+        layout_strategy = 'horizontal',
+        layout_config = {
+            horizontal = {
+                mirror = false,
+                preview_cutoff = 50
+            },
+            vertical = {mirror = false},
+        },
+        file_sorter = require'telescope.sorters'.get_fuzzy_file,
+        file_ignore_patterns = {},
+        generic_sorter = require'telescope.sorters'.get_generic_fuzzy_sorter,
+        border = {},
+        borderchars = {'─', '│', '─', '│', '╭', '╮', '╯', '╰'},
+        color_devicons = true,
+        use_less = true,
+        path_display = {},
+        set_env = {['COLORTERM'] = 'truecolor'}, -- default = nil,
+        file_previewer = require'telescope.previewers'.vim_buffer_cat.new,
+        grep_previewer = require'telescope.previewers'.vim_buffer_vimgrep.new,
+        qflist_previewer = require'telescope.previewers'.vim_buffer_qflist.new,
+        -- file_previewer = require'telescope.previewers'.cat.new,
+        -- grep_previewer = require'telescope.previewers'.vimgrep.new,
+        -- qflist_previewer = require'telescope.previewers'.qflist.new,
+        -- Developer configurations: Not meant for general override
+        buffer_previewer_maker = require'telescope.previewers'.buffer_previewer_maker
+    },
+    -- pickers = {
+    --     find_files = {
+    --         theme = 'dropdown'
+    --     }
+    -- },
+    extensions = {
+        fzf = {
+            fuzzy = true,                    -- false will only do exact matching
+            override_generic_sorter = true,  -- override the generic sorter
+            override_file_sorter = true,     -- override the file sorter
+            case_mode = 'smart_case',        -- or 'ignore_case' or 'respect_case'
+                                            -- the default case_mode is 'smart_case'
+        },
+        file_browser = {
+            hidden = true,
+            path = '%:p:h',
+            respect_gitignore = false,
+        },
+    }
+}
 
---[[ builtin.find_files	Lists files in your current working directory, respects .gitignore
-builtin.git_files	Fuzzy search through the output of git ls-files command, respects .gitignore, optionally ignores untracked files
-builtin.grep_string	Searches for the string under your cursor in your current working directory
-builtin.live_grep	Search for a string in your current working directory and get results live as you type (respecting .gitignore)
-builtin.file_browser	Lists files and folders in your current working directory, open files, navigate your filesystem, and create new files and folders ]]
+-- pcall-guard every extension: telescope-fzf-native's install_command builds
+-- asynchronously, so the .so may not exist yet on first startup after install.
+-- A bare load_extension('fzf') failure would abort this whole setup file.
+--
+-- Extensions whose provider is itself lazy (e.g. refactoring.nvim's telescope
+-- extension) register themselves from their own setup.lua, not here — loading
+-- them here would drag the provider onto the rtp whenever telescope loads.
+for _, ext in ipairs({ 'file_browser', 'fzf' }) do
+    local ok, err = pcall(telescope.load_extension, ext)
+    if not ok then
+        require('logger').warn('telescope: load_extension("' .. ext .. '") failed: ' .. tostring(err))
+    end
+end
 
--- Find files using Telescope command-line sugar.
---[[ map('n', "<leader>ff", "<CMD>Telescope find_files<CR>", {silent = true})
-map('n', "<leader>fg ", "<CMD>Telescope live_grep<CR>", {silent = true})
-map('n', "<leader>fb", "<CMD>Telescope buffers<CR>", {silent = true})
-map('n', "<leader>fh", "<CMD>Telescope help_tags<CR>", {silent = true}) ]]
-
--- Using Lua functions
-map('n', "<leader>td", "<CMD>lua require('telescope.builtin').diagnostics({ previewer = false })<CR>",
-{silent = true})
-map('n', "<leader>te",
-    "<CMD>lua require 'telescope'.extensions.file_browser.file_browser()<CR>", {silent = true})
-map('n', "<leader>tE", "<CMD>lua require('telescope.builtin').symbols()<CR>",
-		{silent = true})
-map('n', "<leader>tf", "<CMD>lua require('telescope.builtin').find_files()<CR>",
-    {silent = true})
-map('n', "<leader>tF", "<CMD>lua require('telescope.builtin').live_grep()<CR>",
-    {silent = true})
-map('n', "<leader>tb", "<CMD>lua require('telescope.builtin').buffers()<CR>",
-    {silent = true})
-map('n', "<leader>tB", "<CMD>lua require('telescope.builtin').current_buffer_fuzzy_find()<CR>",
-		{silent = true})
-map('n', "<leader>tg", "<CMD>lua require('telescope.builtin').git_files()<CR>",
-		{silent = true})
-map('n', "<leader>th", "<CMD>lua require('telescope.builtin').help_tags()<CR>",
-    {silent = true})
-map('n', "<leader>tt", "<CMD>lua require('telescope.builtin').treesitter()<CR>",
-		{silent = true})
-map('n', "<leader>tq", "<CMD>lua require('telescope.builtin').quickfix()<CR>",
-		{silent = true})
-map('n', "<leader>ts", "<CMD>lua require('telescope.builtin').lsp_document_symbols()<CR>",
-		{silent = true})
-map('n', "<leader>tS", "<CMD>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>",
-		{silent = true})
-map('n', "<leader>tR", "<CMD>lua require('telescope.builtin').lsp_references()<CR>",
-	{silent = true})
-map('n', "<leader>tI", "<CMD>lua require('telescope.builtin').lsp_implementations()<CR>",
-	{silent = true})
--- require("telescope.builtin").spell_suggest(require("telescope.themes").get_cursor({}))
-map('n', "<leader>tw", "<CMD>lua require('telescope.builtin').spell_suggest(vim.api.nvim_win_get_cursor(0))<CR>",
-	{silent = true})
--- remap to open the Telescope refactoring menu in visual mode
-map(
-	"n",
-	"<leader>tr",
-	"<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>",
-	{ noremap = true }
-)
-map(
-	"v",
-	"<leader>tr",
-	"<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>",
-	{ noremap = true }
-)
--- remap to open the Telescope refactoring menu in visual mode
--- map(
--- 	"n",
--- 	"<leader>tm",
--- 	"<CMD>Telescope harpoon marks<CR>",
--- 	{ noremap = true }
--- )
-
-vim.api.nvim_create_autocmd("User", {
-  pattern = "TelescopePreviewerLoaded",
-  callback = function(args)
-		vim.api.nvim_buf_set_option(args.buf, "tabstop", 2)
-		vim.api.nvim_buf_set_option(args.buf, "softtabstop", 2)
-		vim.api.nvim_buf_set_option(args.buf, "shiftwidth", 2)
-		--vim.cmd('retab')
-  end,
-})
+-- Keymaps live in plugins/telescope/keys.lua (shared with the lazy
+-- on_key stubs in pack/loader.lua). The loader auto-registers them
+-- after this setup runs — rhs `require('telescope.builtin')…` calls
+-- then have telescope on rtp.

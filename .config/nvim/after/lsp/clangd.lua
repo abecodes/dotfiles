@@ -1,20 +1,10 @@
-local hooks = require('hooks.hooks')
-
-hooks.register(
-	'*.c,*.cpp',
-	'BufWritePre',
-	{
-		function()
-			vim.lsp.buf.format(nil, 1000)
-		end
-	}
-)
+require('lsp.format_on_save').register('*.c,*.cpp')
 
 return {
     filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'cuda', 'proto' },
-    -- cmd = { '/usr/bin/clangd' },
+    -- cmd = { 'clangd' },
     -- '--log=verbose'}
-    cmd = {'/usr/bin/clangd', '--background-index', '--clang-tidy'},
+    cmd = {'clangd', '--background-index', '--clang-tidy'},
     single_file_support = true,
     root_markers = {
         '.clangd',

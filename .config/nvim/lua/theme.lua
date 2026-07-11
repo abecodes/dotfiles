@@ -1,4 +1,5 @@
 local cmd = vim.cmd
+local palette = require('theme.palette').semantic
 
 cmd 'set cursorline'
 -- cmd 'colorscheme horizon'
@@ -220,103 +221,101 @@ local style = {
 }
 
 local set_highlight = function(id, ...)
-	local args = {...}
-
 	vim.api.nvim_set_hl(
 		0,
 		id,
-		vim.tbl_extend(
-			'force',
-			{},
-			unpack(args, select('#', args))
-		)
+		vim.tbl_extend('force', {}, ...)
 	)
 end
 
 local update_highlight = function(id, ...)
-	local args = {...}
-
 	vim.api.nvim_set_hl(
 		0,
 		id,
 		vim.tbl_extend(
 			'force',
 			{},
-			-- DEPRECATED
-			-- vim.api.nvim_get_hl_by_name(id, true),
-			vim.api.nvim_get_hl(0, { name=id, create=true }),
-			unpack(args, select('#', args))
+			vim.api.nvim_get_hl(0, { name = id, create = true }),
+			...
 		)
 	)
 end
 
-set_highlight("none", color.none.fg, color.none.bg, style.none)
+-- Wired to VimEnter + ColorScheme so overrides survive `:colorscheme` swaps,
+-- which run `hi clear` and drop user-set highlights. Mirrors the pattern in
+-- theme_overwrites/init.lua.
+local function apply()
+	set_highlight("none", color.none.fg, color.none.bg, style.none)
 
--- Italic
-for _, s in pairs({
-	'Comment',
-	'Constant',
-	'Type',
-	'StorageClass',
-	'Structure',
-	'PmenuSel',
-}) do
-	update_highlight(s, style.italic)
-end
+	-- Italic
+	for _, s in pairs({
+		'Comment',
+		'Constant',
+		'Type',
+		'StorageClass',
+		'Structure',
+		'PmenuSel',
+	}) do
+		update_highlight(s, style.italic)
+	end
 
--- Bold
-for _, s in pairs({
-	'Include',
-	'@namespace',
-	'@type',
-	'@type.definition',
-	'@constant.builtin'
-}) do
-	update_highlight(s, style.bold)
-end
+	-- Bold
+	for _, s in pairs({
+		'Include',
+		'@namespace',
+		'@type',
+		'@type.definition',
+		'@constant.builtin'
+	}) do
+		update_highlight(s, style.bold)
+	end
 
--- BoldItalic
-for _, s in pairs({
-	'Conditional',
-	'Label',
-	'Repeat',
-	'Keyword',
-	'Todo',
-	'@function.builtin',
-}) do
-	update_highlight(s, style.bold_italic)
-end
+	-- BoldItalic
+	for _, s in pairs({
+		'Conditional',
+		'Label',
+		'Repeat',
+		'Keyword',
+		'Todo',
+		'@function.builtin',
+	}) do
+		update_highlight(s, style.bold_italic)
+	end
 
--- None
-for _, s in pairs({
-	'Pmenu',
-	'@punctuation.bracket',
-	'@variable',
-}) do
-	update_highlight(s, style.none)
-end
+	-- None
+	for _, s in pairs({
+		'Pmenu',
+		'@punctuation.bracket',
+		'@variable',
+	}) do
+		update_highlight(s, style.none)
+	end
 
-update_highlight('Number', vim.tbl_extend('force', style.none, { bold = true, cterm = {bold = true }}))
+	update_highlight('Number', vim.tbl_extend('force', style.none, { bold = true, cterm = {bold = true }}))
 
-update_highlight(
-	'SpellBad',
-	vim.tbl_extend(
-		'force',
-		style.none,
-		{
-			undercurl = true,
-			sp = '#599eff',
-			cterm = {
-				undercurl = true
+	update_highlight(
+		'SpellBad',
+		vim.tbl_extend(
+			'force',
+			style.none,
+			{
+				undercurl = true,
+				sp = palette.spell_bad,
+				cterm = {
+					undercurl = true
+				}
 			}
-		}
+		)
 	)
-)
 
-update_highlight(
-	'SpellBad',
-	color.none.fg
-)
+	update_highlight(
+		'SpellBad',
+		color.none.fg
+	)
+end
+
+vim.api.nvim_create_autocmd({ 'VimEnter', 'ColorScheme' }, { callback = apply })
+apply()
 
 -- for _, group in ipairs(vim.fn.getcompletion("@lsp", "highlight")) do
 -- 	vim.api.nvim_set_hl(0, group, {})

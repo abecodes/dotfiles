@@ -1,65 +1,71 @@
-local log = require('logger')
-
 -- ============================================================
--- CLI dependency checks
--- To add a new check: append to the list below.
---   { cmd = 'binary-name', hint = 'how to install it' }
+-- Plugin spec schema reference
 -- ============================================================
-local cli_deps = {
-  { cmd = 'tree-sitter', req = 'nvim-treesitter', hint = 'npm install -g tree-sitter-cli' },
-}
-
-for _, dep in ipairs(cli_deps) do
-  if vim.fn.executable(dep.cmd) == 0 then
-    log.warn('[vim.pack] missing CLI tool: `' .. dep.cmd .. '` (required by ' .. dep.req .. ')  →  ' .. dep.hint)
-  end
-end
-
+-- Required:
+--   src       = 'https://...' | '/abs/path' | '~/path'   plugin URL or local
+--                                                         checkout
+--
+-- Optional:
+--   name      = 'foo'                              override auto-derived name
+--   version   = 'tag-or-branch'                    vim.pack version pin
+--
+-- Dependencies (slugs matched against another spec's src):
+--   requires  = { 'owner/repo', ... }              hard — log.error if missing, continues
+--   wants     = { 'owner/repo', ... }              soft — log.warn if missing
+--   after     = { 'owner/repo', ... }              order-only — log.error if missing, continues
+--
+-- Lazy triggers (all optional, all combinable — plugin loads on FIRST fire):
+--   ft        = { 'go', 'typescriptreact', ... }   FileType match
+--   on_event  = { 'BufReadPre', 'LspAttach' }      matching autocmd event
+--   on_init   = true                               VimEnter + vim.schedule
+--   on_cmd    = { 'Telescope', 'Neogit' }          stub user command(s)
+--                                                    (args/bang/range/mods preserved)
+--   on_key    = { '<leader>dD', '""' }             first key press; each entry
+--                                                    is a string (normal mode)
+--                                                    or { mode = 'v', lhs = … }.
+--                                                    Stubs carry no desc.
+--             = true                                auto-discover from
+--                                                    `lua/plugins/<name>/keys.lua`.
+--                                                    Stubs carry `opts.desc`
+--                                                    so which-key / :map show
+--                                                    labels pre-load. setup.lua
+--                                                    imports the same file to
+--                                                    register the real keymaps —
+--                                                    one source of truth.
+--
+-- A spec with no lazy field inherits laziness from its reverse-deps when all
+-- rdeps are lazy. See lua/pack/ARCHITECTURE.md → "Lazy propagation".
+--
+-- Force-eager opt-out:
+--   eager     = true                               skip propagation; stay
+--                                                    eager even if every rdep
+--                                                    is lazy
+--
+-- Post-install hook:
+--   install_command
+--     = 'COQdeps'    → ex command via vim.schedule (packadd-first if lazy)
+--     = { 'make' }   → external process via proc.run_async, cwd = install path
+--
+-- See lua/pack/ARCHITECTURE.md for the full pipeline (phase ordering,
+-- propagation rules, stub semantics, maintenance hash gating).
 -- ============================================================
--- Section 0: Post-install/update hooks (replaces packer `run`)
--- ============================================================
--- vim.pack fires User PackChanged after any install or update.
--- ev.data = { kind = "install"|"update"|"delete", spec, path, active }
-vim.api.nvim_create_autocmd('User', {
-  pattern = 'PackChanged',
-  callback = function(ev)
-    local d = ev.data
-    if d.kind ~= 'install' and d.kind ~= 'update' then return end
-    local name = d.spec.name or d.spec.src:match('[^/]+$')
 
-    if name == 'coq_nvim' then
-      log.log('[vim.pack] coq_nvim ' .. d.kind .. 'd — running :COQdeps', vim.log.levels.INFO)
-      vim.schedule(function() vim.cmd('COQdeps') end)
-    end
+-- NOTE: nvim-treesitter is replaced by the in-tree `lua/treesitter/` module
+-- (see lua/treesitter/init.lua — loaded from the top-level init.lua before
+-- this file). Plugins that historically declared
+-- `requires = { 'nvim-treesitter/nvim-treesitter' }` or the `wants` variant
+-- have that entry removed — the runtime `require('nvim-treesitter')` is
+-- satisfied by lua/treesitter/shim/nvim-treesitter.lua via package.preload.
 
-    if name == 'nvim-treesitter' then
-      log.log('[vim.pack] nvim-treesitter ' .. d.kind .. 'd — running :TSUpdate', vim.log.levels.INFO)
-      -- schedule so the plugin is fully on rtp before TSUpdate runs
-      vim.schedule(function() vim.cmd('TSUpdate') end)
-    end
+-- nvim-dap / nvim-dap-ui share a single source of truth at
+-- `plugins/nvim-dap/keys.lua`; `plugins/nvim-dap-ui/keys.lua` re-exports
+-- it so both specs' `on_key = true` resolve to identical trigger
+-- bundles. See lua/pack/ARCHITECTURE.md → "Lazy propagation".
 
-    if name == 'telescope-fzf-native.nvim' then
-      log.log('[vim.pack] telescope-fzf-native ' .. d.kind .. 'd — running make in ' .. d.path, vim.log.levels.INFO)
-      vim.fn.jobstart({ 'make' }, {
-        cwd = d.path,
-        on_exit = function(_, code)
-          if code == 0 then
-            log.log('[vim.pack] telescope-fzf-native: make succeeded', vim.log.levels.INFO)
-          else
-            log.error('[vim.pack] telescope-fzf-native: make failed (exit ' .. code .. ')')
-          end
-        end,
-      })
-    end
-  end,
-})
-
--- ============================================================
--- Section 1: Eager plugins — install + load immediately
--- ============================================================
-vim.pack.add({
-  -- devicons (pinned to nerd-v2-compat tag)
-  { src = 'https://github.com/nvim-tree/nvim-web-devicons', version = 'nerd-v2-compat' },
+local plugins = {
+  -- devicons (pinned to nerd-v2-compat tag; eager because lua/winbar/winbar.lua
+  -- requires it at startup via init.lua, outside the plugin dep graph)
+  { src = 'https://github.com/nvim-tree/nvim-web-devicons', version = 'nerd-v2-compat', eager = true },
 
   -- shared dependencies
   'https://github.com/nvim-lua/plenary.nvim',
@@ -69,163 +75,163 @@ vim.pack.add({
   -- Editor components
   'https://github.com/mhinz/vim-startify',
   'https://github.com/liuchengxu/vim-which-key',
-  'https://github.com/mbbill/undotree',
-  'https://github.com/folke/todo-comments.nvim',
-  'https://github.com/folke/trouble.nvim',
-  'https://github.com/sindrets/diffview.nvim',
-  'https://github.com/gennaro-tedesco/nvim-peekup',
-  'https://github.com/NeogitOrg/neogit',
+  {
+    src    = 'https://github.com/mbbill/undotree',
+    on_cmd = { 'UndotreeToggle', 'UndotreeShow', 'UndotreeHide', 'UndotreeFocus' },
+    on_key = true,
+  },
+  { src = 'https://github.com/folke/todo-comments.nvim', requires = { 'nvim-lua/plenary.nvim' }, on_event = { 'BufReadPost' } },
+  {
+    src      = 'https://github.com/folke/trouble.nvim',
+    requires = { 'nvim-tree/nvim-web-devicons' },
+    on_cmd   = { 'Trouble' },
+    on_key   = true,
+  },
+  { src = 'https://github.com/sindrets/diffview.nvim',   wants = { 'nvim-tree/nvim-web-devicons' }, on_cmd = { 'DiffviewOpen', 'DiffviewFileHistory', 'DiffviewClose', 'DiffviewFocusFiles', 'DiffviewRefresh', 'DiffviewToggleFiles' } },
+  { src = 'https://github.com/gennaro-tedesco/nvim-peekup', on_key = true },
+  {
+    src      = 'https://github.com/NeogitOrg/neogit',
+    requires = {
+      'nvim-lua/plenary.nvim',
+      'nvim-telescope/telescope.nvim',
+      'sindrets/diffview.nvim',
+    },
+    on_cmd   = { 'Neogit' },
+    on_key   = true,
+  },
 
   -- Editor visuals
   'https://github.com/machakann/vim-sandwich',
-  'https://github.com/windwp/nvim-autopairs',
-  'https://github.com/lukas-reineke/indent-blankline.nvim',
-  'https://github.com/machakann/vim-highlightedyank',
-  'https://github.com/andymass/vim-matchup',
+  -- NOTE: on_event = {'InsertEnter'} — could move to on_init if first-keystroke feels sluggish
+  { src = 'https://github.com/windwp/nvim-autopairs',               after = { 'ms-jpq/coq_nvim' }, on_event = { 'InsertEnter' } },
+  { src = 'https://github.com/lukas-reineke/indent-blankline.nvim', after = { 'hiphish/rainbow-delimiters.nvim' }, on_event = { 'BufReadPost' } },
+  { src = 'https://github.com/andymass/vim-matchup',                on_event = { 'BufReadPost' } },
 
   -- Project
-  'https://github.com/airblade/vim-rooter',
-  'https://github.com/lewis6991/gitsigns.nvim',
+  { src = 'https://github.com/lewis6991/gitsigns.nvim', requires = { 'nvim-lua/plenary.nvim' }, on_event = { 'BufReadPre' } },
 
   -- Search
-  'https://github.com/nvim-telescope/telescope.nvim',
+  {
+    src      = 'https://github.com/nvim-telescope/telescope.nvim',
+    requires = {
+      'nvim-lua/popup.nvim',
+      'nvim-telescope/telescope-symbols.nvim',
+      'nvim-telescope/telescope-file-browser.nvim',
+      'nvim-telescope/telescope-fzf-native.nvim',
+    },
+    wants    = { 'nvim-lua/plenary.nvim' },
+    on_cmd   = { 'Telescope' },
+    -- Keymaps live in plugins/telescope/keys.lua — auto-discovered by
+    -- the loader for stubs (with desc) and imported by setup.lua for
+    -- real registration post-load.
+    on_key   = true,
+  },
   'https://github.com/nvim-telescope/telescope-symbols.nvim',
   'https://github.com/nvim-telescope/telescope-file-browser.nvim',
-  'https://github.com/nvim-telescope/telescope-fzf-native.nvim', -- make runs automatically via PackChanged
-  'https://github.com/nvim-telescope/telescope-ui-select.nvim',
-  'https://github.com/brooth/far.vim',
-  'https://github.com/MagicDuck/grug-far.nvim',
+  { src = 'https://github.com/nvim-telescope/telescope-fzf-native.nvim', install_command = { 'make' } },
+  {
+    src    = 'https://github.com/MagicDuck/grug-far.nvim',
+    on_cmd = { 'GrugFar', 'GrugFarWithin' },
+    on_key = true,
+  },
 
   -- Writing / reading
-  'https://github.com/nullchilly/fsread.nvim',
-  'https://github.com/renerocksai/telekasten.nvim',
-  'https://github.com/JellyApple102/flote.nvim',
-  'https://github.com/yujinyuz/gitpad.nvim',
+  {
+    src    = 'https://github.com/renerocksai/telekasten.nvim',
+    wants  = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim' },
+    on_cmd = { 'Telekasten' },
+    on_key = true,
+  },
 
   -- Documentation
-  'https://github.com/danymat/neogen',
+  { src = 'https://github.com/danymat/neogen', on_cmd = { 'Neogen' }, on_key = true },
 
   -- Comments
-  'https://github.com/tpope/vim-commentary',
 
   -- Motion
-  { src = 'https://codeberg.org/andyg/leap.nvim' },
+  { src = 'https://codeberg.org/andyg/leap.nvim', requires = { 'tpope/vim-repeat' } },
   'https://github.com/tpope/vim-repeat',
-  'https://github.com/abecodes/tabout.nvim',
+  {
+    src      = 'https://github.com/abecodes/tabout.nvim',
+    after    = { 'ms-jpq/coq_nvim' },
+    on_event = { 'InsertEnter' },
+  },
 
   -- LSP / Treesitter
-  { src = 'https://github.com/nvim-treesitter/nvim-treesitter', version = 'main' },  -- :TSUpdate runs automatically via PackChanged
-  'https://github.com/JoosepAlviste/nvim-ts-context-commentstring',
-  'https://github.com/hiphish/rainbow-delimiters.nvim',
+  -- nvim-treesitter is GONE (archived upstream) — replaced by the in-tree
+  -- `lua/treesitter/` module. See its init.lua + the README/plan for details.
+  -- ts-context-commentstring: no rdeps after treesitter removal, stays eager by
+  -- default (propagate_lazy leaves rootless specs alone). Its setup() call
+  -- lives at lua/plugins/nvim-ts-context-commentstring/setup.lua.
+  { src = 'https://github.com/JoosepAlviste/nvim-ts-context-commentstring' },
+  { src = 'https://github.com/hiphish/rainbow-delimiters.nvim', on_event = { 'BufReadPost' } },
   'https://github.com/windwp/nvim-ts-autotag',
-  'https://github.com/nvim-lua/lsp_extensions.nvim',
-  'https://github.com/onsails/lspkind-nvim',
-  'https://github.com/ray-x/lsp_signature.nvim',
-  { src = 'https://git.sr.ht/~whynothugo/lsp_lines.nvim' },   -- non-GitHub source
-  'https://github.com/nvim-treesitter/nvim-treesitter-context',
-  { src = 'https://github.com/ms-jpq/coq_nvim',    version = 'coq' },
+  { src = 'https://github.com/ray-x/lsp_signature.nvim',    on_event = { 'LspAttach' } },
+  { src = 'https://git.sr.ht/~whynothugo/lsp_lines.nvim',   on_event = { 'LspAttach' } },  -- non-GitHub source
+  {
+    src    = 'https://github.com/nvim-treesitter/nvim-treesitter-context',
+    on_key = true,
+  },
+  -- NOTE: on_event = {'InsertEnter'} — could move to on_init if first-keystroke feels sluggish
+  {
+    src             = 'https://github.com/ms-jpq/coq_nvim',
+    version         = 'coq',
+    requires        = { 'ms-jpq/coq.artifacts' },
+    on_event        = { 'InsertEnter' },
+    install_command = 'COQdeps',
+  },
   { src = 'https://github.com/ms-jpq/coq.artifacts', version = 'artifacts' },
-  'https://github.com/ThePrimeagen/refactoring.nvim',
+  {
+    src    = 'https://github.com/ThePrimeagen/refactoring.nvim',
+    wants  = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim' },
+    on_cmd = { 'Refactor' },
+    on_key = true,
+  },
 
   -- Debugging
-  'https://github.com/mfussenegger/nvim-dap',
-  'https://github.com/rcarriga/nvim-dap-ui',
-  'https://github.com/nvim-telescope/telescope-dap.nvim',
-
-  -- Bars
-  'https://github.com/SmiteshP/nvim-navic',
-  'https://github.com/nvim-lualine/lualine.nvim',
+  {
+    src    = 'https://github.com/mfussenegger/nvim-dap',
+    on_key = true,
+  },
+  {
+    src      = 'https://github.com/rcarriga/nvim-dap-ui',
+    requires = { 'nvim-neotest/nvim-nio' },
+    wants    = { 'mfussenegger/nvim-dap' },
+    -- plugins/nvim-dap-ui/keys.lua re-exports plugins/nvim-dap/keys.lua so
+    -- both specs share an identical trigger bundle — keeps propagate_lazy
+    -- from promoting either to on_init.
+    on_key   = true,
+  },
+  {
+    src    = 'https://github.com/nvim-telescope/telescope-dap.nvim',
+    wants  = { 'mfussenegger/nvim-dap', 'nvim-telescope/telescope.nvim' },
+    -- Loads on first use of the telescope-dap picker keys, which register as
+    -- real mappings in setup.lua (after `telescope.load_extension('dap')`).
+    -- Trade-off: `:Telescope dap <subcmd>` typed manually before any of these
+    -- keys have fired will fail — any telescope-dap use in practice is inside
+    -- a debugging session, so the key press is a natural trigger.
+    on_key = true,
+  },
 
   -- Theme
   'https://github.com/atelierbram/Base2Tone-nvim',
 
-  -- UI
-  'https://github.com/stevearc/dressing.nvim',
-}, { load = true })
+  -- ft-lazy: installed only, loaded on FileType event
+  { src = 'https://github.com/maxmellon/vim-jsx-pretty', name = 'vim-jsx-pretty', ft = { 'javascriptreact', 'typescriptreact', 'html' } },
+  { src = 'https://github.com/mattn/emmet-vim',          name = 'emmet-vim',      ft = { 'javascriptreact', 'typescriptreact', 'html' } },
+}
 
--- ============================================================
--- Section 2: ft-lazy plugins — install only, no immediate load
--- ============================================================
--- Loaded on-demand via the FileType autocommand in Section 5.
-vim.pack.add({
-  { src = 'https://github.com/maxmellon/vim-jsx-pretty', name = 'vim-jsx-pretty' },
-  { src = 'https://github.com/mattn/emmet-vim',          name = 'emmet-vim' },
-})
+-- Profile-specific plugin extras: append `lua/plugins_<profile>.lua` (if it
+-- exists) to the manifest before dep resolution. See README "Profiles".
+-- fs_stat-then-require (not pcall) so syntax errors in the overlay surface.
+local profile_name = require('profile').current
+local extras_path = vim.fn.stdpath('config') .. '/lua/plugins_' .. profile_name .. '.lua'
+if vim.uv.fs_stat(extras_path) then
+  vim.list_extend(plugins, require('plugins_' .. profile_name))
+end
 
--- ============================================================
--- Section 3: setup() calls  (packer `setup` key — runs before config)
--- ============================================================
-require('plugins.vim-which-key.setup')
-require('plugins.undotree.setup')
-require('plugins.trouble.setup')
-require('plugins.neogit.setup')
-require('plugins.coq_nvim.setup')
-require('plugins.telescope.setup')
-require('plugins.far.setup')
-require('plugins.grug-far.setup')
-require('plugins.leap.setup')
-require('plugins.lsp_lines.setup')
-require('plugins.nvim-treesitter-context.setup')
-require('plugins.refactoring.setup')
-require('plugins.telekasten.setup')
-require('plugins.gitpad.setup')
-require('plugins.vim-commentary.setup')
-require('plugins.telescope-dap.setup')
-
--- ============================================================
--- Section 4: config() calls  (packer `config` key — runs after load)
--- ============================================================
--- Load ordering preserved from packer `after` relationships:
---   rainbow-delimiters  → indent-blankline
---   coq_nvim            → nvim-autopairs, tabout
-
-require('nvim-web-devicons').setup()
-
-require('plugins.vim-startify.config')
-require('plugins.vim-which-key.config')
-require('plugins.todo-comments.config')
-require('plugins.trouble.config')
-require('plugins.diffview.config')
-require('plugins.nvim-peekup.config')
-require('plugins.neogit.config')
-require('plugins.vim-highlightedyank.config')
-require('plugins.vim-matchup.config')
-require('plugins.vim-rooter.config')
-require('gitsigns').setup()
-require('plugins.telescope.config')
-require('plugins.grug-far.config')
-require('plugins.telekasten.config')
-require('plugins.flote.config')
-require('plugins.gitpad.config')
-require('plugins.neogen.config')
-require('plugins.leap.config')
-require('plugins.nvim-treesitter.config')
-require('plugins.rainbow-delimiters.config')   -- must come before indent-blankline
-require('plugins.nvim-ts-autotag.config')
-require('plugins.lsp_extensions.config')
-require('plugins.lspkind-nvim.config')
-require('plugins.lsp_signature.config')
-require('plugins.lsp_lines.config')
-require('plugins.nvim-treesitter-context.config')
-require('plugins.coq_nvim.config')             -- must come before nvim-autopairs and tabout
-require('plugins.nvim-autopairs.config')
-require('plugins.indent-blankline.config')     -- after rainbow-delimiters
-require('plugins.tabout.config')               -- after coq_nvim
-require('plugins.refactoring.config')
-require('plugins.nvim-dap.config')
-require('plugins.nvim-dap-ui.config')
-require('plugins.telescope-dap.config')
-require('plugins.lualine.config')
-require('plugins.dressing.config')
-
--- ============================================================
--- Section 5: FileType autocommand for ft-lazy plugins
--- ============================================================
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'javascriptreact', 'javascript.jsx', 'typescriptreact', 'typescript.tsx', 'html' },
-  once = true,
-  callback = function()
-    vim.cmd('packadd vim-jsx-pretty')
-    vim.cmd('packadd emmet-vim')
-  end,
+require('pack.loader').setup(plugins, {
+  cli_deps = {
+    { cmd = 'tree-sitter', req = 'lua/treesitter', hint = 'npm install -g tree-sitter-cli' },
+  },
 })

@@ -1,7 +1,0 @@
--- autocmd CursorHold * lua vim.lsp.diagnostic.show_line_diagnostics()
--- vim.api.nvim_exec([[
---   augroup LspHover
---       autocmd!
---       autocmd CursorHold * silent! lua vim.lsp.buf.signature_help()
---   augroup END
--- ]], true)

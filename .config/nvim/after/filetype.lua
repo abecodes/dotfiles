@@ -1,1 +1,1 @@
--- require('modules.ensureTabstop')()
+-- require('pde.rules.ensure_tabstop')()

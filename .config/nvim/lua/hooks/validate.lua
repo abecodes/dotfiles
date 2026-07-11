@@ -1,6 +1,6 @@
 local logger = require('logger')
 
-local validateHook= function(fileID, event, hook)
+local validateHook = function(fileID, event, hook)
 	if type(hook) == 'function' then
 		return true
 	end
@@ -10,16 +10,12 @@ local validateHook= function(fileID, event, hook)
 			return true
 		end
 
-		logger.warn('[hook]' .. fileID .. ':' .. event .. ' expected to be either a function or a table, got '..type(cmd))
-
+		logger.warn('[hook]' .. fileID .. ':' .. event .. ' expected to be either a function or a table, got ' .. type(hook))
 		return false
 	end
 
-	if not hook or not (type(hook) == 'table') then
-		logger.warn('[hook:'..fileID..':'..event..'] has no hook')
-		return false
-	end
-
+	logger.warn('[hook:' .. fileID .. ':' .. event .. '] has no hook')
+	return false
 end
 
 local M = {}

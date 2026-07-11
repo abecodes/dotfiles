@@ -1,6 +1,6 @@
 return {
     filetypes = {'zig', 'zir'},
-    cmd = { '/opt/homebrew/bin/zls' },
+    cmd = { 'zls' },
     single_file_support = true,
 		root_markers = {
 			'zls.json',
@@ -10,7 +10,8 @@ return {
     settings = {
         zls = {
             -- other options see: https://github.com/zigtools/zls/blob/master/src/Config.zig
-            zig_exe_path = '/opt/homebrew/bin/zig',
+            -- zls needs an absolute path; resolve via $PATH at config-load time.
+            zig_exe_path = vim.fn.exepath('zig'),
         }
     },
 }

@@ -1,11 +1,11 @@
-local map = require'utils'.map_key
-
-map('n', '<leader>dcc',
-    '<cmd>lua require"telescope".extensions.dap.commands{}<CR>')
-map('n', '<leader>dco',
-    '<cmd>lua require"telescope".extensions.dap.configurations{}<CR>')
-map('n', '<leader>dlb',
-    '<cmd>lua require"telescope".extensions.dap.list_breakpoints{}<CR>')
-map('n', '<leader>dv',
-    '<cmd>lua require"telescope".extensions.dap.variables{}<CR>')
-map('n', '<leader>df', '<cmd>lua require"telescope".extensions.dap.frames{}<CR>')
+-- available commands
+-- :Telescope dap commands
+-- :Telescope dap configurations
+-- :Telescope dap list_breakpoints
+-- :Telescope dap variables
+-- :Telescope dap frames
+---@diagnostic disable-next-line: different-requires
+require('telescope').load_extension('dap')
+-- Keymaps live in plugins/telescope-dap/keys.lua — the pack loader
+-- auto-registers them after this setup runs (load_extension must go first
+-- so the rhs `telescope.extensions.dap.*` calls resolve).

@@ -1,4 +1,2 @@
-local map = require'utils'.map_key
-
-map('n', "<leader>pu",
-    "<CMD>UndotreeToggle<CR>", {silent = true})
+-- Keymaps live in plugins/undotree/keys.lua — the pack loader auto-registers
+-- them after this setup runs (utils.keys.register with silent default).

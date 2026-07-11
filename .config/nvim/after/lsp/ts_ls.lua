@@ -1,5 +1,4 @@
 local custom_attach = require('lsp.utils.attach')
-local hooks = require('hooks.hooks')
 
 local function organize_imports()
   local params = {
@@ -8,29 +7,18 @@ local function organize_imports()
       title = ''
   }
 
-	vim.lsp.Client.execute_command(params)
+	for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0, name = 'ts_ls' })) do
+		client:exec_cmd(params)
+	end
 end
 
-hooks.register(
-	'*.ts,*.tsx,*.js,*.jsx',
-	'BufWritePre',
-	{
-		organize_imports,
-		function()
-			vim.lsp.buf.format(nil, 1000)
-		end
-	}
-)
+require('lsp.format_on_save').register('*.ts,*.tsx,*.js,*.jsx', { organize_imports })
 
 return {
 	on_attach = function(client, bufnr)
 		-- disable formatting, handled with prettierd via efm ls
-			client.server_capabilities.document_formatting = false
-			vim.api.nvim_buf_set_keymap(
-				bufnr, 'n', 'go',
-				':LspOrganizeImports<CR>',
-				{silent = true}
-			)
+			client.server_capabilities.documentFormattingProvider = false
+			vim.keymap.set('n', 'go', '<cmd>LspTSImports<CR>', { buffer = bufnr, silent = true })
 			custom_attach(client, bufnr)
 	end,
 	root_markers = {
@@ -39,8 +27,8 @@ return {
 	},
 	cmd = {'typescript-language-server', '--stdio'},
 	filetypes = {
-			'javascript', 'javascriptreact', 'javascript.jsx', 'typescript',
-			'typescriptreact', 'typescript.tsx'
+			'javascript', 'javascriptreact', 'typescript',
+			'typescriptreact'
 	},
 	commands = {
 		LspTSImports = {

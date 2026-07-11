@@ -3,40 +3,10 @@ local fn = vim.fn   -- to call Vim functions e.g. fn.bufnr()
 local g = vim.g     -- a table to access global variables
 local opt = vim.opt -- to set options
 
--- Settings
---[[ opt.completeopt = {'menuone', 'noinsert', 'noselect'}  -- Completion options (for deoplete)
-opt.expandtab = true                -- Use spaces instead of tabs
-opt.hidden = true                   -- Enable background buffers
-opt.ignorecase = true               -- Ignore case
-opt.joinspaces = false              -- No double spaces with join
-opt.list = true                     -- Show some invisible characters
-opt.number = true                   -- Show line numbers
-opt.relativenumber = true           -- Relative line numbers
-opt.scrolloff = 4                   -- Lines of context
-opt.shiftround = true               -- Round indent
-opt.shiftwidth = 2                  -- Size of an indent
-opt.sidescrolloff = 8               -- Columns of context
-opt.smartcase = true                -- Do not ignore case with capitals
-opt.smartindent = true              -- Insert indents automatically
-opt.splitbelow = true               -- Put new windows below current
-opt.splitright = true               -- Put new windows right of current
-opt.tabstop = 2                     -- Number of spaces tabs count for
-opt.termguicolors = true            -- True color support
-opt.wildmode = {'list', 'longest'}  -- Command-line completion mode
-opt.wrap = false                    -- Disable line wrap ]]
-
 -- Don't dispay mode in command line (lightline already shows it)
 cmd 'set noshowmode'
 -- Don't show last command
 cmd 'set noshowcmd'
--- don't give |ins-completion-menu| messages.
--- cmd 'set shortmess+=c'
--- Change vertical split character to be a space (essentially hide it)
--- cmd 'fillchars+=vert:.'
--- Some servers have issues with backup files, see #649
--- cmd 'set nobackup'
--- cmd 'set nowritebackup'
--- set later once merged into nvim master cmd 'set completeopt+=fuzzy'
 
 -- for plugin nvim-ts-context-commentstring
 g.skip_ts_context_commentstring_module = true
@@ -53,9 +23,9 @@ opt.relativenumber = true
 opt.spelllang = 'en_us'
 opt.spell = true
 opt.hidden = true
-opt.cmdheight = 2
--- opt.updatetime = 300
-opt.updatetime = 100 -- for vim-signify
+opt.cmdheight = 1
+-- snappier CursorHold for LSP document_highlight (see lsp/utils/attach.lua)
+opt.updatetime = 100
 -- always show signcolumns
 opt.signcolumn = 'yes'
 -- Yank and paste with the system clipboard
@@ -68,11 +38,24 @@ opt.ignorecase = true
 opt.smartcase = true
 -- Automatically re-read file if a change was detected outside of vim
 opt.autoread = true
--- Always keep cursor centered (seems to be overwritten by a plugin)
--- opt.scrolloff = 999
--- use on mac if neovim/fish is installed with brew
---[[ opt.shell = '/usr/local/bin/fish' ]]
 opt.jumpoptions = 'stack' -- how items in the jumplist are arranged
+-- Ensure a trailing newline on write when the buffer doesn't end in one.
+-- This is the Neovim default; keep it explicit because the EOL invariant
+-- is relied on by pde/rules/ensure_last_line.lua.
+opt.fixeol = true
+-- Global statusline: one at the bottom shared across all windows,
+-- instead of per-window (which 2 would give).
+opt.laststatus = 3
+
+-- Render width for literal `\t` characters and column count for `>>`/`<<`.
+-- Applies to tab-indented files (Go, Makefiles, this dotfiles repo); has no
+-- effect on space-indented content since `tabstop` is display-only. We do NOT
+-- set `expandtab` globally — each ftplugin owns the tabs-vs-spaces decision so
+-- Python/YAML/JSON keep their native on-disk format. See
+-- `lua/pde/rules/ensure_tabstop.lua` for why a global `noexpandtab` hook is
+-- wrong (YAML is spec-illegal with tabs; Python mutates docstrings; etc.).
+opt.tabstop = 2
+opt.shiftwidth = 2
 
 vim.diagnostic.config({
 	float = {

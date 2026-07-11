@@ -1,15 +1,6 @@
-local hooks = require('hooks.hooks')
-
-hooks.register(
-	'*.lua',
-	'BufWritePre',
-	{
-		function()
-			vim.lsp.buf.format(nil, 1000)
-			vim.diagnostic.show()
-		end
-	}
-)
+require('lsp.format_on_save').register('*.lua', nil, {
+	function() vim.diagnostic.show() end,
+})
 
 return {
 	cmd = { 'lua-language-server' },
@@ -18,7 +9,7 @@ return {
 	on_init = function(client)
     if client.workspace_folders then
       local path = client.workspace_folders[1].name
-      if path ~= vim.fn.stdpath('config') and (vim.loop.fs_stat(path..'/.luarc.json') or vim.loop.fs_stat(path..'/.luarc.jsonc')) then
+      if path ~= vim.fn.stdpath('config') and (vim.uv.fs_stat(path..'/.luarc.json') or vim.uv.fs_stat(path..'/.luarc.jsonc')) then
         return
       end
     end

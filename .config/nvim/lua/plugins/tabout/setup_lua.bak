@@ -1,0 +1,12 @@
+require('tabout').setup {
+    enable_backwards = true,
+    completion = true,
+    tabouts = {
+        {open = "'", close = "'"}, {open = '"', close = '"'},
+        {open = '`', close = '`'}, {open = '(', close = ')'},
+        {open = '[', close = ']'}, {open = '{', close = '}'},
+        {open = '<', close = '>'},
+    }
+}
+-- Keymaps live in plugins/tabout/keys.lua — the pack loader auto-registers
+-- them after this setup runs (utils.keys.register with silent default).

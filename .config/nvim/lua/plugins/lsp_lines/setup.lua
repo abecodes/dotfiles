@@ -1,6 +1,3 @@
--- Disable virtual_text since it's redundant due to lsp_lines.
-vim.diagnostic.config({
-	virtual_text = false,
-	-- only show diag when cursor is on line
-	-- virtual_lines = { only_current_line = true },
-})
+require('lsp_lines').setup()
+-- setup() leaves virtual_lines off in this version; toggle() is what enables it.
+require('lsp_lines').toggle()

@@ -1,2 +1,0 @@
--- nvim-treesitter.configs was removed in the main branch rewrite.
--- vim-matchup auto-enables treesitter integration on Neovim — no setup needed.

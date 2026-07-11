@@ -1,16 +1,8 @@
-local hooks = require('hooks.hooks')
+local custom_attach = require('lsp.utils.attach')
 
 -- see https://docs.astral.sh/ruff/installation/
 
-hooks.register(
-	'*.py',
-	'BufWritePre',
-	{
-		function()
-			vim.lsp.buf.format(nil, 1000)
-		end
-	}
-)
+require('lsp.format_on_save').register('*.py')
 
 return {
 	cmd = { 'ruff', 'server' },
@@ -23,10 +15,15 @@ return {
 		'pyvenv.cfg',
 		'.git',
 	},
+	on_attach = function(client, bufnr)
+		-- Disable hover in favor of Pyright. https://docs.astral.sh/ruff/editors/setup/#neovim
+		client.server_capabilities.hoverProvider = false
+		custom_attach(client, bufnr)
+	end,
 	-- see https://docs.astral.sh/ruff/editors/settings/
 	init_options = {
 		settings = {
-			logLevel = 'debug',
+			logLevel = 'warn',
 			-- Any extra CLI arguments for `ruff` go here.
 			-- does not work for config
 			args = {},

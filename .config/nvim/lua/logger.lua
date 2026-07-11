@@ -1,16 +1,15 @@
 local name = '{plugins}'
-local debug = false
+local debug = vim.env.NVIM_DEBUG == '1'
 
 ---@class Logger
 local M = {}
 
+--- @param v boolean
+M.set_debug = function(v) debug = v and true or false end
+
 --- @param msg string
---- @param level string
---- vim.log.levels.DEBUG | vim.log.levels.ERROR | vim.log.levels.INFO | vim.log.levels.TRACE | vim.log.levels.WARN | vim.log.levels.OFF
+--- @param level integer vim.log.levels.DEBUG|ERROR|INFO|TRACE|WARN|OFF
 M.log = function(msg, level)
-		if level == "" then
-			level = vim.log.levels.INFO
-		end
     if vim.in_fast_event() then
       vim.schedule(function()
         vim.notify(msg, level)
@@ -22,6 +21,9 @@ M.log = function(msg, level)
 end
 
 --- @param msg string
+M.info = function(msg) M.log(msg, vim.log.levels.INFO) end
+
+--- @param msg string
 M.error = function(msg) M.log(msg, vim.log.levels.ERROR) end
 
 --- @param msg string
@@ -29,36 +31,5 @@ M.warn = function(msg) M.log(msg, vim.log.levels.WARN) end
 
 --- @param msg string
 M.debug = function(msg) if debug then M.log(msg, vim.log.levels.DEBUG) end end
-
-M.dump = function(o)
-	M.warn('rather use vim.print')
-	if type(o) == 'table' then
-		local s = '{ '
-		for k,v in pairs(o) do
-			s = s .. '\n['..k..'] = ' .. M.dump(v) .. ',\n'
-		end
-		return s .. '} '
-	end
-
-	if type(o) == 'boolean' then
-		bool_to_string={ [true]='true', [false]='false' }
-		return bool_to_string[o]
-	end
-
-	if type(o) == 'number' then
-		return o
-	end
-
-	if type(o) == 'function' then
-		return 'function'
-	end
-
-    if type(o) == 'string' then
-		return '"'..o..'"'
-	end
-
-    print('unhandled type '.. type(o))
-	return ''
-end
 
 return M
