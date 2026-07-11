@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review — payments-svc-pr482</title>
+<style>
+:root {
+  --bg: #0e1116; --fg: #e6edf3; --muted: #8b97a8; --panel: #161b22;
+  --border: #30363d; --accent: #58a6ff; --code-bg: #0a0d12;
+  --chip-good: #3fb950; --chip-warn: #ffb224; --chip-danger: #e5484d;
+  --chip-info: #58a6ff; --chip-muted: #8b97a8;
+  --sev-blocker: #e5484d;
+  --sev-critical: #f76808;
+  --sev-high: #ffb224;
+  --sev-medium: #f5d90a;
+  --sev-low: #8b97a8;
+}
+[data-theme="light"] {
+  --bg: #fbfcfd; --fg: #1c2128; --muted: #57606a; --panel: #ffffff;
+  --border: #d0d7de; --accent: #0969da; --code-bg: #f4f6f8;
+  --chip-good: #1a7f37; --chip-warn: #9a6700; --chip-danger: #cf222e;
+  --chip-info: #0969da; --chip-muted: #57606a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+#deck { height: 100vh; }
+.slide {
+  display: none; flex-direction: column; gap: 18px; position: relative;
+  height: 100vh; padding: 48px 64px 64px; overflow: auto;
+}
+.copy-btn {
+  position: fixed; top: 14px; right: 16px; z-index: 6;
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
+  font: 600 12px/1.4 inherit; color: var(--muted); background: var(--panel);
+  border: 1px solid var(--border); border-radius: 999px; cursor: pointer;
+  caret-color: transparent; user-select: none;
+}
+.copy-btn:hover { color: var(--fg); border-color: var(--accent); }
+.copy-btn.copied { color: var(--chip-good); border-color: var(--chip-good); }
+.slide.active { display: flex; }
+.slide-header { font-size: 14px; color: var(--muted); letter-spacing: .04em; }
+.slide-body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 16px; }
+h1 { font-size: 38px; margin: 0; }
+h2 { font-size: 26px; margin: 0 0 8px; }
+h3 { font-size: 18px; margin: 0 0 6px; }
+p { margin: 0 0 10px; }
+.muted { color: var(--muted); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, pre, .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; }
+pre {
+  background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 14px; overflow: auto; font-size: 13px; margin: 0;
+}
+.big { font-size: 64px; font-weight: 700; line-height: 1.1; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.card {
+  background: var(--panel); border: 1px solid var(--border); border-left-width: 4px;
+  border-radius: 8px; padding: 14px 16px;
+}
+.card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.card-title { font-weight: 600; margin-bottom: 4px; }
+.card-meta, .card-body { font-size: 13px; color: var(--muted); }
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; letter-spacing: .03em; color: #0e1116;
+}
+.chip {
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;
+  border: 1px solid var(--border); border-radius: 999px; font-size: 12px;
+  font-weight: 700; letter-spacing: .02em; line-height: 1.5; color: var(--fg);
+  background: color-mix(in srgb, var(--chip-muted) 18%, transparent);
+}
+.chip.good { border-color: var(--chip-good); color: var(--chip-good); background: color-mix(in srgb, var(--chip-good) 14%, transparent); }
+.chip.warn { border-color: var(--chip-warn); color: var(--chip-warn); background: color-mix(in srgb, var(--chip-warn) 16%, transparent); }
+.chip.danger { border-color: var(--chip-danger); color: var(--chip-danger); background: color-mix(in srgb, var(--chip-danger) 14%, transparent); }
+.chip.info { border-color: var(--chip-info); color: var(--chip-info); background: color-mix(in srgb, var(--chip-info) 14%, transparent); }
+.chip.muted { border-color: var(--chip-muted); color: var(--chip-muted); }
+.chips { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; flex: 1; min-height: 0; }
+.col { display: flex; flex-direction: column; gap: 8px; overflow: auto; min-height: 0; }
+.col h3 { color: var(--muted); }
+.stacked-panels { display: grid; grid-template-rows: 1fr 1fr; gap: 12px; min-height: 0; height: 100%; }
+.panel { border: 1px solid var(--border); border-radius: 10px; padding: 12px; overflow: auto; background: color-mix(in srgb, var(--panel) 82%, transparent); }
+.panel-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--muted); }
+.rowfull { border-top: 1px solid var(--border); padding-top: 14px; overflow: auto; }
+.kv { color: var(--muted); }
+.histo { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.histo span { font-weight: 700; }
+table.grid { border-collapse: collapse; width: 100%; }
+table.grid th, table.grid td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; font-size: 14px; }
+table.grid th { color: var(--muted); font-weight: 600; }
+ul.checks { list-style: none; padding-left: 0; }
+ul.checks li::before { content: "☐ "; color: var(--muted); }
+#hud {
+  position: fixed; bottom: 10px; right: 14px; font-size: 12px;
+  color: var(--muted); font-family: ui-monospace, monospace;
+}
+#progress { position: fixed; bottom: 0; left: 0; right: 0; height: 3px; background: transparent; }
+#progressbar { height: 100%; width: 0; background: var(--accent); transition: width .15s; }
+#help {
+  position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.6); z-index: 10;
+}
+#help.show { display: flex; }
+#help .box { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 24px 32px; }
+
+@media print {
+  #hud, #progress, #help, .copy-btn { display: none !important; }
+  .slide { display: flex !important; height: auto; min-height: 100vh; page-break-after: always; break-after: page; }
+}</style>
+
+</head>
+<body>
+<div id="deck">
+<section class="slide" id="title"><div class="slide-header">Code review</div><div class="slide-body">
+<h1>payments-svc-pr482</h1>
+<p class="mono muted">https://github.example.com/acme/payments-svc/pull/482</p>
+<p class="mono">main @ a1b2c3d → pr-482 @ 9f8e7d6</p>
+<p class="muted">2026-06-20T18:00:00Z</p>
+<p class="mono">14 file(s) · <span style="color:#8b97a8">+612</span> / −88</p>
+<div class="histo"><span class="badge" style="background:#e5484d">BLOCKER</span> <span class="mono">1</span> &nbsp; <span class="badge" style="background:#f76808">CRITICAL</span> <span class="mono">1</span> &nbsp; <span class="badge" style="background:#ffb224">HIGH</span> <span class="mono">3</span> &nbsp; <span class="badge" style="background:#f5d90a">MEDIUM</span> <span class="mono">2</span> &nbsp; <span class="badge" style="background:#8b97a8">LOW</span> <span class="mono">1</span></div></div></section>
+<section class="slide" id="verdict"><div class="slide-header">Verdict</div><div class="slide-body"><div class="big" style="color:#e5484d">DO NOT MERGE</div><p>strongest concern: Nil deref on refund path.</p><div class="histo"><span style="color:#e5484d">BLOCKER 1</span><span style="color:#f76808">CRITICAL 1</span><span style="color:#ffb224">HIGH 3</span><span style="color:#f5d90a">MEDIUM 2</span><span style="color:#8b97a8">LOW 1</span></div></div></section>
+<section class="slide" id="tldr"><div class="slide-header">TL;DR</div><div class="slide-body"><p>PR #482 reworks the refund and ledger paths and adds provider config. It carries two ship-stoppers — a nil dereference that crashes the refund worker for wallet refunds, and an unversioned proto change that makes every charge decode to zero — plus a data race, a framework bypass, and a committed live secret.</p></div></section>
+<section class="slide" id="overview"><div class="slide-header">Findings overview</div><div class="slide-body"><div class="cards"><div class="card" style="border-left-color:#e5484d" data-jump="finding-0"><div class="card-top"><span class="badge" style="background:#e5484d">BLOCKER</span><span class="card-meta">CORRECTNESS</span></div><div class="card-title">Nil deref on refund path</div><div class="card-body"><span class="mono">internal/refund/service.go:134-137</span> · implementation · codex</div></div><div class="card" style="border-left-color:#f76808" data-jump="finding-1"><div class="card-top"><span class="badge" style="background:#f76808">CRITICAL</span><span class="card-meta">CONTRACT</span></div><div class="card-title">Unversioned breaking API change</div><div class="card-body"><span class="mono">api/v1/payments.proto:52</span> · architecture · opus</div></div><div class="card" style="border-left-color:#ffb224" data-jump="finding-2"><div class="card-top"><span class="badge" style="background:#ffb224">HIGH</span><span class="card-meta">CONCURRENCY</span></div><div class="card-title">Race on shared ledger map</div><div class="card-body"><span class="mono">internal/ledger/cache.go:88</span> · implementation · codex</div></div><div class="card" style="border-left-color:#ffb224" data-jump="finding-3"><div class="card-top"><span class="badge" style="background:#ffb224">HIGH</span><span class="card-meta">FRAMEWORK_BYPASS</span></div><div class="card-title">Direct SQL bypasses repository</div><div class="card-body"><span class="mono">internal/refund/service.go:201-240</span> · architecture · opus</div></div><div class="card" style="border-left-color:#ffb224" data-jump="finding-4"><div class="card-top"><span class="badge" style="background:#ffb224">HIGH</span><span class="card-meta">SECRET_EXPOSURE</span></div><div class="card-title">Hardcoded provider API token</div><div class="card-body"><span class="mono">config/providers.go:17</span> · security · opus</div></div><div class="card" style="border-left-color:#f5d90a" data-jump="finding-5"><div class="card-top"><span class="badge" style="background:#f5d90a">MEDIUM</span><span class="card-meta">ERROR_HANDLING</span></div><div class="card-title">Webhook error swallowed</div><div class="card-body"><span class="mono">internal/webhook/handler.go:76</span> · implementation · codex</div></div><div class="card" style="border-left-color:#f5d90a" data-jump="finding-6"><div class="card-top"><span class="badge" style="background:#f5d90a">MEDIUM</span><span class="card-meta">PERFORMANCE</span></div><div class="card-title">N+1 query in invoice list</div><div class="card-body"><span class="mono">internal/invoice/list.go:44-49</span> · maintainability · gpt</div></div><div class="card" style="border-left-color:#8b97a8" data-jump="finding-7"><div class="card-top"><span class="badge" style="background:#8b97a8">LOW</span><span class="card-meta">DOCUMENTATION</span></div><div class="card-title">Exported func undocumented</div><div class="card-body"><span class="mono">internal/refund/service.go:60</span> · maintainability · gpt</div></div></div></div></section>
+<section class="slide" id="finding-0"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Nil deref on refund path\n\n**BLOCKER · CORRECTNESS** · `internal/refund/service.go:134-137` · implementation · codex\n\n## Issue\n\n`refund.Account` is only populated for card payments; for wallet refunds it stays nil and `acct.Balance` panics, taking down the whole refund worker.\n\n```go\nacct := r.accounts.Find(refund.AccountID)\n// acct may be nil for wallet refunds\nacct.Balance += refund.AmountCents // panics\n```\n\n## Suggested Fix\n\nGuard the lookup and fail the single refund instead of the worker:\n```go\nacct := r.accounts.Find(refund.AccountID)\nif acct == nil {\n    return fmt.Errorf(\&quot;refund %s: account %s not found\&quot;, refund.ID, refund.AccountID)\n}\nacct.Balance += refund.AmountCents\n```\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#e5484d">BLOCKER</span> <span class="mono">CORRECTNESS</span> · Nil deref on refund path · <span class="mono">internal/refund/service.go:134-137</span> · implementation · codex</div><div class="slide-body">
+<div class="cols">
+  <div class="col"><h3>Issue</h3><p><code>refund.Account</code> is only populated for card payments; for wallet refunds it stays nil and <code>acct.Balance</code> panics, taking down the whole refund worker.</p><pre>acct := r.accounts.Find(refund.AccountID)
+// acct may be nil for wallet refunds
+acct.Balance += refund.AmountCents // panics</pre></div>
+  <div class="col"><h3>Suggested fix</h3><p>Guard the lookup and fail the single refund instead of the worker:<br></p><pre>acct := r.accounts.Find(refund.AccountID)
+if acct == nil {
+    return fmt.Errorf(&quot;refund %s: account %s not found&quot;, refund.ID, refund.AccountID)
+}
+acct.Balance += refund.AmountCents</pre></div>
+</div>
+<div class="rowfull"><h3>Why it matters / details</h3><ul><li>It crashes the whole refund worker, so no refunds go out until someone restarts it.</li><li><strong>ELI5:</strong> For wallet refunds the account object is empty, and the code reads a field off the empty thing.</li></ul></div></div></section>
+<section class="slide" id="finding-1"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Unversioned breaking API change\n\n**CRITICAL · CONTRACT** · `api/v1/payments.proto:52` · architecture · opus\n\n## Issue\n\n`amount` (int64) was renamed to `amount_cents` on the existing `v1` message. Deployed clients still send `amount`, which now silently decodes to 0 — every charge becomes free.\n\n```proto\n  // was: int64 amount = 3;\n  int64 amount_cents = 3;\n```\n\n## Suggested Fix\n\nIntroduce the field as `v2` or add `amount_cents` alongside a deprecated `amount`, and migrate consumers before removing it. Never repurpose a tag on a shipped message.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#f76808">CRITICAL</span> <span class="mono">CONTRACT</span> · Unversioned breaking API change · <span class="mono">api/v1/payments.proto:52</span> · architecture · opus</div><div class="slide-body">
+<div class="cols">
+  <div class="col"><h3>Issue</h3><p><code>amount</code> (int64) was renamed to <code>amount_cents</code> on the existing <code>v1</code> message. Deployed clients still send <code>amount</code>, which now silently decodes to 0 — every charge becomes free.</p><pre>  // was: int64 amount = 3;
+  int64 amount_cents = 3;</pre></div>
+  <div class="col"><h3>Suggested fix</h3><p>Introduce the field as <code>v2</code> or add <code>amount_cents</code> alongside a deprecated <code>amount</code>, and migrate consumers before removing it. Never repurpose a tag on a shipped message.</p></div>
+</div>
+<div class="rowfull"><h3>Why it matters / details</h3><ul><li>Old clients keep sending the old name, it reads as 0, and every charge becomes free.</li><li><strong>ELI5:</strong> A field that clients already send was renamed without bumping the version.</li></ul></div></div></section>
+<section class="slide" id="finding-2"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Race on shared ledger map\n\n**HIGH · CONCURRENCY** · `internal/ledger/cache.go:88` · implementation · codex\n\n## Issue\n\n`entries` is read in `Get` and written in `Apply` from multiple goroutines with no lock — `go test -race` flags it and balances can corrupt under load.\n\n```go\nfunc (c *Cache) Apply(e Entry) {\n\tc.entries[e.Account] = c.entries[e.Account] + e.Delta\n}\n```\n\n## Suggested Fix\n\nProtect with a `sync.RWMutex` (RLock in `Get`, Lock in `Apply`), or switch to `sync.Map` if the access pattern is write-light.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#ffb224">HIGH</span> <span class="mono">CONCURRENCY</span> · Race on shared ledger map · <span class="mono">internal/ledger/cache.go:88</span> · implementation · codex</div><div class="slide-body">
+<div class="cols">
+  <div class="col"><h3>Issue</h3><p><code>entries</code> is read in <code>Get</code> and written in <code>Apply</code> from multiple goroutines with no lock — <code>go test -race</code> flags it and balances can corrupt under load.</p><pre>func (c *Cache) Apply(e Entry) {
+	c.entries[e.Account] = c.entries[e.Account] + e.Delta
+}</pre></div>
+  <div class="col"><h3>Suggested fix</h3><p>Protect with a <code>sync.RWMutex</code> (RLock in <code>Get</code>, Lock in <code>Apply</code>), or switch to <code>sync.Map</code> if the access pattern is write-light.</p></div>
+</div>
+<div class="rowfull"><h3>Why it matters / details</h3><ul><li>Under load the balances can corrupt and the race detector fails the build.</li><li><strong>ELI5:</strong> Two goroutines touch the same map at once without a lock.</li></ul></div></div></section>
+<section class="slide" id="finding-3"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Direct SQL bypasses repository\n\n**HIGH · FRAMEWORK_BYPASS** · `internal/refund/service.go:201-240` · architecture · opus\n\n## Issue\n\n`service.go` opens a raw `*sql.DB` and hand-writes queries, bypassing the `ledger.Repository` abstraction every other package uses — duplicating retry/tracing/tx logic that already exists.\n\n```go\n\tline1 := compute(step1)\n\tline2 := compute(step2)\n\tline3 := compute(step3)\n\tline4 := compute(step4)\n\tline5 := compute(step5)\n\tline6 := compute(step6)\n\tline7 := compute(step7)\n\tline8 := compute(step8)\n\tline9 := compute(step9)\n\tline10 := compute(step10)\n\tline11 := compute(step11)\n\tline12 := compute(step12)\n\tline13 := compute(step13)\n\tline14 := compute(step14)\n\tline15 := compute(step15)\n\tline16 := compute(step16)\n\tline17 := compute(step17)\n\tline18 := compute(step18)\n\tline19 := compute(step19)\n\tline20 := compute(step20)\n\tline21 := compute(step21)\n\tline22 := compute(step22)\n\tline23 := compute(step23)\n\tline24 := compute(step24)\n\tline25 := compute(step25)\n\tline26 := compute(step26)\n\tline27 := compute(step27)\n\tline28 := compute(step28)\n\tline29 := compute(step29)\n\tline30 := compute(step30)\n\tline31 := compute(step31)\n\tline32 := compute(step32)\n\tline33 := compute(step33)\n\tline34 := compute(step34)\n\tline35 := compute(step35)\n\tline36 := compute(step36)\n\tline37 := compute(step37)\n\tline38 := compute(step38)\n\tline39 := compute(step39)\n\tline40 := compute(step40)\n\tline41 := compute(step41)\n\tline42 := compute(step42)\n\tline43 := compute(step43)\n\tline44 := compute(step44)\n\tline45 := compute(step45)\n\tline46 := compute(step46)\n\tline47 := compute(step47)\n\tline48 := compute(step48)\n\tline49 := compute(step49)\n\tline50 := compute(step50)\n\tline51 := compute(step51)\n\tline52 := compute(step52)\n\tline53 := compute(step53)\n\tline54 := compute(step54)\n\tline55 := compute(step55)\n\tline56 := compute(step56)\n\tline57 := compute(step57)\n\tline58 := compute(step58)\n\tline59 := compute(step59)\n\tline60 := compute(step60)\n```\n\n## Suggested Fix\n\nRoute the reads through `ledger.Repository`; if it lacks a method, add it there so retries and tracing stay in one place.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#ffb224">HIGH</span> <span class="mono">FRAMEWORK_BYPASS</span> · Direct SQL bypasses repository · <span class="mono">internal/refund/service.go:201-240</span> · architecture · opus</div><div class="slide-body">
+<div class="cols">
+  <div class="col"><h3>Issue</h3><p><code>service.go</code> opens a raw <code>*sql.DB</code> and hand-writes queries, bypassing the <code>ledger.Repository</code> abstraction every other package uses — duplicating retry/tracing/tx logic that already exists.</p><pre>	line1 := compute(step1)
+	line2 := compute(step2)
+	line3 := compute(step3)
+	line4 := compute(step4)
+	line5 := compute(step5)
+	line6 := compute(step6)
+	line7 := compute(step7)
+	line8 := compute(step8)
+	line9 := compute(step9)
+	line10 := compute(step10)
+	line11 := compute(step11)
+	line12 := compute(step12)
+	line13 := compute(step13)
+	line14 := compute(step14)
+	line15 := compute(step15)
+	line16 := compute(step16)
+	line17 := compute(step17)
+	line18 := compute(step18)
+	line19 := compute(step19)
+	line20 := compute(step20)
+	line21 := compute(step21)
+	line22 := compute(step22)
+	line23 := compute(step23)
+	line24 := compute(step24)
+	line25 := compute(step25)
+	line26 := compute(step26)
+	line27 := compute(step27)
+	line28 := compute(step28)
+	line29 := compute(step29)
+	line30 := compute(step30)
+	line31 := compute(step31)
+	line32 := compute(step32)
+	line33 := compute(step33)
+	line34 := compute(step34)
+	line35 := compute(step35)
+	line36 := compute(step36)
+	line37 := compute(step37)
+	line38 := compute(step38)
+	line39 := compute(step39)
+	line40 := compute(step40)
+	line41 := compute(step41)
+	line42 := compute(step42)
+	line43 := compute(step43)
+	line44 := compute(step44)
+	line45 := compute(step45)
+	line46 := compute(step46)
+	line47 := compute(step47)
+	line48 := compute(step48)
+	line49 := compute(step49)
+	line50 := compute(step50)
+… (truncated, see review.md)</pre></div>
+  <div class="col"><h3>Suggested fix</h3><p>Route the reads through <code>ledger.Repository</code>; if it lacks a method, add it there so retries and tracing stay in one place.</p></div>
+</div>
+<div class="rowfull"><h3>Why it matters / details</h3><ul><li>Retries and tracing live in the shared layer; bypassing it loses them and duplicates logic.</li><li><strong>ELI5:</strong> This file talks to the database directly instead of through the shared data layer.</li></ul></div></div></section>
+<section class="slide" id="finding-4"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Hardcoded provider API token\n\n**HIGH · SECRET_EXPOSURE** · `config/providers.go:17` · security · opus\n\n## Issue\n\nA live Stripe-style secret is committed in source. Anyone with repo read access can move money; it also leaks into build logs and images.\n\n```go\nconst providerToken = \&quot;sk_live_4eC39HqLyjWDarjtT1zdp7dc\&quot;\n```\n\n## Suggested Fix\n\nLoad it from the secret manager at runtime and rotate the exposed token immediately:\n```go\ntoken := secrets.MustGet(ctx, \&quot;payments/provider_token\&quot;)\n```\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#ffb224">HIGH</span> <span class="mono">SECRET_EXPOSURE</span> · Hardcoded provider API token · <span class="mono">config/providers.go:17</span> · security · opus</div><div class="slide-body">
+<div class="cols">
+  <div class="col"><h3>Issue</h3><p>A live Stripe-style secret is committed in source. Anyone with repo read access can move money; it also leaks into build logs and images.</p><pre>const providerToken = &quot;sk_live_4eC39HqLyjWDarjtT1zdp7dc&quot;</pre></div>
+  <div class="col"><h3>Suggested fix</h3><p>Load it from the secret manager at runtime and rotate the exposed token immediately:<br></p><pre>token := secrets.MustGet(ctx, &quot;payments/provider_token&quot;)</pre></div>
+</div>
+<div class="rowfull"><h3>Why it matters / details</h3><ul><li>Anyone who can read the repo can spend money, and it leaks into logs and images.</li><li><strong>ELI5:</strong> A real payment secret is written straight into the code.</li></ul></div></div></section>
+<section class="slide" id="finding-5"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Webhook error swallowed\n\n**MEDIUM · ERROR_HANDLING** · `internal/webhook/handler.go:76` · implementation · codex\n\n## Issue\n\nThe error from `process(evt)` is assigned to `_`, so a failed webhook returns 200 and the provider never retries — events are lost silently.\n\n```go\n_ = process(evt)\nw.WriteHeader(http.StatusOK)\n```\n\n## Suggested Fix\n\nReturn a 5xx on failure so the provider redelivers, and log with the event id.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#f5d90a">MEDIUM</span> <span class="mono">ERROR_HANDLING</span> · Webhook error swallowed · <span class="mono">internal/webhook/handler.go:76</span> · implementation · codex</div><div class="slide-body">
+<div class="cols">
+  <div class="col"><h3>Issue</h3><p>The error from <code>process(evt)</code> is assigned to <code>_</code>, so a failed webhook returns 200 and the provider never retries — events are lost silently.</p><pre>_ = process(evt)
+w.WriteHeader(http.StatusOK)</pre></div>
+  <div class="col"><h3>Suggested fix</h3><p>Return a 5xx on failure so the provider redelivers, and log with the event id.</p></div>
+</div>
+<div class="rowfull"><h3>Why it matters / details</h3><ul><li>The provider thinks it succeeded and never retries, so events vanish.</li><li><strong>ELI5:</strong> If handling a webhook fails, the code still says &#39;OK&#39;.</li></ul></div></div></section>
+<section class="slide" id="finding-6"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# N+1 query in invoice list\n\n**MEDIUM · PERFORMANCE** · `internal/invoice/list.go:44-49` · maintainability · gpt\n\n## Issue\n\nFor each invoice the handler issues a separate `LoadLineItems` query — a 200-invoice page fires 201 queries and dominates p99 latency.\n\n```go\nfor _, inv := range invoices {\n\tinv.Items, _ = db.LoadLineItems(ctx, inv.ID)\n}\n```\n\n## Suggested Fix\n\nBatch with a single `WHERE invoice_id IN (...)` and group in memory, or use a join.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#f5d90a">MEDIUM</span> <span class="mono">PERFORMANCE</span> · N+1 query in invoice list · <span class="mono">internal/invoice/list.go:44-49</span> · maintainability · gpt</div><div class="slide-body">
+<div class="cols">
+  <div class="col"><h3>Issue</h3><p>For each invoice the handler issues a separate <code>LoadLineItems</code> query — a 200-invoice page fires 201 queries and dominates p99 latency.</p><pre>for _, inv := range invoices {
+	inv.Items, _ = db.LoadLineItems(ctx, inv.ID)
+}</pre></div>
+  <div class="col"><h3>Suggested fix</h3><p>Batch with a single <code>WHERE invoice_id IN (...)</code> and group in memory, or use a join.</p></div>
+</div>
+<div class="rowfull"><h3>Why it matters / details</h3><ul><li>A big page fires hundreds of queries and gets slow.</li><li><strong>ELI5:</strong> It runs one extra database query per invoice in the list.</li></ul></div></div></section>
+<section class="slide" id="finding-7"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Exported func undocumented\n\n**LOW · DOCUMENTATION** · `internal/refund/service.go:60` · maintainability · gpt\n\n## Issue\n\n`func Reconcile(...)` is exported but has no doc comment; `go doc` shows nothing for a non-obvious entry point.\n\n```go\nfunc Reconcile(ctx context.Context, day time.Time) error {\n```\n\n## Suggested Fix\n\nAdd a `// Reconcile …` comment describing the invariant it restores.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#8b97a8">LOW</span> <span class="mono">DOCUMENTATION</span> · Exported func undocumented · <span class="mono">internal/refund/service.go:60</span> · maintainability · gpt</div><div class="slide-body">
+<div class="cols">
+  <div class="col"><h3>Issue</h3><p><code>func Reconcile(...)</code> is exported but has no doc comment; <code>go doc</code> shows nothing for a non-obvious entry point.</p><pre>func Reconcile(ctx context.Context, day time.Time) error {</pre></div>
+  <div class="col"><h3>Suggested fix</h3><p>Add a <code>// Reconcile …</code> comment describing the invariant it restores.</p></div>
+</div>
+<div class="rowfull"><h3>Why it matters / details</h3><ul><li>Callers can&#39;t tell what guarantee it provides.</li><li><strong>ELI5:</strong> A public function has no explanation.</li></ul></div></div></section>
+<section class="slide" id="style"><div class="slide-header">Style notes</div><div class="slide-body"><ul><li><span class="mono">internal/refund/types.go:12</span> — Rename amt → amountCents: `amt` is ambiguous about units; the codebase standard is explicit `…Cents`.</li><li><span class="mono">internal/ledger/cache.go:19</span> — gofmt: align struct tags: Struct tags aren&#39;t gofmt-aligned.</li></ul></div></section>
+<section class="slide" id="tests"><div class="slide-header">Test results</div><div class="slide-body"><table class="grid"><tr><th>Suite</th><th>Result</th></tr><tr><td>untagged</td><td class="mono">fail</td></tr><tr><td>integration (-tags integration -count 1 -race)</td><td class="mono">pass</td></tr></table></div></section>
+<section class="slide" id="next"><div class="slide-header">Next actions</div><div class="slide-body"><ul class="checks"><li><span class="badge" style="background:#e5484d">BLOCKER</span> Nil deref on refund path — <span class="mono">internal/refund/service.go:134-137</span></li><li><span class="badge" style="background:#f76808">CRITICAL</span> Unversioned breaking API change — <span class="mono">api/v1/payments.proto:52</span></li></ul></div></section>
+</div>
+<div id="hud"><span id="counter"></span></div>
+<div id="progress"><div id="progressbar"></div></div>
+<div id="help"><div class="box"><h3>Keyboard</h3><div>← / → / Space — move &nbsp; t — theme &nbsp; 0-9 — jump &nbsp; c — copy slide &nbsp; ? — help &nbsp; Esc — close</div></div></div>
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var i = 0;
+  var counter = document.getElementById('counter');
+  var bar = document.getElementById('progressbar');
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+    if (counter) counter.textContent = (i + 1) + ' / ' + slides.length;
+    if (bar) bar.style.width = ((i + 1) / slides.length * 100) + '%';
+    var a = slides[i]; if (a) a.scrollTop = 0;
+  }
+  function toggleHelp() { document.getElementById('help').classList.toggle('show'); }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { show(i + 1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(i - 1); e.preventDefault(); }
+    else if (e.key === 'Home') { show(0); }
+    else if (e.key === 'End') { show(slides.length - 1); }
+    else if (e.key === 't' || e.key === 'T') {
+      var h = document.documentElement;
+      h.setAttribute('data-theme', h.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+    }
+    else if (e.key === '?') { toggleHelp(); }
+    else if (e.key === 'Escape') { document.getElementById('help').classList.remove('show'); }
+    else if (/^[0-9]$/.test(e.key)) { var t = document.getElementById('slide-' + e.key); if (t) show(slides.indexOf(t)); }
+  });
+  document.addEventListener('click', function (e) {
+    var jump = e.target.closest('[data-jump]');
+    if (jump) { var t = document.getElementById(jump.getAttribute('data-jump')); if (t) show(slides.indexOf(t)); }
+  });
+  show(0);
+})();
+
+(function () {
+  function flash(btn) {
+    if (!btn) return;
+    var prev = btn.textContent;
+    btn.classList.add('copied'); btn.textContent = '✓ Copied';
+    setTimeout(function () { btn.classList.remove('copied'); btn.textContent = prev; }, 1400);
+  }
+  function fallback(text, btn) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); flash(btn); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  function copy(text, btn) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { flash(btn); }, function () { fallback(text, btn); });
+    } else { fallback(text, btn); }
+  }
+  function src(btn) { try { return JSON.parse(btn.getAttribute('data-copy')); } catch (e) { return ''; } }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.copy-btn');
+    if (btn) { e.preventDefault(); copy(src(btn), btn); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'c' || e.key === 'C') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      var btn = document.querySelector('.slide.active .copy-btn');
+      if (btn) { e.preventDefault(); copy(src(btn), btn); }
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simplify — 3 files</title>
+<style>
+:root {
+  --bg: #0e1116; --fg: #e6edf3; --muted: #8b97a8; --panel: #161b22;
+  --border: #30363d; --accent: #58a6ff; --code-bg: #0a0d12;
+  --chip-good: #3fb950; --chip-warn: #ffb224; --chip-danger: #e5484d;
+  --chip-info: #58a6ff; --chip-muted: #8b97a8;
+  --sev-blocker: #e5484d;
+  --sev-critical: #f76808;
+  --sev-high: #ffb224;
+  --sev-medium: #f5d90a;
+  --sev-low: #8b97a8;
+}
+[data-theme="light"] {
+  --bg: #fbfcfd; --fg: #1c2128; --muted: #57606a; --panel: #ffffff;
+  --border: #d0d7de; --accent: #0969da; --code-bg: #f4f6f8;
+  --chip-good: #1a7f37; --chip-warn: #9a6700; --chip-danger: #cf222e;
+  --chip-info: #0969da; --chip-muted: #57606a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+#deck { height: 100vh; }
+.slide {
+  display: none; flex-direction: column; gap: 18px; position: relative;
+  height: 100vh; padding: 48px 64px 64px; overflow: auto;
+}
+.copy-btn {
+  position: fixed; top: 14px; right: 16px; z-index: 6;
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
+  font: 600 12px/1.4 inherit; color: var(--muted); background: var(--panel);
+  border: 1px solid var(--border); border-radius: 999px; cursor: pointer;
+  caret-color: transparent; user-select: none;
+}
+.copy-btn:hover { color: var(--fg); border-color: var(--accent); }
+.copy-btn.copied { color: var(--chip-good); border-color: var(--chip-good); }
+.slide.active { display: flex; }
+.slide-header { font-size: 14px; color: var(--muted); letter-spacing: .04em; }
+.slide-body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 16px; }
+h1 { font-size: 38px; margin: 0; }
+h2 { font-size: 26px; margin: 0 0 8px; }
+h3 { font-size: 18px; margin: 0 0 6px; }
+p { margin: 0 0 10px; }
+.muted { color: var(--muted); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, pre, .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; }
+pre {
+  background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 14px; overflow: auto; font-size: 13px; margin: 0;
+}
+.big { font-size: 64px; font-weight: 700; line-height: 1.1; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.card {
+  background: var(--panel); border: 1px solid var(--border); border-left-width: 4px;
+  border-radius: 8px; padding: 14px 16px;
+}
+.card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.card-title { font-weight: 600; margin-bottom: 4px; }
+.card-meta, .card-body { font-size: 13px; color: var(--muted); }
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; letter-spacing: .03em; color: #0e1116;
+}
+.chip {
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;
+  border: 1px solid var(--border); border-radius: 999px; font-size: 12px;
+  font-weight: 700; letter-spacing: .02em; line-height: 1.5; color: var(--fg);
+  background: color-mix(in srgb, var(--chip-muted) 18%, transparent);
+}
+.chip.good { border-color: var(--chip-good); color: var(--chip-good); background: color-mix(in srgb, var(--chip-good) 14%, transparent); }
+.chip.warn { border-color: var(--chip-warn); color: var(--chip-warn); background: color-mix(in srgb, var(--chip-warn) 16%, transparent); }
+.chip.danger { border-color: var(--chip-danger); color: var(--chip-danger); background: color-mix(in srgb, var(--chip-danger) 14%, transparent); }
+.chip.info { border-color: var(--chip-info); color: var(--chip-info); background: color-mix(in srgb, var(--chip-info) 14%, transparent); }
+.chip.muted { border-color: var(--chip-muted); color: var(--chip-muted); }
+.chips { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; flex: 1; min-height: 0; }
+.col { display: flex; flex-direction: column; gap: 8px; overflow: auto; min-height: 0; }
+.col h3 { color: var(--muted); }
+.stacked-panels { display: grid; grid-template-rows: 1fr 1fr; gap: 12px; min-height: 0; height: 100%; }
+.panel { border: 1px solid var(--border); border-radius: 10px; padding: 12px; overflow: auto; background: color-mix(in srgb, var(--panel) 82%, transparent); }
+.panel-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--muted); }
+.rowfull { border-top: 1px solid var(--border); padding-top: 14px; overflow: auto; }
+.kv { color: var(--muted); }
+.histo { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.histo span { font-weight: 700; }
+table.grid { border-collapse: collapse; width: 100%; }
+table.grid th, table.grid td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; font-size: 14px; }
+table.grid th { color: var(--muted); font-weight: 600; }
+ul.checks { list-style: none; padding-left: 0; }
+ul.checks li::before { content: "☐ "; color: var(--muted); }
+#hud {
+  position: fixed; bottom: 10px; right: 14px; font-size: 12px;
+  color: var(--muted); font-family: ui-monospace, monospace;
+}
+#progress { position: fixed; bottom: 0; left: 0; right: 0; height: 3px; background: transparent; }
+#progressbar { height: 100%; width: 0; background: var(--accent); transition: width .15s; }
+#help {
+  position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.6); z-index: 10;
+}
+#help.show { display: flex; }
+#help .box { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 24px 32px; }
+
+@media print {
+  #hud, #progress, #help, .copy-btn { display: none !important; }
+  .slide { display: flex !important; height: auto; min-height: 100vh; page-break-after: always; break-after: page; }
+}</style>
+
+</head>
+<body>
+<div id="deck">
+<section class="slide" id="title"><div class="slide-header">Simplify</div><div class="slide-body">
+<h1>3 files</h1>
+<p class="muted">3 files · 2026-06-26T15:28:35Z</p>
+<p class="muted">Focus: nesting</p>
+<p class="muted">Models: opus</p>
+<div class="histo"><span class="badge" style="background:#ffb224">HIGH</span> <span class="mono">2</span> &nbsp; <span class="badge" style="background:#f5d90a">MEDIUM</span> <span class="mono">2</span> <span class="chip good">2 PATCHABLE</span> <span class="chip warn">2 NO AUTO-PATCH</span> </div></div></section>
+<section class="slide" id="tldr"><div class="slide-header">TL;DR</div><div class="slide-body"><p>Three behavior-preserving cleanups: the access check flattens three nested if/else levels into early returns, the membership helper returns on first match instead of latching a flag, and IsAllowed is rewritten to reuse the existing containsName helper (dropping a duplicated loop and a dead branch).</p></div></section>
+<section class="slide" id="overview"><div class="slide-header">Proposals overview</div><div class="slide-body"><div class="cards"><div class="card" style="border-left-color:#ffb224" data-jump="prop-0"><div class="card-top"><span class="badge" style="background:#ffb224">HIGH</span><span class="card-meta">nesting <span class="chips"><span class="chip info">opus</span></span></span></div><div class="card-title">Flatten nested if/else into early returns</div><div class="card-body"><span class="mono">access.go:6</span> · file:access.go</div></div><div class="card" style="border-left-color:#ffb224" data-jump="prop-1"><div class="card-top"><span class="badge" style="background:#ffb224">HIGH</span><span class="card-meta">duplication <span class="chips"><span class="chip info">opus</span><span class="chip warn" title="overlap conflict">NO AUTO-PATCH</span><span class="chip danger" title="overlap conflict">CONFLICT</span></span></span></div><div class="card-title">Reuse containsName instead of reinventing membership</div><div class="card-body"><span class="mono">validate.go:5</span> · module-pass<br>overlap conflict</div></div><div class="card" style="border-left-color:#f5d90a" data-jump="prop-2"><div class="card-top"><span class="badge" style="background:#f5d90a">MEDIUM</span><span class="card-meta">idiom <span class="chips"><span class="chip info">opus</span></span></span></div><div class="card-title">Return on first match instead of a found flag</div><div class="card-body"><span class="mono">stringsutil.go:5</span> · file:stringsutil.go</div></div><div class="card" style="border-left-color:#ffb224" data-jump="prop-3"><div class="card-top"><span class="badge" style="background:#f5d90a">MEDIUM</span><span class="card-meta">dead-code <span class="chips"><span class="chip info">opus</span><span class="chip warn" title="overlap conflict">NO AUTO-PATCH</span><span class="chip danger" title="overlap conflict">CONFLICT</span></span></span></div><div class="card-title">Remove dead legacy branch</div><div class="card-body"><span class="mono">validate.go:11</span> · file:validate.go<br>overlap conflict</div></div></div></div></section>
+<section class="slide" id="prop-0"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Flatten nested if/else into early returns\n\n**HIGH · nesting** · `access.go:6` · opus\n\n## Current\n\n```go\n\tif banned {\n\t\treturn false\n\t} else {\n\t\tif role == \&quot;admin\&quot; {\n\t\t\treturn true\n\t\t} else {\n\t\t\tif owner {\n\t\t\t\treturn true\n\t\t\t} else {\n\t\t\t\treturn false\n\t\t\t}\n\t\t}\n\t}\n```\n\n## Simpler\n\n```go\n\tif banned {\n\t\treturn false\n\t}\n\tif role == \&quot;admin\&quot; {\n\t\treturn true\n\t}\n\treturn owner\n```\n\n## Why simpler / behavior preserved\n\nEach guard returns immediately, so the trailing branch reduces to `return owner`. Same truth table: banned→false, admin→true, else owner.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#ffb224">HIGH</span> <span class="mono">nesting</span> · Flatten nested if/else into early returns · <span class="mono">access.go:6</span> <span class="chips"><span class="chip info">opus</span></span></div><div class="slide-body">
+<div class="cols"><div class="col"><h3>Current</h3><pre>	if banned {
+		return false
+	} else {
+		if role == &quot;admin&quot; {
+			return true
+		} else {
+			if owner {
+				return true
+			} else {
+				return false
+			}
+		}
+	}</pre></div><div class="col"><h3>Simpler</h3><pre>	if banned {
+		return false
+	}
+	if role == &quot;admin&quot; {
+		return true
+	}
+	return owner</pre></div></div>
+<div class="rowfull"><h3>Why simpler / behavior preserved</h3><p>Each guard returns immediately, so the trailing branch reduces to `return owner`. Same truth table: banned→false, admin→true, else owner.</p></div></div></section>
+<section class="slide" id="prop-1"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Reuse containsName instead of reinventing membership\n\n**HIGH · duplication** · `validate.go:5` · opus\n\n## Current\n\n```go\n\tok := false\n\tfor _, a := range allowed {\n\t\tif a == tag {\n\t\t\tok = true\n\t\t}\n\t}\n\tif false {\n\t\t// legacy escape hatch, never taken\n\t\tok = true\n\t}\n\treturn ok\n```\n\n## Simpler\n\n```go\n\treturn containsName(allowed, tag)\n```\n\n## Why simpler / behavior preserved\n\ncontainsName already implements this exact membership check in the same package; delegating removes the duplicated loop and the dead branch in one move. Behavior is identical.\n\n&gt; NO AUTO-PATCH — overlap conflict. Not included in simplify.patch.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#ffb224">HIGH</span> <span class="mono">duplication</span> · Reuse containsName instead of reinventing membership · <span class="mono">validate.go:5</span> <span class="chips"><span class="chip info">opus</span><span class="chip warn" title="overlap conflict">NO AUTO-PATCH</span><span class="chip danger" title="overlap conflict">CONFLICT</span></span></div><div class="slide-body">
+<div class="cols"><div class="col"><h3>Current</h3><pre>	ok := false
+	for _, a := range allowed {
+		if a == tag {
+			ok = true
+		}
+	}
+	if false {
+		// legacy escape hatch, never taken
+		ok = true
+	}
+	return ok</pre></div><div class="col"><h3>Simpler</h3><pre>	return containsName(allowed, tag)</pre></div></div>
+<div class="rowfull"><h3>Why simpler / behavior preserved</h3><p>containsName already implements this exact membership check in the same package; delegating removes the duplicated loop and the dead branch in one move. Behavior is identical.</p><p><span class="chip warn" title="overlap conflict">NO AUTO-PATCH</span> overlap conflict. Not included in simplify.patch.</p><p class="muted">Conflicts with <span class="chip danger" data-jump="prop-3">#prop-3</span></p></div></div></section>
+<section class="slide" id="prop-2"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Return on first match instead of a found flag\n\n**MEDIUM · idiom** · `stringsutil.go:5` · opus\n\n## Current\n\n```go\n\tfound := false\n\tfor _, n := range names {\n\t\tif n == name {\n\t\t\tfound = true\n\t\t}\n\t}\n\treturn found\n```\n\n## Simpler\n\n```go\n\tfor _, n := range names {\n\t\tif n == name {\n\t\t\treturn true\n\t\t}\n\t}\n\treturn false\n```\n\n## Why simpler / behavior preserved\n\nReturning true on the first hit and false after the loop is equivalent — the flag only ever latches true — and avoids scanning the rest of the slice.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#f5d90a">MEDIUM</span> <span class="mono">idiom</span> · Return on first match instead of a found flag · <span class="mono">stringsutil.go:5</span> <span class="chips"><span class="chip info">opus</span></span></div><div class="slide-body">
+<div class="cols"><div class="col"><h3>Current</h3><pre>	found := false
+	for _, n := range names {
+		if n == name {
+			found = true
+		}
+	}
+	return found</pre></div><div class="col"><h3>Simpler</h3><pre>	for _, n := range names {
+		if n == name {
+			return true
+		}
+	}
+	return false</pre></div></div>
+<div class="rowfull"><h3>Why simpler / behavior preserved</h3><p>Returning true on the first hit and false after the loop is equivalent — the flag only ever latches true — and avoids scanning the rest of the slice.</p></div></div></section>
+<section class="slide" id="prop-3"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Remove dead legacy branch\n\n**MEDIUM · dead-code** · `validate.go:11` · opus\n\n## Current\n\n```go\n\tif false {\n\t\t// legacy escape hatch, never taken\n\t\tok = true\n\t}\n```\n\n## Simpler\n\n_(empty)_\n\n## Why simpler / behavior preserved\n\n`if false` is never entered, so the block has no effect on the result.\n\n&gt; NO AUTO-PATCH — overlap conflict. Not included in simplify.patch.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#f5d90a">MEDIUM</span> <span class="mono">dead-code</span> · Remove dead legacy branch · <span class="mono">validate.go:11</span> <span class="chips"><span class="chip info">opus</span><span class="chip warn" title="overlap conflict">NO AUTO-PATCH</span><span class="chip danger" title="overlap conflict">CONFLICT</span></span></div><div class="slide-body">
+<div class="cols"><div class="col"><h3>Current</h3><pre>	if false {
+		// legacy escape hatch, never taken
+		ok = true
+	}</pre></div><div class="col"><h3>Simpler</h3><p class="muted">(empty)</p></div></div>
+<div class="rowfull"><h3>Why simpler / behavior preserved</h3><p>`if false` is never entered, so the block has no effect on the result.</p><p><span class="chip warn" title="overlap conflict">NO AUTO-PATCH</span> overlap conflict. Not included in simplify.patch.</p><p class="muted">Conflicts with <span class="chip danger" data-jump="prop-1">#prop-1</span></p></div></div></section>
+<section class="slide" id="apply"><div class="slide-header">Apply</div><div class="slide-body">
+<p class="big" style="font-size:28px">2 patchable proposal(s)</p>
+<pre>git apply ~/.pi/agent/commands/simplify/demo/out/simplify.patch</pre>
+<p class="muted">Applies only internal, located, non-conflicting proposals. NO AUTO-PATCH proposals are advisory (see report.md).</p>
+<ul><li><span class="chip warn">NO AUTO-PATCH</span> 2 — overlap conflict</li></ul></div></section>
+</div>
+<div id="hud"><span id="counter"></span></div>
+<div id="progress"><div id="progressbar"></div></div>
+<div id="help"><div class="box"><h3>Keyboard</h3><div>← / → / Space — move &nbsp; t — theme &nbsp; 0-9 — jump &nbsp; c — copy slide &nbsp; ? — help &nbsp; Esc — close</div></div></div>
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var i = 0;
+  var counter = document.getElementById('counter');
+  var bar = document.getElementById('progressbar');
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+    if (counter) counter.textContent = (i + 1) + ' / ' + slides.length;
+    if (bar) bar.style.width = ((i + 1) / slides.length * 100) + '%';
+    var a = slides[i]; if (a) a.scrollTop = 0;
+  }
+  function toggleHelp() { document.getElementById('help').classList.toggle('show'); }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { show(i + 1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(i - 1); e.preventDefault(); }
+    else if (e.key === 'Home') { show(0); }
+    else if (e.key === 'End') { show(slides.length - 1); }
+    else if (e.key === 't' || e.key === 'T') {
+      var h = document.documentElement;
+      h.setAttribute('data-theme', h.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+    }
+    else if (e.key === '?') { toggleHelp(); }
+    else if (e.key === 'Escape') { document.getElementById('help').classList.remove('show'); }
+    else if (/^[0-9]$/.test(e.key)) { var t = document.getElementById('slide-' + e.key); if (t) show(slides.indexOf(t)); }
+  });
+  document.addEventListener('click', function (e) {
+    var jump = e.target.closest('[data-jump]');
+    if (jump) { var t = document.getElementById(jump.getAttribute('data-jump')); if (t) show(slides.indexOf(t)); }
+  });
+  show(0);
+})();
+
+(function () {
+  function flash(btn) {
+    if (!btn) return;
+    var prev = btn.textContent;
+    btn.classList.add('copied'); btn.textContent = '✓ Copied';
+    setTimeout(function () { btn.classList.remove('copied'); btn.textContent = prev; }, 1400);
+  }
+  function fallback(text, btn) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); flash(btn); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  function copy(text, btn) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { flash(btn); }, function () { fallback(text, btn); });
+    } else { fallback(text, btn); }
+  }
+  function src(btn) { try { return JSON.parse(btn.getAttribute('data-copy')); } catch (e) { return ''; } }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.copy-btn');
+    if (btn) { e.preventDefault(); copy(src(btn), btn); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'c' || e.key === 'C') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      var btn = document.querySelector('.slide.active .copy-btn');
+      if (btn) { e.preventDefault(); copy(src(btn), btn); }
+    }
+  });
+})();
+</script>
+</body>
+</html>

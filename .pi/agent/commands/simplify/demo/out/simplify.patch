@@ -1,0 +1,49 @@
+diff --git a/access.go b/access.go
+--- a/access.go
++++ b/access.go
+@@ -3,17 +3,11 @@
+ // CanAccess reports whether a user with the given role may access a resource.
+ // banned always wins; admins may access anything; otherwise only the owner may.
+ func CanAccess(role string, owner bool, banned bool) bool {
+-	if banned {
+-		return false
+-	} else {
+-		if role == "admin" {
+-			return true
+-		} else {
+-			if owner {
+-				return true
+-			} else {
+-				return false
+-			}
+-		}
+-	}
++	if banned {
++		return false
++	}
++	if role == "admin" {
++		return true
++	}
++	return owner
+ }
+diff --git a/stringsutil.go b/stringsutil.go
+--- a/stringsutil.go
++++ b/stringsutil.go
+@@ -2,11 +2,10 @@
+ 
+ // containsName reports whether name is present in names.
+ func containsName(names []string, name string) bool {
+-	found := false
+-	for _, n := range names {
+-		if n == name {
+-			found = true
+-		}
+-	}
+-	return found
++	for _, n := range names {
++		if n == name {
++			return true
++		}
++	}
++	return false
+ }

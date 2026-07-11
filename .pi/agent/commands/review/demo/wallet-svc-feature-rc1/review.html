@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Review — wallet-svc-feature-rc1</title>
+<style>
+:root {
+  --bg: #0e1116; --fg: #e6edf3; --muted: #8b97a8; --panel: #161b22;
+  --border: #30363d; --accent: #58a6ff; --code-bg: #0a0d12;
+  --chip-good: #3fb950; --chip-warn: #ffb224; --chip-danger: #e5484d;
+  --chip-info: #58a6ff; --chip-muted: #8b97a8;
+  --sev-blocker: #e5484d;
+  --sev-critical: #f76808;
+  --sev-high: #ffb224;
+  --sev-medium: #f5d90a;
+  --sev-low: #8b97a8;
+}
+[data-theme="light"] {
+  --bg: #fbfcfd; --fg: #1c2128; --muted: #57606a; --panel: #ffffff;
+  --border: #d0d7de; --accent: #0969da; --code-bg: #f4f6f8;
+  --chip-good: #1a7f37; --chip-warn: #9a6700; --chip-danger: #cf222e;
+  --chip-info: #0969da; --chip-muted: #57606a;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+#deck { height: 100vh; }
+.slide {
+  display: none; flex-direction: column; gap: 18px; position: relative;
+  height: 100vh; padding: 48px 64px 64px; overflow: auto;
+}
+.copy-btn {
+  position: fixed; top: 14px; right: 16px; z-index: 6;
+  display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px;
+  font: 600 12px/1.4 inherit; color: var(--muted); background: var(--panel);
+  border: 1px solid var(--border); border-radius: 999px; cursor: pointer;
+  caret-color: transparent; user-select: none;
+}
+.copy-btn:hover { color: var(--fg); border-color: var(--accent); }
+.copy-btn.copied { color: var(--chip-good); border-color: var(--chip-good); }
+.slide.active { display: flex; }
+.slide-header { font-size: 14px; color: var(--muted); letter-spacing: .04em; }
+.slide-body { flex: 1; min-height: 0; display: flex; flex-direction: column; gap: 16px; }
+h1 { font-size: 38px; margin: 0; }
+h2 { font-size: 26px; margin: 0 0 8px; }
+h3 { font-size: 18px; margin: 0 0 6px; }
+p { margin: 0 0 10px; }
+.muted { color: var(--muted); }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code, pre, .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; }
+pre {
+  background: var(--code-bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 12px 14px; overflow: auto; font-size: 13px; margin: 0;
+}
+.big { font-size: 64px; font-weight: 700; line-height: 1.1; }
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.card {
+  background: var(--panel); border: 1px solid var(--border); border-left-width: 4px;
+  border-radius: 8px; padding: 14px 16px;
+}
+.card-top { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.card-title { font-weight: 600; margin-bottom: 4px; }
+.card-meta, .card-body { font-size: 13px; color: var(--muted); }
+.badge {
+  display: inline-block; padding: 2px 8px; border-radius: 999px;
+  font-size: 12px; font-weight: 700; letter-spacing: .03em; color: #0e1116;
+}
+.chip {
+  display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;
+  border: 1px solid var(--border); border-radius: 999px; font-size: 12px;
+  font-weight: 700; letter-spacing: .02em; line-height: 1.5; color: var(--fg);
+  background: color-mix(in srgb, var(--chip-muted) 18%, transparent);
+}
+.chip.good { border-color: var(--chip-good); color: var(--chip-good); background: color-mix(in srgb, var(--chip-good) 14%, transparent); }
+.chip.warn { border-color: var(--chip-warn); color: var(--chip-warn); background: color-mix(in srgb, var(--chip-warn) 16%, transparent); }
+.chip.danger { border-color: var(--chip-danger); color: var(--chip-danger); background: color-mix(in srgb, var(--chip-danger) 14%, transparent); }
+.chip.info { border-color: var(--chip-info); color: var(--chip-info); background: color-mix(in srgb, var(--chip-info) 14%, transparent); }
+.chip.muted { border-color: var(--chip-muted); color: var(--chip-muted); }
+.chips { display: inline-flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; flex: 1; min-height: 0; }
+.col { display: flex; flex-direction: column; gap: 8px; overflow: auto; min-height: 0; }
+.col h3 { color: var(--muted); }
+.stacked-panels { display: grid; grid-template-rows: 1fr 1fr; gap: 12px; min-height: 0; height: 100%; }
+.panel { border: 1px solid var(--border); border-radius: 10px; padding: 12px; overflow: auto; background: color-mix(in srgb, var(--panel) 82%, transparent); }
+.panel-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--muted); }
+.rowfull { border-top: 1px solid var(--border); padding-top: 14px; overflow: auto; }
+.kv { color: var(--muted); }
+.histo { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+.histo span { font-weight: 700; }
+table.grid { border-collapse: collapse; width: 100%; }
+table.grid th, table.grid td { border: 1px solid var(--border); padding: 8px 10px; text-align: left; font-size: 14px; }
+table.grid th { color: var(--muted); font-weight: 600; }
+ul.checks { list-style: none; padding-left: 0; }
+ul.checks li::before { content: "☐ "; color: var(--muted); }
+#hud {
+  position: fixed; bottom: 10px; right: 14px; font-size: 12px;
+  color: var(--muted); font-family: ui-monospace, monospace;
+}
+#progress { position: fixed; bottom: 0; left: 0; right: 0; height: 3px; background: transparent; }
+#progressbar { height: 100%; width: 0; background: var(--accent); transition: width .15s; }
+#help {
+  position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.6); z-index: 10;
+}
+#help.show { display: flex; }
+#help .box { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 24px 32px; }
+
+@media print {
+  #hud, #progress, #help, .copy-btn { display: none !important; }
+  .slide { display: flex !important; height: auto; min-height: 100vh; page-break-after: always; break-after: page; }
+}</style>
+
+</head>
+<body>
+<div id="deck">
+<section class="slide" id="title"><div class="slide-header">Code review</div><div class="slide-body">
+<h1>wallet-svc-feature-rc1</h1>
+<p class="mono muted">/Users/dev/repos/wallet-svc</p>
+<p class="mono">origin/main @ 44ad910 → HEAD @ c0ffee1 + uncommitted</p>
+<p class="muted">2026-06-20T18:00:00Z</p>
+<p class="mono">6 file(s) · <span style="color:#8b97a8">+145</span> / −12</p>
+<div class="histo"><span class="badge" style="background:#ffb224">HIGH</span> <span class="mono">1</span> &nbsp; <span class="badge" style="background:#f5d90a">MEDIUM</span> <span class="mono">1</span> &nbsp; <span class="badge" style="background:#8b97a8">LOW</span> <span class="mono">1</span></div></div></section>
+<section class="slide" id="verdict"><div class="slide-header">Verdict</div><div class="slide-body"><div class="big" style="color:#ffb224">NEEDS-CHANGES</div><p>strongest concern: Deadlock on unbuffered channel.</p><div class="histo"><span style="color:#e5484d">BLOCKER 0</span><span style="color:#f76808">CRITICAL 0</span><span style="color:#ffb224">HIGH 1</span><span style="color:#f5d90a">MEDIUM 1</span><span style="color:#8b97a8">LOW 1</span></div></div></section>
+<section class="slide" id="tldr"><div class="slide-header">TL;DR</div><div class="slide-body"><p>wallet-svc adds the refund-sync worker and an HTTP handler. The headline risk is a deadlock on an unbuffered channel in the error path; there&#39;s also a layering leak from the handler into storage.</p></div></section>
+<section class="slide" id="overview"><div class="slide-header">Findings overview</div><div class="slide-body"><div class="cards"><div class="card" style="border-left-color:#ffb224" data-jump="finding-0"><div class="card-top"><span class="badge" style="background:#ffb224">HIGH</span><span class="card-meta">CONCURRENCY</span></div><div class="card-title">Deadlock on unbuffered channel</div><div class="card-body"><span class="mono">internal/sync/refund.go:31</span> · implementation · codex</div></div><div class="card" style="border-left-color:#f5d90a" data-jump="finding-1"><div class="card-top"><span class="badge" style="background:#f5d90a">MEDIUM</span><span class="card-meta">LAYERING</span></div><div class="card-title">Handler reaches into storage</div><div class="card-body"><span class="mono">internal/sync/handler.go:18</span> · architecture · opus</div></div><div class="card" style="border-left-color:#8b97a8" data-jump="finding-2"><div class="card-top"><span class="badge" style="background:#8b97a8">LOW</span><span class="card-meta">DOCUMENTATION</span></div><div class="card-title">Package lacks doc.go</div><div class="card-body"><span class="mono">internal/sync/sync.go:1</span> · maintainability · gpt</div></div></div></div></section>
+<section class="slide" id="finding-0"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Deadlock on unbuffered channel\n\n**HIGH · CONCURRENCY** · `internal/sync/refund.go:31` · implementation · codex\n\n## Issue\n\n`done` is unbuffered and the only sender runs after the receiver returns on the error path, so a failed sync blocks the worker forever.\n\n```go\ndone := make(chan struct{})\nif err != nil {\n\treturn err // nobody ever drains done\n}\ndone &lt;- struct{}{}\n```\n\n## Suggested Fix\n\nBuffer the channel (`make(chan struct{}, 1)`) or `select` with a context cancel.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#ffb224">HIGH</span> <span class="mono">CONCURRENCY</span> · Deadlock on unbuffered channel · <span class="mono">internal/sync/refund.go:31</span> · implementation · codex</div><div class="slide-body">
+<div class="cols">
+  <div class="col"><h3>Issue</h3><p><code>done</code> is unbuffered and the only sender runs after the receiver returns on the error path, so a failed sync blocks the worker forever.</p><pre>done := make(chan struct{})
+if err != nil {
+	return err // nobody ever drains done
+}
+done &lt;- struct{}{}</pre></div>
+  <div class="col"><h3>Suggested fix</h3><p>Buffer the channel (<code>make(chan struct{}, 1)</code>) or <code>select</code> with a context cancel.</p></div>
+</div>
+<div class="rowfull"><h3>Why it matters / details</h3><ul><li>A single failed sync hangs the worker forever.</li><li><strong>ELI5:</strong> A worker waits to hand off a signal that nobody is listening for on the error path.</li></ul></div></div></section>
+<section class="slide" id="finding-1"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Handler reaches into storage\n\n**MEDIUM · LAYERING** · `internal/sync/handler.go:18` · architecture · opus\n\n## Issue\n\nThe HTTP handler imports the `storage` package directly instead of going through the service layer, coupling transport to persistence.\n\n```go\nimport \&quot;wallet-svc/internal/storage\&quot;\n```\n\n## Suggested Fix\n\nInject a service interface and call that; keep `storage` behind it.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#f5d90a">MEDIUM</span> <span class="mono">LAYERING</span> · Handler reaches into storage · <span class="mono">internal/sync/handler.go:18</span> · architecture · opus</div><div class="slide-body">
+<div class="cols">
+  <div class="col"><h3>Issue</h3><p>The HTTP handler imports the <code>storage</code> package directly instead of going through the service layer, coupling transport to persistence.</p><pre>import &quot;wallet-svc/internal/storage&quot;</pre></div>
+  <div class="col"><h3>Suggested fix</h3><p>Inject a service interface and call that; keep <code>storage</code> behind it.</p></div>
+</div>
+<div class="rowfull"><h3>Why it matters / details</h3><ul><li>Transport and persistence get tangled, making both harder to change/test.</li><li><strong>ELI5:</strong> The web handler talks straight to the database package.</li></ul></div></div></section>
+<section class="slide" id="finding-2"><button type="button" class="copy-btn" title="Copy this slide as Markdown (c)" data-copy="&quot;# Package lacks doc.go\n\n**LOW · DOCUMENTATION** · `internal/sync/sync.go:1` · maintainability · gpt\n\n## Issue\n\n`internal/sync` has no package comment; `go doc` shows nothing for a non-trivial package.\n\n```go\npackage sync\n```\n\n## Suggested Fix\n\nAdd a `doc.go` with a package overview.\n&quot;">⧉ Copy MD</button><div class="slide-header"><span class="badge" style="background:#8b97a8">LOW</span> <span class="mono">DOCUMENTATION</span> · Package lacks doc.go · <span class="mono">internal/sync/sync.go:1</span> · maintainability · gpt</div><div class="slide-body">
+<div class="cols">
+  <div class="col"><h3>Issue</h3><p><code>internal/sync</code> has no package comment; <code>go doc</code> shows nothing for a non-trivial package.</p><pre>package sync</pre></div>
+  <div class="col"><h3>Suggested fix</h3><p>Add a <code>doc.go</code> with a package overview.</p></div>
+</div>
+<div class="rowfull"><h3>Why it matters / details</h3><ul><li>Newcomers can&#39;t tell what it&#39;s for at a glance.</li><li><strong>ELI5:</strong> The package has no overview comment.</li></ul></div></div></section>
+<section class="slide" id="style"><div class="slide-header">Style notes</div><div class="slide-body"><ul><li><span class="mono">internal/sync/handler.go:7</span> — Unused import: `errors` is imported but unused.</li></ul></div></section>
+<section class="slide" id="tests"><div class="slide-header">Test results</div><div class="slide-body"><table class="grid"><tr><th>Suite</th><th>Result</th></tr><tr><td>untagged</td><td class="mono">pass</td></tr><tr><td>integration (-tags integration -count 1 -race)</td><td class="mono">skipped</td></tr></table></div></section>
+</div>
+<div id="hud"><span id="counter"></span></div>
+<div id="progress"><div id="progressbar"></div></div>
+<div id="help"><div class="box"><h3>Keyboard</h3><div>← / → / Space — move &nbsp; t — theme &nbsp; 0-9 — jump &nbsp; c — copy slide &nbsp; ? — help &nbsp; Esc — close</div></div></div>
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var i = 0;
+  var counter = document.getElementById('counter');
+  var bar = document.getElementById('progressbar');
+  function show(n) {
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+    if (counter) counter.textContent = (i + 1) + ' / ' + slides.length;
+    if (bar) bar.style.width = ((i + 1) / slides.length * 100) + '%';
+    var a = slides[i]; if (a) a.scrollTop = 0;
+  }
+  function toggleHelp() { document.getElementById('help').classList.toggle('show'); }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { show(i + 1); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { show(i - 1); e.preventDefault(); }
+    else if (e.key === 'Home') { show(0); }
+    else if (e.key === 'End') { show(slides.length - 1); }
+    else if (e.key === 't' || e.key === 'T') {
+      var h = document.documentElement;
+      h.setAttribute('data-theme', h.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
+    }
+    else if (e.key === '?') { toggleHelp(); }
+    else if (e.key === 'Escape') { document.getElementById('help').classList.remove('show'); }
+    else if (/^[0-9]$/.test(e.key)) { var t = document.getElementById('slide-' + e.key); if (t) show(slides.indexOf(t)); }
+  });
+  document.addEventListener('click', function (e) {
+    var jump = e.target.closest('[data-jump]');
+    if (jump) { var t = document.getElementById(jump.getAttribute('data-jump')); if (t) show(slides.indexOf(t)); }
+  });
+  show(0);
+})();
+
+(function () {
+  function flash(btn) {
+    if (!btn) return;
+    var prev = btn.textContent;
+    btn.classList.add('copied'); btn.textContent = '✓ Copied';
+    setTimeout(function () { btn.classList.remove('copied'); btn.textContent = prev; }, 1400);
+  }
+  function fallback(text, btn) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed'; ta.style.top = '-1000px'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); flash(btn); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  function copy(text, btn) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { flash(btn); }, function () { fallback(text, btn); });
+    } else { fallback(text, btn); }
+  }
+  function src(btn) { try { return JSON.parse(btn.getAttribute('data-copy')); } catch (e) { return ''; } }
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.copy-btn');
+    if (btn) { e.preventDefault(); copy(src(btn), btn); }
+  });
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'c' || e.key === 'C') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      var btn = document.querySelector('.slide.active .copy-btn');
+      if (btn) { e.preventDefault(); copy(src(btn), btn); }
+    }
+  });
+})();
+</script>
+</body>
+</html>

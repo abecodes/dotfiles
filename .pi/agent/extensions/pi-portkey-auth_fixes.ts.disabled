@@ -1,0 +1,377 @@
+/**
+ * pi-portkey-auth fixes
+ * =====================
+ *
+ * STATUS (as of pi-portkey-auth fd79fd9, "fix anthropic models for pi
+ * v0.75.5"): both fixes are now redundant against upstream and have been
+ * commented out. The file exports nothing -- it stays in the extensions
+ * directory as a reference / staging area for future portkey/Bedrock
+ * payload rewrites.
+ *
+ *   - Fix 1 (strip eager_input_streaming): [ENABLE IF REQUIRED].
+ *     Upstream now sets `supportsEagerToolInputStreaming: false` on
+ *     `claude-haiku-4-5` (the only model where the rejection was ever
+ *     observed). Re-enable if a future sonnet/opus regresses into the
+ *     same Bedrock rejection.
+ *
+ *   - Fix 2 (force adaptive thinking): [DEPRECATED].
+ *     Upstream now sets `forceAdaptiveThinking: true` on opus-4-7 /
+ *     opus-4-6 / sonnet-4-6 (gated on PORTKEY_FORCE_ADAPTIVE_THINKING
+ *     != "false"). Kept here as reference for the rewrite shape.
+ *
+ * To re-activate either fix: uncomment the relevant block AND restore
+ * the `export default function piPortkeyAuthFixes(...)` wrapper at the
+ * bottom (currently inside the comment-out region).
+ *
+ * Two payload-rewriting workarounds for the dynamically-registered
+ * `portkey` provider (registered by the pi-portkey-auth extension via
+ * `pi.registerProvider()`). Each one patches a different shape mismatch
+ * that surfaces on portkey -> Bedrock for specific Claude models. Both
+ * hook `before_provider_request`, both are no-ops on every other provider.
+ *
+ * ---------------------------------------------------------------------------
+ * Why these live in an extension and not in models.json
+ * ---------------------------------------------------------------------------
+ *
+ * `modelOverrides` in models.json is only honored for built-in providers
+ * (see ModelRegistry.loadBuiltInModels iterating pi-ai's getProviders()).
+ * The `portkey` provider here is registered dynamically by pi-portkey-auth
+ * via `pi.registerProvider()`, so models.json overrides never reach
+ * `streamPortkey -> streamSimpleAnthropic`. Confirmed empirically: writing
+ * an override and reloading produced the exact same byte-identical 400.
+ *
+ * The cleanest long-term fix is to add the relevant `compat` flags
+ * directly to pi-portkey-auth/environments.ts (the .ts file under
+ * ~/.pi/agent/git/.../pi-portkey-auth/). When that lands and propagates
+ * everywhere, this extension can shrink or be deleted entirely. Until
+ * then, this file is belt-and-suspenders: it works even if pi-portkey-auth
+ * regresses, and it's where new portkey/Bedrock asymmetries should land.
+ *
+ * ---------------------------------------------------------------------------
+ * Debug playbook for "new portkey/Bedrock 400 of the week"
+ * ---------------------------------------------------------------------------
+ *
+ * Symptom shape: `Error: 400 {"error":{"message":"bedrock error: ...",
+ * ...,"provider":"bedrock"}}` happens immediately on every request to a
+ * `portkey/<model>` model, but the same physical Bedrock model is fine
+ * when accessed via the built-in `amazon-bedrock` provider.
+ *
+ * That asymmetry is the giveaway. The two providers send DIFFERENT
+ * payloads for the same model id because pi-ai gates per-model quirks on
+ * the model entry's `compat` flags, and the portkey-registered entries
+ * don't carry those flags.
+ *
+ * Where to look (in this order):
+ *
+ * 1. pi-ai's payload builders. The Anthropic-shaped path runs through
+ *      providers/anthropic.js -> buildParams()
+ *    which is the chokepoint for `tools`, `thinking`, `output_config`,
+ *    `temperature`, `metadata`, `tool_choice`. Every Bedrock 400 we've
+ *    hit so far traces back to a branch in this function.
+ *
+ *      /opt/homebrew/lib/node_modules/@earendil-works/pi-coding-agent/
+ *        node_modules/@earendil-works/pi-ai/dist/providers/anthropic.js
+ *
+ *    Skim it for `model.compat?.<flag> === ...` branches. Each one is a
+ *    candidate for a per-model asymmetry.
+ *
+ * 2. pi-ai's model registry. Search models.generated.js for the model id
+ *    Bedrock is rejecting and read its `compat: { ... }` block. Whatever
+ *    flags are set there are the flags the portkey entry MUST also set
+ *    to behave identically.
+ *
+ *      .../pi-ai/dist/models.generated.js  (search for the model id)
+ *
+ * 3. pi-portkey-auth's catalog. Open
+ *      ~/.pi/agent/git/<host>/ai/pi-portkey-auth/
+ *        environments.ts
+ *    and locate the same model id. If it lacks the compat flag(s) you
+ *    saw in step 2, that is the root cause. Adding the flag in
+ *    environments.ts is the proper fix; rewriting the payload here is
+ *    the workaround.
+ *
+ * 4. Confirm the rejection is portkey-specific by toggling to the
+ *    built-in `amazon-bedrock` provider for the same physical model. If
+ *    that works, you have the asymmetry; if it ALSO fails, the issue is
+ *    upstream (Bedrock itself or pi-ai's handling) and a portkey-only
+ *    extension cannot fix it.
+ *
+ * Then write the rewrite as a `before_provider_request` handler scoped
+ * by `ctx.model?.provider === "portkey"` plus a payload-shape sniff (we
+ * use `looksAnthropicShaped` for the Anthropic-API route). Read the
+ * active model on `ctx.model`, NOT on `event.model` -- the event itself
+ * only carries `{ type, payload }`.
+ *
+ * ---------------------------------------------------------------------------
+ * Fix 1: strip eager_input_streaming
+ * ---------------------------------------------------------------------------
+ *
+ * Workaround for upstream tool-schema rejection on the Portkey -> Bedrock
+ * route for `claude-haiku-4-5`.
+ *
+ * Since pi 0.68.1 (2026-04-22, pi-mono#3175) pi-ai's Anthropic provider
+ * bakes `eager_input_streaming: true` into every tool schema by default
+ * (see anthropic.js `convertTools`, gated by
+ * `model.compat?.supportsEagerToolInputStreaming` which only auto-disables
+ * for Fireworks). Bedrock's tool-use validator strict-rejects unknown keys:
+ *
+ *     bedrock error: tools.0.custom.eager_input_streaming:
+ *     Extra inputs are not permitted
+ *
+ * Empirically, Portkey -> Bedrock currently fails this way on
+ * `portkey/claude-haiku-4-5` but NOT on `portkey/claude-sonnet-4-6`. Same
+ * gateway, same convertTools code path on our side -- the asymmetry is
+ * upstream (haiku endpoint validation, or a per-model Portkey schema
+ * check). Effect: scout, tracer, implement (all haiku-4-5) error
+ * immediately on every chain dispatch.
+ *
+ * Note: pi-ai also has a fallback path -- when
+ * `supportsEagerToolInputStreaming` is false at convertTools time, it
+ * sends the legacy `fine-grained-tool-streaming-2025-05-14` beta header
+ * for tool-enabled requests instead. We can't trigger that path from here
+ * (the header is set before the payload is built), so we just remove the
+ * field. Bedrock has historically tolerated requests without either
+ * mechanism for tool streaming; if that changes, this extension stops
+ * being sufficient.
+ *
+ * Removable when:
+ *   - Portkey/Bedrock stops rejecting `eager_input_streaming` on the haiku
+ *     route (test by disabling this fix and running an agent that
+ *     selects portkey/claude-haiku-4-5 with tools), OR
+ *   - pi-ai auto-disables eager_input_streaming for Bedrock-routed models
+ *     the same way it does for Fireworks, OR
+ *   - pi-portkey-auth grows its own per-model compat handling and sets
+ *     `supportsEagerToolInputStreaming: false` on the haiku entry at
+ *     provider registration time.
+ *
+ * Scope: provider-scoped to `portkey`. Applies to ALL portkey models, not
+ * just haiku -- if sonnet-4-6 starts getting the same rejection later,
+ * this already covers it. The cost of stripping the field on a model
+ * that would have accepted it is one round-trip's worth of (probably
+ * negligible) tool-input streaming optimization, not a correctness
+ * regression.
+ *
+ * ---------------------------------------------------------------------------
+ * Fix 2: force adaptive thinking
+ * ---------------------------------------------------------------------------
+ *
+ * Bedrock now rejects `thinking.type=enabled` for claude-opus-4-7 /
+ * claude-opus-4-6 / claude-sonnet-4-6:
+ *
+ *   bedrock error: "thinking.type.enabled" is not supported for this
+ *   model. Use "thinking.type.adaptive" and "output_config.effort" to
+ *   control thinking behavior.
+ *
+ * pi-ai's built-in `amazon-bedrock` entries for these models set
+ * `compat.forceAdaptiveThinking = true`, which steers `buildParams` into
+ * the adaptive branch:
+ *
+ *     params.thinking = { type: "adaptive", display };
+ *     if (options.effort)
+ *       params.output_config = { effort: options.effort };
+ *
+ * The portkey entries in pi-portkey-auth/environments.ts historically did
+ * NOT carry that flag, so `streamSimpleAnthropic -> buildParams` fell
+ * into the else-branch and shipped:
+ *
+ *     params.thinking = {
+ *       type: "enabled",
+ *       budget_tokens: options.thinkingBudgetTokens || 1024,
+ *       display,
+ *     };
+ *
+ * which is what Bedrock now rejects. Today's environments.ts patch adds
+ * `compat: { forceAdaptiveThinking: true }` (and a thinkingLevelMap for
+ * opus-4-6/4-7) to the affected entries, which should make this fix a
+ * no-op going forward. Keeping the rewrite live as a guard.
+ *
+ * Effort selection: pi exposes `pi.getThinkingLevel()` on the
+ * ExtensionAPI. We mirror pi-ai's `mapThinkingLevelToEffort` for the
+ * three models we rewrite -- opus-4-7 supports "xhigh", opus-4-6 maps
+ * "xhigh" -> "max", sonnet-4-6 falls through to "high". Default is
+ * "high" to match the most common settings.json `defaultThinkingLevel`.
+ *
+ * Removable when both:
+ *   - pi-portkey-auth/environments.ts ships forceAdaptiveThinking on the
+ *     three affected entries everywhere (already patched locally; needs
+ *     to land upstream + propagate), AND
+ *   - no future portkey/Bedrock model regresses into the same shape.
+ *
+ * Caveat we cannot fix from here: when forceAdaptiveThinking is false at
+ * `createClient` time, pi-ai also adds the `interleaved-thinking-2025-
+ * 05-14` beta header. We can't strip the header from a payload hook.
+ * Bedrock has so far tolerated the extra header on adaptive models; if
+ * it stops, this extension stops being sufficient and the fix has to
+ * move into pi-portkey-auth (or pi-ai itself).
+ */
+
+// No runtime exports. Both fixes below are inactive; the file is kept as
+// a reference / staging area. See the STATUS block at the top for the
+// upstream changes that made these redundant and the conditions under
+// which Fix 1 should be re-enabled.
+//
+// To re-activate, lift the relevant block out of its comment and restore
+// the `export default function piPortkeyAuthFixes(pi: ExtensionAPI) {`
+// wrapper plus the `import type { ExtensionAPI } from
+// '@earendil-works/pi-coding-agent';` import.
+
+/* ============================================================================
+ * SHARED TYPES + SNIFF (used by both fixes below)
+ * ============================================================================
+ *
+ * import type { ExtensionAPI } from '@earendil-works/pi-coding-agent';
+ *
+ * type AnthropicToolEntry = {
+ *   name?: unknown;
+ *   description?: unknown;
+ *   input_schema?: unknown;
+ *   eager_input_streaming?: unknown;
+ *   [key: string]: unknown;
+ * };
+ *
+ * type AnthropicThinking =
+ *   | { type: 'enabled'; budget_tokens?: number; display?: string }
+ *   | { type: 'adaptive'; display?: string }
+ *   | { type: 'disabled' };
+ *
+ * type AnthropicLikePayload = {
+ *   tools?: AnthropicToolEntry[];
+ *   thinking?: AnthropicThinking;
+ *   output_config?: { effort?: string };
+ *   model?: unknown;
+ *   [key: string]: unknown;
+ * };
+ *
+ * function looksAnthropicShaped(payload: unknown): payload is AnthropicLikePayload {
+ *   if (!payload || typeof payload !== 'object') return false;
+ *   const p = payload as { tools?: unknown; thinking?: unknown };
+ *   // Either a tools array of Anthropic-shaped entries, or a thinking object.
+ *   // The original strip-eager extension also required a tools array; we relax
+ *   // that here so the thinking-rewrite can match payloads with no tools.
+ *   if (Array.isArray(p.tools)) {
+ *     return p.tools.every(
+ *       tool => tool && typeof tool === 'object' && 'input_schema' in (tool as object)
+ *     );
+ *   }
+ *   return !!p.thinking && typeof p.thinking === 'object';
+ * }
+ * ========================================================================= */
+
+/* ============================================================================
+ * FIX 1 — [ENABLE IF REQUIRED] strip eager_input_streaming
+ * ============================================================================
+ *
+ * Currently inactive: pi-portkey-auth fd79fd9 sets
+ *   compat: { supportsEagerToolInputStreaming: false }
+ * on `claude-haiku-4-5` in both opencode and claude variants, which is
+ * the only model where the Bedrock rejection was ever observed.
+ *
+ * Re-enable if a future sonnet/opus model starts getting:
+ *   bedrock error: tools.0.custom.eager_input_streaming:
+ *   Extra inputs are not permitted
+ *
+ * Original fix body (paste inside a `before_provider_request` handler
+ * scoped to `ctx.model?.provider === 'portkey'` and gated on
+ * `looksAnthropicShaped(event.payload)`; see Fix 2 below for the full
+ * handler skeleton):
+ *
+ *   if (payload.tools && payload.tools.length > 0) {
+ *     let toolsMutated = false;
+ *     const cleaned = payload.tools.map(tool => {
+ *       if (tool && typeof tool === 'object' && 'eager_input_streaming' in tool) {
+ *         const { eager_input_streaming, ...rest } = tool;
+ *         void eager_input_streaming;
+ *         toolsMutated = true;
+ *         return rest;
+ *       }
+ *       return tool;
+ *     });
+ *     if (toolsMutated) {
+ *       payload = { ...payload, tools: cleaned };
+ *       mutated = true;
+ *     }
+ *   }
+ * ========================================================================= */
+
+/* ============================================================================
+ * FIX 2 — [DEPRECATED] force adaptive thinking
+ * ============================================================================
+ *
+ * Superseded by pi-portkey-auth fd79fd9, which sets
+ *   compat: { forceAdaptiveThinking: true }
+ * on opus-4-7 / opus-4-6 / sonnet-4-6 (gated on the env var
+ * PORTKEY_FORCE_ADAPTIVE_THINKING != "false"). Kept as reference for
+ * the rewrite shape -- if a future portkey/Bedrock model regresses into
+ * the same `thinking.type=enabled` rejection AND upstream isn't a
+ * viable fix path, the rewrite skeleton + helpers + handler below are
+ * the starting point.
+ *
+ * Helpers (Fix 2 only):
+ *
+ *   // Substring match covers all regional ids (us./eu./global./au./jp.)
+ *   // plus the bare ids the portkey provider actually uses.
+ *   const ADAPTIVE_REQUIRED = ['opus-4-7', 'opus-4-6', 'sonnet-4-6'];
+ *
+ *   function requiresAdaptive(modelId: unknown): boolean {
+ *     if (typeof modelId !== 'string') return false;
+ *     return ADAPTIVE_REQUIRED.some(tag => modelId.includes(tag));
+ *   }
+ *
+ *   // Mirrors pi-ai's mapThinkingLevelToEffort for the three models we rewrite.
+ *   function pickEffort(level: string | undefined, modelId: string): string {
+ *     switch (level) {
+ *       case 'minimal':
+ *       case 'low':
+ *         return 'low';
+ *       case 'medium':
+ *         return 'medium';
+ *       case 'high':
+ *         return 'high';
+ *       case 'xhigh':
+ *         if (modelId.includes('opus-4-7')) return 'xhigh';
+ *         if (modelId.includes('opus-4-6')) return 'max';
+ *         return 'high';
+ *       default:
+ *         return 'high';
+ *     }
+ *   }
+ *
+ * Full handler skeleton (also covers Fix 1's handler shape):
+ *
+ *   export default function piPortkeyAuthFixes(pi: ExtensionAPI) {
+ *     // The before_provider_request event itself only carries { type, payload }
+ *     // (see pi-coding-agent dist/core/extensions/runner.js#emitBeforeProviderRequest).
+ *     // The active model is exposed on the context, not the event. Reading it off
+ *     // `event.model` returns undefined and silently no-ops the entire extension --
+ *     // confirmed empirically (one wasted round-trip on the eager-input fix).
+ *     pi.on('before_provider_request', (event, ctx) => {
+ *       if (ctx.model?.provider !== 'portkey') return;
+ *       if (!looksAnthropicShaped(event.payload)) return;
+ *
+ *       let payload: AnthropicLikePayload = event.payload;
+ *       let mutated = false;
+ *
+ *       // -- Fix 1 body goes here (see Fix 1 block above) --
+ *
+ *       // -- Fix 2 body --
+ *       if (payload.thinking?.type === 'enabled' && requiresAdaptive(payload.model)) {
+ *         const modelId = String(payload.model);
+ *         const level = pi.getThinkingLevel?.();
+ *         const effort = pickEffort(level, modelId);
+ *
+ *         const newThinking: AnthropicThinking = { type: 'adaptive' };
+ *         if (payload.thinking.display) newThinking.display = payload.thinking.display;
+ *
+ *         payload = {
+ *           ...payload,
+ *           thinking: newThinking,
+ *           output_config: { ...(payload.output_config ?? {}), effort },
+ *         };
+ *         mutated = true;
+ *       }
+ *
+ *       if (!mutated) return;
+ *       return payload;
+ *     });
+ *   }
+ * ========================================================================= */

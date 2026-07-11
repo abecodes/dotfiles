@@ -1,0 +1,128 @@
+/**
+ * strip-eager-input-streaming
+ * ===========================
+ *
+ * Workaround for upstream tool-schema rejection on the Portkey -> Bedrock
+ * route for `claude-haiku-4-5`.
+ *
+ * Why this exists
+ * ---------------
+ * Since pi 0.68.1 (2026-04-22, pi-mono#3175) pi-ai's Anthropic provider
+ * bakes `eager_input_streaming: true` into every tool schema by default
+ * (see anthropic.js `convertTools`, gated by
+ * `model.compat?.supportsEagerToolInputStreaming` which only auto-disables
+ * for Fireworks). Bedrock's tool-use validator strict-rejects unknown keys:
+ *
+ *     bedrock error: tools.0.custom.eager_input_streaming:
+ *     Extra inputs are not permitted
+ *
+ * Empirically, Portkey -> Bedrock currently fails this way on
+ * `portkey/claude-haiku-4-5` but NOT on `portkey/claude-sonnet-4-6`. Same
+ * gateway, same convertTools code path on our side — the asymmetry is
+ * upstream (haiku endpoint validation, or a per-model Portkey schema
+ * check). Effect: scout, tracer, implement (all haiku-4-5) error
+ * immediately on every chain dispatch.
+ *
+ * Why not models.json
+ * -------------------
+ * `modelOverrides` in models.json is only honored for built-in providers
+ * (see ModelRegistry.loadBuiltInModels iterating pi-ai's getProviders()).
+ * The `portkey` provider here is registered dynamically by the
+ * pi-portkey-auth extension via `pi.registerProvider()`, so models.json
+ * overrides never reach `streamPortkey -> streamSimpleAnthropic`.
+ * Confirmed empirically: writing the override and reloading produced the
+ * exact same byte-identical 400.
+ *
+ * What this does
+ * --------------
+ * Hooks `before_provider_request` and, for requests targeting the
+ * `portkey` provider whose payload looks Anthropic-shaped (tools array of
+ * objects with `input_schema`), strips `eager_input_streaming` from every
+ * tool entry. Returns the mutated payload so it replaces the original.
+ *
+ * Note: pi-ai also has a fallback path — when
+ * `supportsEagerToolInputStreaming` is false at convertTools time, it
+ * sends the legacy `fine-grained-tool-streaming-2025-05-14` beta header
+ * for tool-enabled requests instead. We can't trigger that path from here
+ * (the header is set before the payload is built), so we just remove the
+ * field. Bedrock has historically tolerated requests without either
+ * mechanism for tool streaming; if that changes, this extension stops
+ * being sufficient.
+ *
+ * Removable when
+ * --------------
+ * - Portkey/Bedrock stops rejecting `eager_input_streaming` on the haiku
+ *   route (test by disabling this extension and running an agent that
+ *   selects portkey/claude-haiku-4-5 with tools), OR
+ * - pi-ai auto-disables eager_input_streaming for Bedrock-routed models
+ *   the same way it does for Fireworks, OR
+ * - pi-portkey-auth grows its own per-model compat handling and sets
+ *   `supportsEagerToolInputStreaming: false` on the haiku entry at
+ *   provider registration time.
+ *
+ * Scope
+ * -----
+ * Provider-scoped to `portkey`. Applies to ALL portkey models, not just
+ * haiku — if sonnet-4-6 starts getting the same rejection later, this
+ * already covers it. The cost of stripping the field on a model that
+ * would have accepted it is one round-trip's worth of (probably
+ * negligible) tool-input streaming optimization, not a correctness
+ * regression.
+ */
+
+import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+
+type AnthropicToolEntry = {
+  name?: unknown;
+  description?: unknown;
+  input_schema?: unknown;
+  eager_input_streaming?: unknown;
+  [key: string]: unknown;
+};
+
+type AnthropicLikePayload = {
+  tools?: AnthropicToolEntry[];
+  [key: string]: unknown;
+};
+
+function looksAnthropicShaped(payload: unknown): payload is AnthropicLikePayload {
+  if (!payload || typeof payload !== "object") return false;
+  const p = payload as { tools?: unknown };
+  if (!Array.isArray(p.tools)) return false;
+  // Anthropic tool entries always have `input_schema`. OpenAI-style tools
+  // wrap things differently, so this check keeps us out of OpenAI payloads
+  // even when a future provider routes through this hook.
+  return p.tools.every(
+    (tool) => tool && typeof tool === "object" && "input_schema" in (tool as object),
+  );
+}
+
+export default function stripEagerInputStreaming(pi: ExtensionAPI) {
+  // The before_provider_request event itself only carries { type, payload }
+  // (see pi-coding-agent dist/core/extensions/runner.js#emitBeforeProviderRequest).
+  // The active model is exposed on the context, not the event. Reading it off
+  // `event.model` returns undefined and silently no-ops the entire extension —
+  // confirmed empirically (one wasted round-trip).
+  pi.on("before_provider_request", (event, ctx) => {
+    if (ctx.model?.provider !== "portkey") return;
+    if (!looksAnthropicShaped(event.payload)) return;
+
+    const tools = event.payload.tools;
+    if (!tools || tools.length === 0) return;
+
+    let mutated = false;
+    const cleaned = tools.map((tool) => {
+      if (tool && typeof tool === "object" && "eager_input_streaming" in tool) {
+        const { eager_input_streaming, ...rest } = tool;
+        void eager_input_streaming;
+        mutated = true;
+        return rest;
+      }
+      return tool;
+    });
+
+    if (!mutated) return;
+
+    return { ...event.payload, tools: cleaned };
+  });
+}

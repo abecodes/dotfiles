@@ -107,6 +107,10 @@
       "rev": "6784b54587e6d8a6b9ea199318512170ffb9e418",
       "src": "https://github.com/ThePrimeagen/refactoring.nvim"
     },
+    "tabout.nvim": {
+      "rev": "9a3499480a8e53dcaa665e2836f287e3b7764009",
+      "src": "https://github.com/abecodes/tabout.nvim"
+    },
     "telekasten.nvim": {
       "rev": "760c7cdbbd0bb5337d11533bc09732223c752e41",
       "src": "https://github.com/renerocksai/telekasten.nvim"

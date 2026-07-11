@@ -1,0 +1,86 @@
+{
+  "c": {
+    "extensions": [
+      ".c",
+      ".h",
+      ".cc",
+      ".cpp",
+      ".cxx",
+      ".c++",
+      ".hpp",
+      ".hh",
+      ".hxx",
+      ".h++",
+      ".m",
+      ".mm"
+    ],
+    "command": "clangd",
+    "installCommand": "brew install llvm",
+    "installNotes": "clangd ships inside LLVM. Linux: `apt install clangd` / `dnf install clang-tools-extra`. macOS often has it under Xcode — try `xcrun --find clangd`."
+  },
+  "go": {
+    "extensions": [
+      ".go"
+    ],
+    "command": "gopls",
+    "installCommand": "go install golang.org/x/tools/gopls@latest",
+    "installNotes": "Requires Go on PATH. Binary lands in $(go env GOPATH)/bin.",
+    "initializationOptions": {
+      "buildFlags": ["-tags=integration"]
+    }
+  },
+  "lua": {
+    "extensions": [
+      ".lua"
+    ],
+    "command": "lua-language-server",
+    "installCommand": "brew install lua-language-server",
+    "installNotes": "Non-mac: download a release from https://github.com/LuaLS/lua-language-server/releases and put `lua-language-server` on PATH."
+  },
+  "python": {
+    "extensions": [
+      ".py",
+      ".pyi"
+    ],
+    "command": "pyright-langserver",
+    "args": [
+      "--stdio"
+    ],
+    "installCommand": "npm install -g pyright",
+    "installNotes": "Microsoft's Pyright. Static-analysis focused, very fast."
+  },
+  "typescript": {
+    "extensions": [
+      ".ts",
+      ".tsx",
+      ".mts",
+      ".cts",
+      ".js",
+      ".jsx",
+      ".mjs",
+      ".cjs"
+    ],
+    "command": "typescript-language-server",
+    "args": [
+      "--stdio"
+    ],
+    "installCommand": "npm install -g typescript typescript-language-server",
+    "installNotes": "Or: brew install typescript-language-server. The `typescript` package must be reachable too.",
+    "languageIdMap": {
+      ".tsx": "typescriptreact",
+      ".jsx": "javascriptreact",
+      ".js": "javascript",
+      ".mjs": "javascript",
+      ".cjs": "javascript"
+    }
+  },
+  "zig": {
+    "extensions": [
+      ".zig",
+      ".zon"
+    ],
+    "command": "zls",
+    "installCommand": "brew install zls",
+    "installNotes": "Non-mac: download a release from https://github.com/zigtools/zls/releases or build from source."
+  }
+}

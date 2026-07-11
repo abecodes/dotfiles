@@ -1,0 +1,13 @@
+{
+  "paths": [
+    ".env",
+    ".envrc",
+    ".netrc",
+    ".npmrc",
+    ".pypirc",
+    ".git/",
+    ".ssh/",
+    ".aws/",
+    "node_modules/"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "lastChangelogVersion": "0.80.2",
+  "packages": [
+    "npm:@ff-labs/pi-fff"
+  ],
+  "defaultProvider": "portkey",
+  "defaultModel": "gpt-5.5",
+  "terminal": {
+    "showTerminalProgress": true
+  },
+  "enableInstallTelemetry": false,
+  "defaultThinkingLevel": "high",
+  "theme": "dark"
+}
